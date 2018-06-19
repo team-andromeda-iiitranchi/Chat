@@ -4,4 +4,6 @@
     <string name="message_hint">Write you message here...</string>
     <string name="title_activity_chat">ChatActivity</string>
     <string name="title_activity_main2">Main2Activity</string>
+    <string name="SignUp">Sign Up</string>
+    <string name="title_activity_sign_up">SignUpActivity</string>
 </resources>
