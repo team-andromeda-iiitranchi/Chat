@@ -1,5 +1,6 @@
 package chat.chat.chat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -28,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        startActivity(new Intent(MainActivity.this,ChatActivity.class));
+        finish();
     }
 
     @Override
