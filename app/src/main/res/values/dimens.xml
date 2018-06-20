@@ -3,4 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="edtPadding">20dp</dimen>
+    <dimen name="edtMarginSignUp">20dp</dimen>
 </resources>

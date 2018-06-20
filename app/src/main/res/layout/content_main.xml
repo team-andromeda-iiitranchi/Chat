@@ -12,44 +12,55 @@
     tools:context="chat.chat.chat.MainActivity"
     tools:showIn="@layout/activity_main"
     android:background="#3b4df5">
-
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logo"
+        android:id="@+id/logo"
+        android:background="@drawable/img_background"
+        android:layout_alignStart="@+id/logIn"
+        android:layout_alignEnd="@+id/signUp" />
    <EditText
+
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:id="@+id/user"
        android:background="@drawable/edt_background"
-       android:layout_marginTop="40dp"
        android:hint="Username"
-       android:paddingEnd="40dp"
-       android:paddingStart="40dp" />
+       android:padding="@dimen/edtPadding"
+       android:layout_below="@+id/logo"
+       android:layout_alignParentStart="true" />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:password="true"
         android:hint="Password"
-        android:layout_marginTop="20dp"
         android:id="@+id/password"
         android:background="@drawable/edt_background"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/user"
-        android:paddingStart="40dp"
-        android:paddingEnd="40dp" />
+        android:padding="@dimen/edtPadding"
+        android:layout_alignTop="@+id/user"
+        android:layout_marginTop="100dp"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Log In"
         android:id="@+id/logIn"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true"
-        android:background="@drawable/btn_background" />
+        android:background="@drawable/btn_background"
+        android:layout_marginRight="20dp"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="47dp"
+        android:layout_below="@+id/password"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_background"
         android:text="Sign Up"
-        android:id="@+id/button2"
+        android:id="@+id/signUp"
+        android:layout_marginLeft="20dp"
         android:layout_alignTop="@+id/logIn"
-        android:layout_alignEnd="@+id/password" />
+        android:layout_toEndOf="@+id/logIn"
+        android:layout_marginStart="51dp" />
 </RelativeLayout>

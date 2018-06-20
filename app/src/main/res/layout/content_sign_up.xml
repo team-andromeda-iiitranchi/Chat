@@ -10,6 +10,56 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="chat.chat.chat.SignUpActivity"
+    android:background="@color/colorPrimary"
     tools:showIn="@layout/activity_sign_up">
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/name"
+        android:hint="@string/nameStr"
+        android:background="@drawable/edt_background"
+        android:layout_marginTop="50dp"
+        android:padding="@dimen/edtPadding"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/username"
+        android:hint="@string/usernameStr"
+        android:layout_below="@+id/name"
+        android:background="@drawable/edt_background"
+        android:layout_alignParentEnd="true"
+        android:padding="@dimen/edtPadding"
+        android:layout_marginTop="@dimen/edtMarginSignUp"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:password="true"
+        android:layout_height="wrap_content"
+        android:id="@+id/pwd"
+        android:hint="@string/passStr"
+        android:background="@drawable/edt_background"
+        android:padding="@dimen/edtPadding"
+        android:layout_below="@+id/username"
+        android:layout_marginTop="@dimen/edtMarginSignUp"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:padding="@dimen/edtPadding"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edt_background"
+        android:id="@+id/cpwd"
+        android:hint="@string/cpassStr"
+        android:layout_below="@+id/pwd"
+        android:password="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="@dimen/edtMarginSignUp"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign Up"
+        android:background="@drawable/btn_background"
+        android:id="@+id/button"
+        android:layout_marginTop="41dp"
+        android:layout_below="@+id/cpwd"
+        android:layout_centerHorizontal="true" />
+
 
 </RelativeLayout>

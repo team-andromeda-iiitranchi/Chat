@@ -6,4 +6,8 @@
     <string name="title_activity_main2">Main2Activity</string>
     <string name="SignUp">Sign Up</string>
     <string name="title_activity_sign_up">SignUpActivity</string>
+    <string name="usernameStr">Username</string>
+    <string name="nameStr">Name</string>
+    <string name="passStr">Password</string>
+    <string name="cpassStr">Confirm Password</string>
 </resources>

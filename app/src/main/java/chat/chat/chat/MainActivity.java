@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private EditText user;
     private EditText password;
-    private Button logIn;
+    private Button logIn,signUp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()) {
                                 startActivity(new Intent(MainActivity.this, ChatActivity.class));
+                                finish();
                             }
                             else
                             {
@@ -66,7 +67,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
+        signUp=(Button)findViewById(R.id.signUp);
+        signUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,SignUpActivity.class));
+            }
+        });
     }
 
     @Override
