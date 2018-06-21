@@ -16,6 +16,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import chat.chat.R;
 
@@ -23,6 +26,7 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText mUser,mName,mPass,mCpass;
     private Button mSignUp;
     FirebaseAuth mAuth;
+    private DatabaseReference mRef;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,27 +42,26 @@ public class SignUpActivity extends AppCompatActivity {
         mSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name,user,pass,cpass;
-                name=mName.getText().toString();
-                user=mUser.getText().toString();
-                pass=mPass.getText().toString();
-                cpass=mCpass.getText().toString();
-                if(TextUtils.isEmpty(name)||TextUtils.isEmpty(user)||TextUtils.isEmpty(pass)||TextUtils.isEmpty(cpass))
-                {
-                    Toast.makeText(getApplicationContext(),"Empty Field!",Toast.LENGTH_LONG).show();
-                }
-                else if(!pass.equals(cpass))
-                {
-                    Toast.makeText(getApplicationContext(),"Passwords do not match!",Toast.LENGTH_LONG).show();
-                }
-                else
-                {
+                String name, user, pass, cpass;
+                name = mName.getText().toString();
+                user = mUser.getText().toString();
+                pass = mPass.getText().toString();
+                cpass = mCpass.getText().toString();
+                if (TextUtils.isEmpty(name) || TextUtils.isEmpty(user) || TextUtils.isEmpty(pass) || TextUtils.isEmpty(cpass)) {
+                    Toast.makeText(getApplicationContext(), "Empty Field!", Toast.LENGTH_LONG).show();
+                } else if (!pass.equals(cpass)) {
+                    Toast.makeText(getApplicationContext(), "Passwords do not match!", Toast.LENGTH_LONG).show();
+                } else {
                     user=user+"@abc.com";
                     mAuth.createUserWithEmailAndPassword(user,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(Task<AuthResult> task) {
                             if(task.isSuccessful())
                             {
+                                String uid;
+                                uid=mAuth.getCurrentUser().getUid();
+                                mRef= FirebaseDatabase.getInstance().getReference();
+                                mRef.child("Users").setValue(uid);
                                 Toast.makeText(getApplicationContext(),"Authentication Successful!",Toast.LENGTH_LONG).show();
                                 startActivity(new Intent(SignUpActivity.this,MainActivity.class));
                                 finish();
@@ -73,6 +76,7 @@ public class SignUpActivity extends AppCompatActivity {
 
             }
         });
+
 
     }
 

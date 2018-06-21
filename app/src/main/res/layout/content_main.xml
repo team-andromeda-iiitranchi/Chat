@@ -12,14 +12,14 @@
     tools:context="chat.chat.chat.MainActivity"
     tools:showIn="@layout/activity_main"
     android:background="#3b4df5">
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/logo"
-        android:id="@+id/logo"
-        android:background="@drawable/img_background"
-        android:layout_alignStart="@+id/logIn"
-        android:layout_alignEnd="@+id/signUp" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo"
+            android:id="@+id/logo"
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="center" />
    <EditText
 
        android:layout_width="match_parent"
@@ -48,10 +48,10 @@
         android:id="@+id/logIn"
         android:background="@drawable/btn_background"
         android:layout_marginRight="20dp"
-        android:layout_marginStart="72dp"
-        android:layout_marginTop="47dp"
-        android:layout_below="@+id/password"
-        android:layout_alignParentStart="true" />
+        android:layout_marginBottom="41dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/logo"
+        android:layout_marginStart="43dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -59,8 +59,8 @@
         android:background="@drawable/btn_background"
         android:text="Sign Up"
         android:id="@+id/signUp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="40dp"
         android:layout_alignTop="@+id/logIn"
-        android:layout_toEndOf="@+id/logIn"
-        android:layout_marginStart="51dp" />
+        android:layout_alignEnd="@+id/password"
+        android:layout_marginEnd="49dp" />
 </RelativeLayout>
