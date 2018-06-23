@@ -10,4 +10,9 @@
     <string name="nameStr">Name</string>
     <string name="passStr">Password</string>
     <string name="cpassStr">Confirm Password</string>
+    <string name="signup">Sign Up</string>
+    <string name="login">Log In</string>
+    <string name="display_name">Display Name</string>
+    <string name="text">Text</string>
+    <string name="sent_text">Sent Text</string>
 </resources>

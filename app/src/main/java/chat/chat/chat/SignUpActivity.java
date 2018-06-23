@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.firebase.client.FirebaseException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -19,6 +21,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import chat.chat.R;
 
@@ -53,25 +58,7 @@ public class SignUpActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Passwords do not match!", Toast.LENGTH_LONG).show();
                 } else {
                     user=user+"@abc.com";
-                    mAuth.createUserWithEmailAndPassword(user,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(Task<AuthResult> task) {
-                            if(task.isSuccessful())
-                            {
-                                String uid;
-                                uid=mAuth.getCurrentUser().getUid();
-                                mRef= FirebaseDatabase.getInstance().getReference();
-                                mRef.child("Users").setValue(uid);
-                                Toast.makeText(getApplicationContext(),"Authentication Successful!",Toast.LENGTH_LONG).show();
-                                startActivity(new Intent(SignUpActivity.this,MainActivity.class));
-                                finish();
-                            }
-                            else
-                            {
-                                Toast.makeText(getApplicationContext(),"Some error occured!",Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
+                    createUser(name,user,pass);
                 }
 
             }
@@ -79,5 +66,28 @@ public class SignUpActivity extends AppCompatActivity {
 
 
     }
-
+    public void createUser(final String name,final String user,final String pass)
+    {
+        mAuth.createUserWithEmailAndPassword(user,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(Task<AuthResult> task) {
+                if(task.isSuccessful())
+                {
+                    String uid;
+                    uid=mAuth.getCurrentUser().getUid();
+                    mRef= FirebaseDatabase.getInstance().getReference();
+                    Map<String,String> map=new HashMap<>();
+                    map.put("Name",name);
+                    mRef.child("Users").child(uid).setValue(map);
+                    Toast.makeText(getApplicationContext(),"Authentication Successful!",Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(SignUpActivity.this,MainActivity.class));
+                    finish();
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(),"Some error occured!",Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
 }

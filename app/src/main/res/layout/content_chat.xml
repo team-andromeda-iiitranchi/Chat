@@ -7,29 +7,33 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
+    android:background="@color/colorPrimary"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="chat.chat.chat.ChatActivity"
     tools:showIn="@layout/activity_chat">
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/scrollView"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/send">
+        android:background="@drawable/list_background"
+        android:layout_above="@+id/bar"
+        >
 
-    </ListView>
-
-    <Button
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:id="@+id/send"
-        android:src="@drawable/send_btn"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true" />
-    <ScrollView
+    </android.support.v7.widget.RecyclerView>
+    <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/bar"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/linear_background"
+        android:layout_alignParentEnd="true">
+
+        <ScrollView
+        android:layout_width="288dp"
         android:layout_height="wrap_content"
         android:id="@+id/scroll"
         android:layout_alignParentBottom="true"
@@ -40,10 +44,24 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:id="@+id/message"
             android:hint="@string/message_hint"
+            android:padding="15dp"
             android:layout_alignTop="@+id/send"
-            android:layout_toStartOf="@+id/send" />
+            android:layout_toStartOf="@+id/send"
+            android:background="@drawable/edt_background"/>
     </ScrollView>
 
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/send"
+        android:src="@drawable/send_btn"
+        android:layout_alignBottom="@+id/bar"
+        android:layout_alignParentEnd="true"
+        android:clickable="true"
+        android:padding="8dp"/>
 </RelativeLayout>

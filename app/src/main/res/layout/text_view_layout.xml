@@ -1,20 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:weightSum="1"
     android:orientation="vertical">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:layout_width="match_parent"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/default_pic"
+        android:id="@+id/circleview"
+        android:layout_alignParentStart="true" />
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="0.02" />
+        android:id="@+id/linearLayout"
+        android:orientation="vertical"
+
+        android:layout_alignParentEnd="true"
+
+        android:layout_toEndOf="@+id/circleview">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/display_name"
+            android:id="@+id/displayname"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/message_background2"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="0"
+            android:textSize="10dp"
+            android:layout_below="@+id/linearLayout"
+            android:layout_toEndOf="@+id/linearLayout" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_marginLeft="10dp"
+            android:text="@string/text"
+            android:id="@+id/messview"
+            android:background="@drawable/message_background"
+            android:textSize="@dimen/message_text_size"
+            android:layout_below="@+id/circleview"
+            android:layout_alignEnd="@+id/linearLayout"
+            />
+
     </LinearLayout>
+</RelativeLayout>

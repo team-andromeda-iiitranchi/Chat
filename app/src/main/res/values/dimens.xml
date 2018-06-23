@@ -5,4 +5,6 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="edtPadding">20dp</dimen>
     <dimen name="edtMarginSignUp">20dp</dimen>
+    <dimen name="message_single_padding">5dp</dimen>
+    <dimen name="message_text_size">16dp</dimen>
 </resources>
