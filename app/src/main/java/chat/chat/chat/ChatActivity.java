@@ -1,20 +1,24 @@
 package chat.chat.chat;
 
+import android.app.DownloadManager;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.google.firebase.database.Query;
 import com.firebase.client.ServerValue;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,6 +37,8 @@ import java.util.Map;
 import chat.chat.R;
 
 public class ChatActivity extends AppCompatActivity {
+    private static final int ITEMS_PER_PAGE = 10;
+    private static int NO_OF_PAGES = 1    ;
     private ImageView mSendBtn;
     private EditText mMessage;
     private DatabaseReference mRef;
@@ -40,8 +46,11 @@ public class ChatActivity extends AppCompatActivity {
     private FirebaseUser mCurrentUser;
     private RecyclerView mRecyclerView;
     private MessageAdapter messageAdapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private final List<Messages> messagesList=new ArrayList<>();
     private LinearLayoutManager mLinearLayout;
+    private int itemPos=0;
+    private String lastKey="",prevToLast="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,16 +84,42 @@ public class ChatActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(messageAdapter);
         loadMessages();
 
+        swipeRefreshLayout=(SwipeRefreshLayout)findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                NO_OF_PAGES++;
+                itemPos=0;
+                loadMoreMessages();
+            }
+        });
 
     }
 
-    private void loadMessages() {
-        mRef.child("message").addChildEventListener(new ChildEventListener() {
+    private void loadMoreMessages() {
+        DatabaseReference mRootRef=mRef.child("message");
+        Query q=mRootRef.orderByKey().endAt(lastKey).limitToLast(ITEMS_PER_PAGE);
+        q.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Messages messages=dataSnapshot.getValue(Messages.class);
-                messagesList.add(messages);
+                if(!dataSnapshot.getKey().equals(prevToLast))
+                {
+                    messagesList.add(itemPos++,messages);
+                }
+                else {
+                    prevToLast=lastKey;
+                }
+                Log.e("KEYS MORE","LAST KEY :"+lastKey+" PREV_TO_LAST :"+prevToLast+" CURRENT :"+dataSnapshot.getKey());
+                if(itemPos==1)
+                {
+                    lastKey=dataSnapshot.getKey();
+
+                }
                 messageAdapter.notifyDataSetChanged();
+                mRecyclerView.scrollToPosition(0);
+                swipeRefreshLayout.setRefreshing(false);
+
             }
 
             @Override
@@ -106,6 +141,48 @@ public class ChatActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
 
             }
+        });
+    }
+
+    private void loadMessages() {
+        DatabaseReference mRootRef=mRef.child("message");
+        Query q=mRootRef.limitToLast(ITEMS_PER_PAGE*NO_OF_PAGES);
+                q.addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        Messages messages = dataSnapshot.getValue(Messages.class);
+                        messagesList.add(messages);
+                        itemPos++;
+                        if(itemPos==1)
+                        {
+                            lastKey=dataSnapshot.getKey();
+                            prevToLast=lastKey;
+                        }
+                        Log.e("KEYS","LAST KEY :"+lastKey+" PREV_TO_LAST :"+prevToLast+" CURRENT :"+dataSnapshot.getKey());
+                        messageAdapter.notifyDataSetChanged();
+                        mRecyclerView.scrollToPosition(messagesList.size() - 1);
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
         });
     }
 

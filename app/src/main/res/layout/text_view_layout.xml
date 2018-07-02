@@ -46,6 +46,7 @@
             android:layout_marginLeft="10dp"
             android:text="@string/text"
             android:id="@+id/messview"
+            android:maxWidth="@dimen/message_max_width"
             android:background="@drawable/message_background"
             android:textSize="@dimen/message_text_size"
             android:layout_below="@+id/circleview"

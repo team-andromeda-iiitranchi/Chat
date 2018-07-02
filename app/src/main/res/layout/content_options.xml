@@ -8,16 +8,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    >
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/sent_message_background"
-        android:layout_alignParentRight="true"
-        android:text="@string/sent_text"
-        android:textSize="@dimen/message_text_size"
-        android:textColor="@color/white"
-        android:maxWidth="@dimen/message_max_width"
-        android:id="@+id/text"
-        />
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="chat.chat.chat.OptionsActivity"
+    tools:showIn="@layout/activity_options">
+
 </RelativeLayout>
