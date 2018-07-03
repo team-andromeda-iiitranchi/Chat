@@ -1,13 +1,16 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="chat.chat.chat.NoticeFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="notice fragment" />
+        android:layout_height="wrap_content"
+        android:text="notice fragment"
+        android:background="@drawable/notice_img"
+        android:id="@+id/noticeTextView">
+    </ImageView>
 
-</FrameLayout>
+</RelativeLayout>

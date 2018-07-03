@@ -50,10 +50,6 @@ public class OptionsActivity extends AppCompatActivity {
                 {
                     startActivity(new Intent(OptionsActivity.this,MainActivity.class));
                 }
-                else
-                {
-                    Toast.makeText(getApplicationContext(),mUser.getUid().toString(),Toast.LENGTH_LONG).show();
-                }
             }
         });
 
