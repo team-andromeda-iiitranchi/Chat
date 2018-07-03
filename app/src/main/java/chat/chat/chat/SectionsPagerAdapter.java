@@ -31,4 +31,15 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public int getCount() {
     return 3;
     }
+
+    public CharSequence getPageTitle(int position)
+    {
+        switch (position)
+        {
+            case 0:return "CRs";
+            case 1:return "NOTICES";
+            case 2:return "POLLS";
+        }
+        return null;
+    }
 }
