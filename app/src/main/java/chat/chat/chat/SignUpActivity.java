@@ -78,6 +78,8 @@ public class SignUpActivity extends AppCompatActivity {
                     mRef= FirebaseDatabase.getInstance().getReference();
                     Map<String,String> map=new HashMap<>();
                     map.put("Name",name);
+                    map.put("CR","false");
+                    map.put("username",user);
                     mRef.child("Users").child(uid).setValue(map);
                     Toast.makeText(getApplicationContext(),"Authentication Successful!",Toast.LENGTH_LONG).show();
                     startActivity(new Intent(SignUpActivity.this,MainActivity.class));

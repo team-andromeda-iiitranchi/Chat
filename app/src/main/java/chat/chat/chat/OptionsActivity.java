@@ -34,13 +34,6 @@ public class OptionsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_options);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        mViewPager=(ViewPager)findViewById(R.id.tabPager);
-        mSectionsPagerAdapter=new SectionsPagerAdapter(getSupportFragmentManager());
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        tabLayout=(TabLayout)findViewById(R.id.tabLayout);
-        tabLayout.setupWithViewPager(mViewPager);
-        mViewPager.setCurrentItem(1);
 
         FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
@@ -49,9 +42,19 @@ public class OptionsActivity extends AppCompatActivity {
                 if(mUser==null)
                 {
                     startActivity(new Intent(OptionsActivity.this,MainActivity.class));
+                    finish();
                 }
             }
         });
+
+        mViewPager=(ViewPager)findViewById(R.id.tabPager);
+        mSectionsPagerAdapter=new SectionsPagerAdapter(getSupportFragmentManager());
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        tabLayout=(TabLayout)findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(mViewPager);
+        mViewPager.setCurrentItem(1);
+
 
     }
 

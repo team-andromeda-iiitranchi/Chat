@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.google.firebase.database.Query;
 import com.firebase.client.ServerValue;
@@ -27,6 +28,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,11 +48,9 @@ public class ChatActivity extends AppCompatActivity {
     private FirebaseUser mCurrentUser;
     private RecyclerView mRecyclerView;
     private MessageAdapter messageAdapter;
-    private SwipeRefreshLayout swipeRefreshLayout;
     private final List<Messages> messagesList=new ArrayList<>();
     private LinearLayoutManager mLinearLayout;
-    private int itemPos=0;
-    private String lastKey="",prevToLast="";
+    private LinearLayout bar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +76,24 @@ public class ChatActivity extends AppCompatActivity {
         mCurrentUser=mAuth.getInstance().getCurrentUser();
 
 
+        //bar visibility changes
+        bar=(LinearLayout)findViewById(R.id.bar);
+        mRef.child("Users").child(mCurrentUser.getUid().toString()).child("CR").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String isCR = dataSnapshot.getValue().toString();
+                if (!isCR.equals("false")) {
+                    bar.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        //loading messages through adapter
         messageAdapter=new MessageAdapter(messagesList);
         mRecyclerView=(RecyclerView)findViewById(R.id.scrollView);
         mLinearLayout=new LinearLayoutManager(this);
@@ -84,84 +102,17 @@ public class ChatActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(messageAdapter);
         loadMessages();
 
-        swipeRefreshLayout=(SwipeRefreshLayout)findViewById(R.id.swipeRefreshLayout);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                NO_OF_PAGES++;
-                itemPos=0;
-                loadMoreMessages();
-            }
-        });
-
-    }
-
-    private void loadMoreMessages() {
-        DatabaseReference mRootRef=mRef.child("message");
-        Query q=mRootRef.orderByKey().endAt(lastKey).limitToLast(ITEMS_PER_PAGE);
-        q.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Messages messages=dataSnapshot.getValue(Messages.class);
-                if(!dataSnapshot.getKey().equals(prevToLast))
-                {
-                    messagesList.add(itemPos++,messages);
-                }
-                else {
-                    prevToLast=lastKey;
-                }
-                Log.e("KEYS MORE","LAST KEY :"+lastKey+" PREV_TO_LAST :"+prevToLast+" CURRENT :"+dataSnapshot.getKey());
-                if(itemPos==1)
-                {
-                    lastKey=dataSnapshot.getKey();
-
-                }
-                messageAdapter.notifyDataSetChanged();
-                mRecyclerView.scrollToPosition(0);
-                swipeRefreshLayout.setRefreshing(false);
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
+        }
 
     private void loadMessages() {
         DatabaseReference mRootRef=mRef.child("message");
-        Query q=mRootRef.limitToLast(ITEMS_PER_PAGE*NO_OF_PAGES);
-                q.addChildEventListener(new ChildEventListener() {
+        mRootRef.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         Messages messages = dataSnapshot.getValue(Messages.class);
                         messagesList.add(messages);
-                        itemPos++;
-                        if(itemPos==1)
-                        {
-                            lastKey=dataSnapshot.getKey();
-                            prevToLast=lastKey;
-                        }
-                        Log.e("KEYS","LAST KEY :"+lastKey+" PREV_TO_LAST :"+prevToLast+" CURRENT :"+dataSnapshot.getKey());
                         messageAdapter.notifyDataSetChanged();
                         mRecyclerView.scrollToPosition(messagesList.size() - 1);
-                        swipeRefreshLayout.setRefreshing(false);
                     }
 
                     @Override
