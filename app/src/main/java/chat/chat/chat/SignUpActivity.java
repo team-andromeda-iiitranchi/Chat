@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.firebase.client.FirebaseException;
+import com.firebase.client.ServerValue;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -79,8 +80,16 @@ public class SignUpActivity extends AppCompatActivity {
                     Map<String,String> map=new HashMap<>();
                     map.put("Name",name);
                     map.put("CR","false");
-                    map.put("username",user);
+                    map.put("username",user.substring(0,user.indexOf("@")));
                     mRef.child("Users").child(uid).setValue(map);
+                    DatabaseReference databaseReference=mRef.child("CR").child("messages").child(uid).push();
+                    String messageId=databaseReference.getKey();
+                    Map map1=new HashMap();
+                    map1.put("seen","false");
+                    map1.put("timestamp",ServerValue.TIMESTAMP);
+                    map1.put("text","Send your messages from here.");
+                    map1.put("from",uid);
+                    mRef.child("CR").child("messages").child(uid).child(messageId).setValue(map1);
                     Toast.makeText(getApplicationContext(),"Authentication Successful!",Toast.LENGTH_LONG).show();
                     startActivity(new Intent(SignUpActivity.this,MainActivity.class));
                     finish();

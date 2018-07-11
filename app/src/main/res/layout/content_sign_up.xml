@@ -19,7 +19,6 @@
         android:hint="@string/nameStr"
         android:background="@drawable/edt_background"
         android:layout_marginTop="50dp"
-        android:padding="@dimen/edtPadding"
         android:inputType="textPersonName"
         android:maxLines="1" />
     <EditText
@@ -30,7 +29,6 @@
         android:layout_below="@+id/name"
         android:background="@drawable/edt_background"
         android:layout_alignParentEnd="true"
-        android:padding="@dimen/edtPadding"
         android:layout_marginTop="@dimen/edtMarginSignUp"
         android:inputType="textEmailAddress"
         android:maxLines="1" />
@@ -41,14 +39,12 @@
         android:id="@+id/pwd"
         android:hint="@string/passStr"
         android:background="@drawable/edt_background"
-        android:padding="@dimen/edtPadding"
         android:layout_below="@+id/username"
         android:layout_marginTop="@dimen/edtMarginSignUp"
         android:inputType="textPassword"
         android:maxLines="1" />
     <EditText
         android:layout_width="match_parent"
-        android:padding="@dimen/edtPadding"
         android:layout_height="wrap_content"
         android:background="@drawable/edt_background"
         android:id="@+id/cpwd"

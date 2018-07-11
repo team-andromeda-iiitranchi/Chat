@@ -50,6 +50,7 @@ public class OptionsActivity extends AppCompatActivity {
         mViewPager=(ViewPager)findViewById(R.id.tabPager);
         mSectionsPagerAdapter=new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setOffscreenPageLimit(3);
 
         tabLayout=(TabLayout)findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(mViewPager);

@@ -9,6 +9,7 @@
             android:id="@+id/recView2"
             android:layout_above="@+id/bar"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"

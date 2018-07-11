@@ -72,8 +72,9 @@ public class ChatFragment extends Fragment {
         relativeLayout=(RelativeLayout)view.findViewById(R.id.container_layout);
         if(mCurrentUser!=null) {
             mRef = FirebaseDatabase.getInstance().getReference();
-            String uid=mCurrentUser.getUid();
-            mRef.child("Users").child(uid).child("CR").addListenerForSingleValueEvent(new ValueEventListener() {
+            final String uid=mCurrentUser.getUid();
+            final DatabaseReference databaseReference=mRef.child("Users").child(uid).child("CR");
+            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     String isCR=dataSnapshot.getValue().toString();
@@ -86,6 +87,7 @@ public class ChatFragment extends Fragment {
                         inflateForOthers(view);
                     }
                     Log.e("INFLATE : ","CR update "+isCR);
+                    databaseReference.removeEventListener(this);
                 }
 
                 @Override
@@ -102,8 +104,6 @@ public class ChatFragment extends Fragment {
         LayoutInflater inflater1=LayoutInflater.from(getContext());
         inflatedLayout=inflater1.inflate(R.layout.other_chat_fragment,null,false);
         relativeLayout.addView(inflatedLayout);
-
-
         messageAdapter=new MessageAdapter(messagesList);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getActivity());
         mRecyclerView=(RecyclerView)inflatedLayout.findViewById(R.id.recView2);
@@ -111,19 +111,8 @@ public class ChatFragment extends Fragment {
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(messageAdapter);
         final FirebaseUser mCurrentUser=FirebaseAuth.getInstance().getCurrentUser();
-        mRef.child("CR").child("messages").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild(mCurrentUser.getUid()))
-                    loadMessages(mRef.child("CR").child("messages").child(mCurrentUser.getUid()));
-                mRef.child("CR").child("messages").removeEventListener(this);
-            }
+        loadMessages(mRef.child("CR").child("messages").child(mCurrentUser.getUid()));
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
         if(mCurrentUser!=null) {
             mSendBtn = (ImageView) inflatedLayout.findViewById(R.id.send);
             mMessage = (EditText) inflatedLayout.findViewById(R.id.message);
@@ -281,15 +270,14 @@ public class ChatFragment extends Fragment {
     }
     private void sendMessage(final String message,final String uid) {
         DatabaseReference mDatabase=FirebaseDatabase.getInstance().getReference().child("CR").child("messages").child(uid).push();
-        String key=mDatabase.getKey();
+        final String key=mDatabase.getKey();
 
-        Map map=new HashMap();
+        final Map map=new HashMap();
         map.put("seen","false");
         map.put("timestamp", ServerValue.TIMESTAMP);
         map.put("text",message);
         map.put("from",FirebaseAuth.getInstance().getCurrentUser().getUid());
-        mRef.child("CR").child("messages").child(uid).child(key).setValue(map);
-
-
+        final DatabaseReference databaseReference=mRef.child("CR").child("messages");
+        databaseReference.child(uid).child(key).setValue(map);
     }
 }

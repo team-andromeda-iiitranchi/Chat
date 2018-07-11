@@ -13,7 +13,7 @@
         <activity
             android:name=".chat.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".chat.ChatActivity"
             android:label="@string/title_activity_chat"
@@ -32,10 +32,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".chat.AddPoll"
-            android:label="@string/title_activity_add_poll"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".chat.AddPoll"></activity>
     </application>
 
 </manifest>
