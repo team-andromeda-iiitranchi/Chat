@@ -230,14 +230,15 @@ public class ChatFragment extends Fragment {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 String uid=dataSnapshot.getKey().toString();
-                Toast.makeText(getActivity(),uid,Toast.LENGTH_LONG).show();
                 DatabaseReference mDatabase=FirebaseDatabase.getInstance().getReference();
                 mDatabase.child("Users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         Users users=dataSnapshot.getValue(Users.class);
-                        usersList.add(users);
-                        mUserAdapter.notifyDataSetChanged();
+                        if(users!=null) {
+                            usersList.add(users);
+                            mUserAdapter.notifyDataSetChanged();
+                        }
                     }
 
                     @Override
