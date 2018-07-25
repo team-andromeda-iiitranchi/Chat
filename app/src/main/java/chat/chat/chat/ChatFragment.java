@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -19,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.firebase.client.ServerValue;
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,6 +59,7 @@ public class ChatFragment extends Fragment {
     private final List<Users> usersList=new ArrayList<>();
     private final List<Messages> messagesList=new ArrayList<>();
     private View mView;
+    private Toolbar mToolbar;
     public ChatFragment() {
         // Required empty public constructor
     }
@@ -65,6 +69,7 @@ public class ChatFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater,final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         final View view;
         view=inflater.inflate(R.layout.fragment_chat,container,false);
         mView=view;
@@ -138,9 +143,17 @@ public class ChatFragment extends Fragment {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     Messages messages = dataSnapshot.getValue(Messages.class);
-                    messagesList.add(messages);
-                    messageAdapter.notifyDataSetChanged();
-                    mRecyclerView.scrollToPosition(messagesList.size() - 1);
+                    if(messagesList.isEmpty())
+                    {
+                        messagesList.add(messages);
+                        messageAdapter.notifyDataSetChanged();
+                        mRecyclerView.scrollToPosition(messagesList.size() - 1);
+                    }
+                    else if(!messages.isEqual(messagesList.get(messagesList.size()-1))) {
+                        messagesList.add(messages);
+                        messageAdapter.notifyDataSetChanged();
+                        mRecyclerView.scrollToPosition(messagesList.size() - 1);
+                    }
                 }
 
                 @Override
@@ -183,12 +196,35 @@ public class ChatFragment extends Fragment {
     }
     public void inflateForCROnItemClicked(final String uid)
     {
+        messagesList.clear();
+        //Add back button on toolbar
+        OptionsActivity optionsActivity=(OptionsActivity)getActivity();
+        final android.support.v7.widget.Toolbar toolbar=optionsActivity.getToolBar();
+        final ActionBar actionBar=optionsActivity.getSupportActionBar();
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+
+        //Add listener to toolbar
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                usersList.clear();
+                actionBar.setDisplayHomeAsUpEnabled(false);
+                actionBar.setDisplayShowHomeEnabled(false);
+                ((ViewGroup)inflatedLayout.getParent()).removeView(inflatedLayout);
+                inflateForCR(mView);
+            }
+        });
+
+
+        //Inflate Chat Page
         ((ViewGroup)inflatedLayout.getParent()).removeView(inflatedLayout);
         LayoutInflater inflater1=LayoutInflater.from(getContext());
         inflatedLayout=inflater1.inflate(R.layout.other_chat_fragment,null,false);
         relativeLayout.addView(inflatedLayout);
 
-        //CLEAR THE LIST
+
         messageAdapter=new MessageAdapter(messagesList);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getActivity());
         mRecyclerView=(RecyclerView)inflatedLayout.findViewById(R.id.recView2);

@@ -46,5 +46,20 @@ public class Messages {
 
     String from,seen,text;
     long timestamp;
+    public boolean isEqual(Messages messages)
+    {
+        boolean res=false;
+        if(messages.getTimestamp()==this.timestamp)
+        {
+            if(messages.getText().equals(this.text))
+            {
+                if(messages.getFrom()==this.from)
+                {
+                    res=true;
+                }
+            }
 
+        }
+        return res;
+    }
 } 
