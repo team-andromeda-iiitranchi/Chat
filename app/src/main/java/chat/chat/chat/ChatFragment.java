@@ -262,26 +262,18 @@ public class ChatFragment extends Fragment {
 
     */
     private void loadUsers() {
-        mRef.child("CR").child("messages").addChildEventListener(new ChildEventListener() {
+        Query q=mRef.child("Users").orderByChild("latestTimestamp");
+        q.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 String uid=dataSnapshot.getKey().toString();
+                Users users=dataSnapshot.getValue(Users.class);
                 DatabaseReference mDatabase=FirebaseDatabase.getInstance().getReference();
-                mDatabase.child("Users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Users users=dataSnapshot.getValue(Users.class);
-                        if(users!=null) {
-                            usersList.add(users);
-                            mUserAdapter.notifyDataSetChanged();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
+                if(users.getCR().equals("false"))
+                {
+                    usersList.add(0,users);
+                    mUserAdapter.notifyDataSetChanged();
+                }
             }
 
             @Override
@@ -314,6 +306,8 @@ public class ChatFragment extends Fragment {
         map.put("timestamp", ServerValue.TIMESTAMP);
         map.put("text",message);
         map.put("from",FirebaseAuth.getInstance().getCurrentUser().getUid());
+        DatabaseReference timestampUpdate=FirebaseDatabase.getInstance().getReference().child("Users").child(uid).child("latestTimestamp");
+        timestampUpdate.setValue(ServerValue.TIMESTAMP);
         final DatabaseReference databaseReference=mRef.child("CR").child("messages");
         databaseReference.child(uid).child(key).setValue(map);
     }

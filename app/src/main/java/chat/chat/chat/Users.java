@@ -4,6 +4,16 @@ public class Users {
     private String CR;
     private String Name;
 
+    public long getLatestTimestamp() {
+        return latestTimestamp;
+    }
+
+    public void setLatestTimestamp(long latestTimestamp) {
+        this.latestTimestamp = latestTimestamp;
+    }
+
+    private long latestTimestamp;
+
     public String getUsername() {
         return username;
     }
@@ -13,11 +23,13 @@ public class Users {
     }
 
     private String username;
-    public Users(String CR,String Name,String username)
+    public Users(String CR,String Name,String username,long latestTimestamp)
     {
+        this.latestTimestamp=latestTimestamp;
         this.CR=CR;
         this.Name=Name;
         this.username=username;
+
     }
 
     public String getCR() {

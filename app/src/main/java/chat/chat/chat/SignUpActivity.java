@@ -75,12 +75,14 @@ public class SignUpActivity extends AppCompatActivity {
                 if(task.isSuccessful())
                 {
                     String uid;
+
                     uid=mAuth.getCurrentUser().getUid();
                     mRef= FirebaseDatabase.getInstance().getReference();
-                    Map<String,String> map=new HashMap<>();
+                    Map map=new HashMap();
                     map.put("Name",name);
                     map.put("CR","false");
                     map.put("username",user.substring(0,user.indexOf("@")));
+                    map.put("latestTimestamp",ServerValue.TIMESTAMP);
                     mRef.child("Users").child(uid).setValue(map);
                     DatabaseReference databaseReference=mRef.child("CR").child("messages").child(uid).push();
                     String messageId=databaseReference.getKey();
@@ -90,6 +92,7 @@ public class SignUpActivity extends AppCompatActivity {
                     map1.put("text","Send your messages from here.");
                     map1.put("from",uid);
                     mRef.child("CR").child("messages").child(uid).child(messageId).setValue(map1);
+                    //mRef.child("CR").child("messages").child(uid).child("timestamp").setValue(ServerValue.TIMESTAMP);
                     Toast.makeText(getApplicationContext(),"Authentication Successful!",Toast.LENGTH_LONG).show();
                     startActivity(new Intent(SignUpActivity.this,MainActivity.class));
                     finish();
