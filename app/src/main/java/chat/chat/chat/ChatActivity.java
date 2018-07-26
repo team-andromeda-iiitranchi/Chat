@@ -1,6 +1,7 @@
 package chat.chat.chat;
 
 import android.app.DownloadManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
@@ -18,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.firebase.database.Query;
 import com.firebase.client.ServerValue;
@@ -59,6 +61,18 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //back option
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i=new Intent(ChatActivity.this,OptionsActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
 
         mSendBtn=(ImageView)findViewById(R.id.send);
         mMessage=(EditText)findViewById(R.id.message);
@@ -131,7 +145,19 @@ public class ChatActivity extends AppCompatActivity {
 
                     @Override
                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                        DataSnapshot dataSnapshot1 = dataSnapshot;
+                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                            dataSnapshot1 = data;
+                        }
+                        Messages messages = dataSnapshot1.getValue(Messages.class);
+                        Messages messages1=messagesList.get(messagesList.size()-1);
 
+                        //Dangerous Text is being compared
+                        if (!messages.getText().equals(messages1.getText())){
+                            Toast.makeText(getApplicationContext(),"H...", Toast.LENGTH_LONG).show();
+                            messagesList.add(messages);
+                            messageAdapter.notifyDataSetChanged();
+                        }
                     }
 
                     @Override

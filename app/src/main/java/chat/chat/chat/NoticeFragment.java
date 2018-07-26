@@ -55,6 +55,7 @@ public class NoticeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(),ChatActivity.class));
+                getActivity().finish();
             }
         });
 
@@ -114,7 +115,9 @@ public class NoticeFragment extends Fragment {
                 if(dataSnapshot.getKey().equals(name))
                 {
                     Intent i=new Intent(getActivity(),NoticeViewer.class);
+                    i.putExtra("Name",name);
                     startActivity(i);
+                    getActivity().finish();
                 }
             }
 

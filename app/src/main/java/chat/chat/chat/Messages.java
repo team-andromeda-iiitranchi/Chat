@@ -1,6 +1,8 @@
 package chat.chat.chat;
 
 import android.os.Message;
+import android.util.Log;
+import android.widget.Toast;
 
 public class Messages {
     Messages()
@@ -53,7 +55,7 @@ public class Messages {
         {
             if(messages.getText().equals(this.text))
             {
-                if(messages.getFrom()==this.from)
+                if(messages.getFrom().equals(this.from))
                 {
                     res=true;
                 }
