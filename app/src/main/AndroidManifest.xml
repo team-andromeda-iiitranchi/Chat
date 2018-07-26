@@ -33,7 +33,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".chat.AddPoll" />
-        <activity android:name=".chat.VoteActivity"></activity>
+        <activity android:name=".chat.VoteActivity" />
+        <activity android:name=".chat.NoticeViewer"></activity>
     </application>
 
 </manifest>

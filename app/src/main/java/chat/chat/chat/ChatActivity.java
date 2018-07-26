@@ -95,7 +95,6 @@ public class ChatActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-
         //loading messages through adapter
         messageAdapter=new MessageAdapter(messagesList);
         mRecyclerView=(RecyclerView)findViewById(R.id.scrollView);
@@ -103,12 +102,11 @@ public class ChatActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLinearLayout);
         mRecyclerView.setAdapter(messageAdapter);
-        loadMessages();
+        loadMessages(mRef.child("message"));
 
         }
 
-    private void loadMessages() {
-        DatabaseReference mRootRef=mRef.child("message");
+    private void loadMessages(DatabaseReference mRootRef) {
         mRootRef.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {

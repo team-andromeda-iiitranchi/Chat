@@ -14,13 +14,24 @@
         android:background="@drawable/notice_img"
         android:text="notice fragment"></ImageView>
 
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="wrap_content"
-        android:layout_height="334dp"
-        android:layout_above="@+id/noticeTextView"
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
+        android:layout_below="@+id/noticeTextView"
+        android:padding="5dp"
+        android:text="@string/categories"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:textColor="@color/black"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/noticeRecyclerView"
+        android:layout_width="wrap_content"
+        android:layout_height="302dp"
+        android:layout_above="@+id/noticeTextView"
         android:layout_alignParentBottom="true"
-        >
+        android:layout_alignParentStart="true">
 
     </android.support.v7.widget.RecyclerView>
 
