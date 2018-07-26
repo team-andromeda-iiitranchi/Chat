@@ -82,8 +82,10 @@ class MessageAdapter extends RecyclerView.Adapter
             mRef.child("Users").child(messages.getFrom()).child("Name").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    String name=dataSnapshot.getValue().toString();
-                    displayName.setText(name);
+                    if(dataSnapshot.getValue()!=null) {
+                        String name = dataSnapshot.getValue().toString();
+                        displayName.setText(name);
+                    }
                 }
 
                 @Override

@@ -31,6 +31,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -64,7 +66,9 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!TextUtils.isEmpty(mMessage.getText())) {
-                    sendMessage(mMessage.getText().toString(), mCurrentUser.getUid());
+                    final Messages messages=new Messages();
+                    messages.setText(mMessage.getText().toString());
+                    sendMessage(messages, mCurrentUser.getUid());
                     mMessage.setText("");
                 }
 
@@ -108,10 +112,23 @@ public class ChatActivity extends AppCompatActivity {
         mRootRef.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        Messages messages = dataSnapshot.getValue(Messages.class);
-                        messagesList.add(messages);
+                        for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
+                        {
+                            Messages messages=dataSnapshot1.getValue(Messages.class);
+                            messagesList.add(messages);
+                        }
+
+
+                        Collections.sort(messagesList, new Comparator<Messages>() {
+                            @Override
+                            public int compare(Messages lhs, Messages rhs) {
+                                // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
+                                return lhs.getTimestamp() > rhs.getTimestamp() ? 1 : (lhs.getTimestamp() < rhs.getTimestamp()) ? -1 : 0;
+                            }
+                        });
+
                         messageAdapter.notifyDataSetChanged();
-                        mRecyclerView.scrollToPosition(messagesList.size() - 1);
+                        mRecyclerView.scrollToPosition(messagesList.size()-1);
                     }
 
                     @Override
@@ -136,18 +153,22 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    private void sendMessage(final String message,final String uid) {
-        DatabaseReference mDatabase=FirebaseDatabase.getInstance().getReference().child("message").push();
+    private void sendMessage(final Messages message,final String uid) {
+
+        String categ=message.getHashTag();
+
+        DatabaseReference mDatabase=FirebaseDatabase.getInstance().getReference().child("message").child(categ).push();
         String key=mDatabase.getKey();
 
         Map map=new HashMap();
         map.put("seen","false");
         map.put("timestamp",ServerValue.TIMESTAMP);
-        map.put("text",message);
+        map.put("text",message.getText());
         map.put("from",uid);
-        mRef.child("message").child(key).setValue(map);
+        mRef.child("message").child(categ).child(key).setValue(map);
 
 
     }
+
 
 }

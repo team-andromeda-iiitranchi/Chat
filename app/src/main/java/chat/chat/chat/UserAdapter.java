@@ -49,18 +49,24 @@ public class UserAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final Users users=(Users) mList.get(position);
+        if(users.getIsUnseen().equals("true"))
+        {
+            mView.setBackgroundResource(R.color.pollColor);
+        }
         ((UserHolder)holder).bind(users);
         mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
                 //Log.e("ITEMCLICK :",""+position);
                 String username=users.getUsername();
-                DatabaseReference mRef= FirebaseDatabase.getInstance().getReference().child("Users");
+                final DatabaseReference mRef= FirebaseDatabase.getInstance().getReference().child("Users");
                 Query q=mRef.orderByChild("username").equalTo(username);
                 q.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        String uid=dataSnapshot.getKey();
+                        String uid=dataSnapshot.getKey().toString();
+
+                        mRef.child(uid).child("isUnseen").setValue("false");
                         chatFragment.inflateForCROnItemClicked(uid);
                     }
 

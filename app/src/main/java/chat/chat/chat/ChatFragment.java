@@ -82,16 +82,13 @@ public class ChatFragment extends Fragment {
             databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    String isCR=dataSnapshot.getValue().toString();
-                    if(isCR.equals("true"))
-                    {
+                    String isCR = dataSnapshot.getValue().toString();
+                    if (isCR.equals("true")) {
                         inflateForCR(view);
-                    }
-                    else
-                    {
+                    } else {
                         inflateForOthers(view);
                     }
-                    Log.e("INFLATE : ","CR update "+isCR);
+                    Log.e("INFLATE : ", "CR update " + isCR);
                     databaseReference.removeEventListener(this);
                 }
 
@@ -306,8 +303,14 @@ public class ChatFragment extends Fragment {
         map.put("timestamp", ServerValue.TIMESTAMP);
         map.put("text",message);
         map.put("from",FirebaseAuth.getInstance().getCurrentUser().getUid());
-        DatabaseReference timestampUpdate=FirebaseDatabase.getInstance().getReference().child("Users").child(uid).child("latestTimestamp");
-        timestampUpdate.setValue(ServerValue.TIMESTAMP);
+
+
+        DatabaseReference userUpdate=FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+        userUpdate.child("latestTimestamp").setValue(ServerValue.TIMESTAMP);
+        if(uid.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+            userUpdate.child("isUnseen").setValue("true");
+        }
+
         final DatabaseReference databaseReference=mRef.child("CR").child("messages");
         databaseReference.child(uid).child(key).setValue(map);
     }

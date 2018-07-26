@@ -62,4 +62,27 @@ public class Messages {
         }
         return res;
     }
+    public String getHashTag()
+    {
+        int isPresent=text.indexOf("#");
+        if(isPresent==-1||isPresent==text.length()-1)
+        {
+            return "An";
+        }
+        else
+        {
+            String start=text.substring(isPresent+1);
+            int isSpace=start.indexOf(" ");
+            String full;
+            if(isSpace==-1) {
+                 full = start;
+            }
+            else
+            {
+                full=start.substring(0,isSpace);
+            }
+            full=full.toUpperCase();
+            return full;
+        }
+    }
 } 

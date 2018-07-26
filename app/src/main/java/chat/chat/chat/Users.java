@@ -4,6 +4,16 @@ public class Users {
     private String CR;
     private String Name;
 
+    public String getIsUnseen() {
+        return isUnseen;
+    }
+
+    public void setIsUnseen(String isUnseen) {
+        this.isUnseen = isUnseen;
+    }
+
+    private String isUnseen;
+
     public long getLatestTimestamp() {
         return latestTimestamp;
     }
@@ -23,12 +33,13 @@ public class Users {
     }
 
     private String username;
-    public Users(String CR,String Name,String username,long latestTimestamp)
+    public Users(String CR,String Name,String username,long latestTimestamp,String isUnseen)
     {
         this.latestTimestamp=latestTimestamp;
         this.CR=CR;
         this.Name=Name;
         this.username=username;
+        this.isUnseen=isUnseen;
 
     }
 

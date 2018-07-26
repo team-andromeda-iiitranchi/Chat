@@ -83,6 +83,7 @@ public class SignUpActivity extends AppCompatActivity {
                     map.put("CR","false");
                     map.put("username",user.substring(0,user.indexOf("@")));
                     map.put("latestTimestamp",ServerValue.TIMESTAMP);
+                    map.put("isUnseen","true");
                     mRef.child("Users").child(uid).setValue(map);
                     DatabaseReference databaseReference=mRef.child("CR").child("messages").child(uid).push();
                     String messageId=databaseReference.getKey();

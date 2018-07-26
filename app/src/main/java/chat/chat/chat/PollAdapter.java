@@ -100,8 +100,8 @@ public class PollAdapter extends RecyclerView.Adapter {
             description.setText(poll.getDescription());
             int perVote= (int) ((poll.getVoted())/((double)(poll.getVoted()+poll.getNotVoted())));
             int perInFav= (int) ((poll.getForTheIssue())/((double)(poll.getAgainstTheIssue()+poll.getForTheIssue())));
-            percentVoted.setText("% Voted "+perVote);
-            percentFavour.setText("% in favour "+perInFav);
+            percentVoted.setText("% Voted :"+perVote);
+            percentFavour.setText("% in favour :"+perInFav);
         }
     }
 }
