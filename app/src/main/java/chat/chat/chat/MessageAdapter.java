@@ -14,6 +14,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import chat.chat.R;
@@ -69,11 +71,12 @@ class MessageAdapter extends RecyclerView.Adapter
     }
 
     private class ReceivedMessageHolder extends RecyclerView.ViewHolder {
-        TextView displayName,text;
+        TextView displayName,text,recTimeView;
         public ReceivedMessageHolder(View view) {
             super(view);
             displayName=(TextView)view.findViewById(R.id.displayname);
             text=(TextView)view.findViewById(R.id.messview);
+            recTimeView=(TextView)view.findViewById(R.id.recTimeView);
         }
         void bind(Messages messages)
         {
@@ -94,19 +97,31 @@ class MessageAdapter extends RecyclerView.Adapter
                 }
             });
             text.setText(messages.getText());
+            recTimeView.setText(date(messages.getTimestamp()));
         }
     }
 
     private class SentMessageHolder extends RecyclerView.ViewHolder{
         TextView text;
+        TextView timeView;
 
         public SentMessageHolder(View itemView) {
             super(itemView);
             text=(TextView)itemView.findViewById(R.id.text);
+            timeView=(TextView)itemView.findViewById(R.id.timeView);
         }
         void bind(Messages messages)
         {
             text.setText(messages.getText());
+            timeView.setText(date(messages.getTimestamp()));
         }
     }
+
+  public String date(long timeStamp)
+  {
+      SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+      String dateString = formatter.format(new Date(Long.parseLong(""+timeStamp)));
+      dateString=dateString.toUpperCase();
+      return dateString;
+  }
 }

@@ -12,12 +12,21 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/sent_message_background"
         android:layout_alignParentRight="true"
-        android:text="@string/sent_text"
-        android:textSize="@dimen/message_text_size"
-        android:textColor="@color/white"
-        android:maxWidth="@dimen/message_max_width"
+        android:textSize="11dp"
+        android:padding="5dp"
+        android:id="@+id/timeView"
+        android:text="DD-MM-YYYY"/>
+
+    <TextView
         android:id="@+id/text"
-        />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/timeView"
+        android:layout_below="@+id/timeView"
+        android:background="@drawable/sent_message_background"
+        android:maxWidth="@dimen/message_max_width"
+        android:text="@string/sent_text"
+        android:textColor="@color/white"
+        android:textSize="@dimen/message_text_size" />
 </RelativeLayout>
