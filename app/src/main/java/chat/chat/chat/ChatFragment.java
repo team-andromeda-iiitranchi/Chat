@@ -1,6 +1,7 @@
 package chat.chat.chat;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -59,6 +61,7 @@ public class ChatFragment extends Fragment {
     private final List<Users> usersList=new ArrayList<>();
     private final List<Messages> messagesList=new ArrayList<>();
     private View mView;
+    private ProgressDialog progressBar;
     private Toolbar mToolbar;
     public ChatFragment() {
         // Required empty public constructor

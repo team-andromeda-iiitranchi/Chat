@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -24,10 +26,12 @@ public class NoticeViewer extends AppCompatActivity {
     private MessageAdapter messageAdapter;
     private List<Messages> mList=new ArrayList<>();
     private LinearLayoutManager linearLayoutManager;
+    private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notice_viewer);
+
 
         messageAdapter=new MessageAdapter(mList);
         recyclerView=(RecyclerView)findViewById(R.id.noticeViewerRecycler);
@@ -37,6 +41,15 @@ public class NoticeViewer extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
 
         String name= getIntent().getStringExtra("Name");
+        String name1=name.toLowerCase();
+        if(name1.length()>1) {
+            name1 = Character.toUpperCase(name1.charAt(0)) + name1.substring(1);
+        }
+        else
+        {
+            name1=name1.toUpperCase();
+        }
+        getSupportActionBar().setTitle(name1);
         loadMessages(name);
     }
     public void loadMessages(String name)

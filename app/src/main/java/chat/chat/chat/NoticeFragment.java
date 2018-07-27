@@ -117,7 +117,7 @@ public class NoticeFragment extends Fragment {
                     Intent i=new Intent(getActivity(),NoticeViewer.class);
                     i.putExtra("Name",name);
                     startActivity(i);
-                    getActivity().finish();
+
                 }
             }
 

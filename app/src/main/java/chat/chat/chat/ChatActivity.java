@@ -1,5 +1,6 @@
 package chat.chat.chat;
 
+import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.Intent;
 import android.os.Bundle;
@@ -127,18 +128,18 @@ public class ChatActivity extends AppCompatActivity {
                         for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
                         {
                             Messages messages=dataSnapshot1.getValue(Messages.class);
-                            messagesList.add(messages);
+                            addSort(messages);
+
                         }
 
 
-                        Collections.sort(messagesList, new Comparator<Messages>() {
+                        /*Collections.sort(messagesList, new Comparator<Messages>() {
                             @Override
                             public int compare(Messages lhs, Messages rhs) {
                                 // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
                                 return lhs.getTimestamp() > rhs.getTimestamp() ? 1 : (lhs.getTimestamp() < rhs.getTimestamp()) ? -1 : 0;
                             }
-                        });
-
+                        });*/
                         messageAdapter.notifyDataSetChanged();
                         mRecyclerView.scrollToPosition(messagesList.size()-1);
                     }
@@ -152,9 +153,7 @@ public class ChatActivity extends AppCompatActivity {
                         Messages messages = dataSnapshot1.getValue(Messages.class);
                         Messages messages1=messagesList.get(messagesList.size()-1);
 
-                        //Dangerous Text is being compared
-                        if (!messages.getText().equals(messages1.getText())){
-                            Toast.makeText(getApplicationContext(),"H...", Toast.LENGTH_LONG).show();
+                        if(!messages.isEqual(messages1)) {
                             messagesList.add(messages);
                             messageAdapter.notifyDataSetChanged();
                         }
@@ -177,20 +176,61 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
+    public void addSort(Messages messages)
+    {
+        if(messagesList.isEmpty())
+        {
+            messagesList.add(messages);
+        }
+        else
+        {
+            int count=0;
+            for(int i=0;i<messagesList.size();i++)
+            {
+                int comp=messages.compareTo(messagesList.get(i));
+                if(comp>0)
+                {
+                    messagesList.add(i,messages);
+                    count++;
+                    break;
+                }
+                else if(comp==0)
+                {
+                    break;
+                }
+            }
+            if(count==0)
+            {
+                messagesList.add(messages);
+            }
+        }
+    }
+
     private void sendMessage(final Messages message,final String uid) {
 
-        String categ=message.getHashTag();
+        List<String> categ=new ArrayList<>();
+        categ=message.getHashTag();
+        long timestamp=System.currentTimeMillis();
+        int count=0;//to check if message has been pushed
+        for(int i=0;i<categ.size();i++) {
+            String ctgry=categ.get(i);
+            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("message").child(ctgry).push();
+            String key = mDatabase.getKey();
 
-        DatabaseReference mDatabase=FirebaseDatabase.getInstance().getReference().child("message").child(categ).push();
-        String key=mDatabase.getKey();
-
-        Map map=new HashMap();
-        map.put("seen","false");
-        map.put("timestamp",ServerValue.TIMESTAMP);
-        map.put("text",message.getText());
-        map.put("from",uid);
-        mRef.child("message").child(categ).child(key).setValue(map);
-
+            Map map = new HashMap();
+            map.put("seen", "false");
+            map.put("timestamp", timestamp);
+            map.put("text", message.getText());
+            map.put("from", uid);
+            Log.e("Push", "Pushed... at " + System.currentTimeMillis());
+            mRef.child("message").child(ctgry).child(key).setValue(map);
+            count++;
+        }
+        //Message has not been sent due to improper hashtag
+        if(count==0)
+        {
+            Toast.makeText(this, "Your category was not well defined!", Toast.LENGTH_LONG).show();
+        }
 
     }
 
