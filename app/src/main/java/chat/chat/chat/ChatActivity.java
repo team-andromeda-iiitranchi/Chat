@@ -1,9 +1,14 @@
 package chat.chat.chat;
 
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.DownloadManager;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -33,6 +38,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -45,6 +57,7 @@ import chat.chat.R;
 
 public class ChatActivity extends AppCompatActivity {
     private static final int ITEMS_PER_PAGE = 10;
+    public static final String TEMP_PHOTO_JPG = "temp_photo.jpg";
     private static int NO_OF_PAGES = 1    ;
     private ImageView mSendBtn;
     private EditText mMessage;
@@ -88,6 +101,15 @@ public class ChatActivity extends AppCompatActivity {
                 }
 
             }
+
+        });
+        mSendBtn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                PickerDialogFragment pickerDialogFragment=new PickerDialogFragment();
+                pickerDialogFragment.show(getFragmentManager(),"picker");
+                return true;
+            }
         });
 
         mRef= FirebaseDatabase.getInstance().getReference();
@@ -111,7 +133,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
         //loading messages through adapter
-        messageAdapter=new MessageAdapter(messagesList);
+        messageAdapter=new MessageAdapter(messagesList,ChatActivity.this);
         mRecyclerView=(RecyclerView)findViewById(R.id.scrollView);
         mLinearLayout=new LinearLayoutManager(this);
         mRecyclerView.setHasFixedSize(true);
@@ -196,6 +218,7 @@ public class ChatActivity extends AppCompatActivity {
                 }
                 else if(comp==0)
                 {
+                    count++;
                     break;
                 }
             }
@@ -218,11 +241,11 @@ public class ChatActivity extends AppCompatActivity {
             String key = mDatabase.getKey();
 
             Map map = new HashMap();
-            map.put("seen", "false");
             map.put("timestamp", timestamp);
             map.put("text", message.getText());
             map.put("from", uid);
-            Log.e("Push", "Pushed... at " + System.currentTimeMillis());
+            map.put("type","null");
+            map.put("link","default");
             mRef.child("message").child(ctgry).child(key).setValue(map);
             count++;
         }
@@ -234,5 +257,59 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
+    private final int IMG=0;
+    private final int DOC=1;
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==IMG)
+        {
+            if(resultCode==RESULT_OK)
+            {
+                Intent intent=new Intent(ChatActivity.this,ImageTitleActivity.class);
+                Uri photo=(Uri)data.getData();
+                intent.putExtra("image",photo);
+
+                String state = Environment.getExternalStorageState();
+                File mFileTemp;
+                if(Environment.MEDIA_MOUNTED.equals(state)){
+                    mFileTemp = new File(Environment.getExternalStorageDirectory(), TEMP_PHOTO_JPG);
+
+                }else{
+                    mFileTemp = new File(getFilesDir(), TEMP_PHOTO_JPG);
+                }
+                if(!mFileTemp.exists()){
+                    mFileTemp.mkdirs();
+                }
+
+
+                try {
+                    InputStream io = getContentResolver().openInputStream(photo);
+                    FileOutputStream fo = new FileOutputStream(mFileTemp);
+
+                    copyStream(io,fo);
+
+                    fo.close();
+                    io.close();
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                intent.putExtra("image_path",mFileTemp.getPath());
+                startActivity(intent);
+            }
+        }
+    }
+
+    private void copyStream(InputStream input, OutputStream output) throws IOException{
+        byte[] buffer = new byte[1024];
+        int bytesRead;
+        while ((bytesRead = input.read(buffer))!= -1){
+            output.write(buffer,0,bytesRead);
+        }
+    }
 
 }

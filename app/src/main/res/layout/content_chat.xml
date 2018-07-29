@@ -22,13 +22,14 @@
         android:background="@drawable/list_background"
 
         />
+
     <LinearLayout
         android:id="@+id/bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="76dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
         android:background="@drawable/linear_background"
         android:visibility="invisible">
 
@@ -54,12 +55,13 @@
 
         <ImageView
             android:id="@+id/send"
-            android:layout_width="68dp"
-            android:layout_height="63dp"
+            android:layout_width="57dp"
+            android:layout_height="73dp"
             android:layout_alignParentBottom="true"
             android:clickable="true"
-            android:paddingRight="20dp"
+            android:longClickable="true"
             android:paddingBottom="20dp"
+            android:paddingRight="20dp"
             android:paddingTop="20dp"
             android:src="@drawable/send_btn" />
 

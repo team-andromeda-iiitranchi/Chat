@@ -55,7 +55,6 @@ public class NoticeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(),ChatActivity.class));
-                getActivity().finish();
             }
         });
 

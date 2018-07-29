@@ -88,7 +88,8 @@ public class SignUpActivity extends AppCompatActivity {
                     DatabaseReference databaseReference=mRef.child("CR").child("messages").child(uid).push();
                     String messageId=databaseReference.getKey();
                     Map map1=new HashMap();
-                    map1.put("seen","false");
+                    map1.put("type","null");
+                    map1.put("link","default");
                     map1.put("timestamp",ServerValue.TIMESTAMP);
                     map1.put("text","Send your messages from here.");
                     map1.put("from",uid);

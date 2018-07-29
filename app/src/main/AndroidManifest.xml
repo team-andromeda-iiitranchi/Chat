@@ -3,6 +3,9 @@
     package="chat.chat">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
 
     <application
         android:allowBackup="true"
@@ -34,7 +37,8 @@
         </activity>
         <activity android:name=".chat.AddPoll" />
         <activity android:name=".chat.VoteActivity" />
-        <activity android:name=".chat.NoticeViewer"></activity>
+        <activity android:name=".chat.NoticeViewer" />
+        <activity android:name=".chat.ImageTitleActivity"></activity>
     </application>
 
 </manifest>

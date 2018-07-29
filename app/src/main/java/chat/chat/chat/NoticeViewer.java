@@ -61,6 +61,7 @@ public class NoticeViewer extends AppCompatActivity {
                 Messages messages=dataSnapshot.getValue(Messages.class);
                 mList.add(messages);
                 messageAdapter.notifyDataSetChanged();
+                recyclerView.scrollToPosition(mList.size()-1);
             }
 
             @Override

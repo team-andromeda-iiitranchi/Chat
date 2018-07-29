@@ -1,9 +1,5 @@
 package chat.chat.chat;
 
-import android.os.Message;
-import android.util.Log;
-import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,10 +8,6 @@ public class Messages {
     {}
     public String getFrom() {
         return from;
-    }
-
-    public String getSeen() {
-        return seen;
     }
 
     public String getText() {
@@ -30,17 +22,6 @@ public class Messages {
         this.from = from;
     }
 
-    public void setSeen(String seen) {
-        this.seen = seen;
-    }
-
-    public Messages(String from, String seen, String text, long timestamp) {
-        this.from = from;
-        this.seen = seen;
-        this.text = text;
-        this.timestamp = timestamp;
-    }
-
     public void setText(String text) {
         this.text = text;
     }
@@ -49,7 +30,36 @@ public class Messages {
         this.timestamp = timestamp;
     }
 
-    String from,seen,text;
+    String from;
+    String text;
+
+    public Messages(String from, String text, String link, String type, long timestamp) {
+        this.from = from;
+        this.text = text;
+        this.link = link;
+        this.type = type;
+        this.timestamp = timestamp;
+    }
+
+    String link;
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    String type;
     long timestamp;
     public boolean isEqual(Messages messages)
     {

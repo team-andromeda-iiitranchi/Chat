@@ -109,7 +109,7 @@ public class ChatFragment extends Fragment {
         LayoutInflater inflater1=LayoutInflater.from(getContext());
         inflatedLayout=inflater1.inflate(R.layout.other_chat_fragment,null,false);
         relativeLayout.addView(inflatedLayout);
-        messageAdapter=new MessageAdapter(messagesList);
+        messageAdapter=new MessageAdapter(messagesList,ChatFragment.this);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getActivity());
         mRecyclerView=(RecyclerView)inflatedLayout.findViewById(R.id.recView2);
         mRecyclerView.setHasFixedSize(true);
@@ -225,7 +225,7 @@ public class ChatFragment extends Fragment {
         relativeLayout.addView(inflatedLayout);
 
 
-        messageAdapter=new MessageAdapter(messagesList);
+        messageAdapter=new MessageAdapter(messagesList,ChatFragment.this);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getActivity());
         mRecyclerView=(RecyclerView)inflatedLayout.findViewById(R.id.recView2);
         mRecyclerView.setHasFixedSize(true);
@@ -302,7 +302,8 @@ public class ChatFragment extends Fragment {
         final String key=mDatabase.getKey();
 
         final Map map=new HashMap();
-        map.put("seen","false");
+        map.put("type","null");
+        map.put("link","default");
         map.put("timestamp", ServerValue.TIMESTAMP);
         map.put("text",message);
         map.put("from",FirebaseAuth.getInstance().getCurrentUser().getUid());
