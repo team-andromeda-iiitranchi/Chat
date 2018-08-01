@@ -109,7 +109,7 @@ public class ChatFragment extends Fragment {
         LayoutInflater inflater1=LayoutInflater.from(getContext());
         inflatedLayout=inflater1.inflate(R.layout.other_chat_fragment,null,false);
         relativeLayout.addView(inflatedLayout);
-        messageAdapter=new MessageAdapter(messagesList,ChatFragment.this);
+        messageAdapter=new MessageAdapter(messagesList,getActivity());
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getActivity());
         mRecyclerView=(RecyclerView)inflatedLayout.findViewById(R.id.recView2);
         mRecyclerView.setHasFixedSize(true);
@@ -225,7 +225,7 @@ public class ChatFragment extends Fragment {
         relativeLayout.addView(inflatedLayout);
 
 
-        messageAdapter=new MessageAdapter(messagesList,ChatFragment.this);
+        messageAdapter=new MessageAdapter(messagesList,getActivity());
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getActivity());
         mRecyclerView=(RecyclerView)inflatedLayout.findViewById(R.id.recView2);
         mRecyclerView.setHasFixedSize(true);

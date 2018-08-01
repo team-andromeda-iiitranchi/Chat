@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -27,6 +28,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.Query;
 import com.firebase.client.ServerValue;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,9 +42,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -178,6 +187,7 @@ public class ChatActivity extends AppCompatActivity {
                         if(!messages.isEqual(messages1)) {
                             messagesList.add(messages);
                             messageAdapter.notifyDataSetChanged();
+                            mRecyclerView.scrollToPosition(messagesList.size()-1);
                         }
                     }
 
@@ -269,38 +279,110 @@ public class ChatActivity extends AppCompatActivity {
                 Intent intent=new Intent(ChatActivity.this,ImageTitleActivity.class);
                 Uri photo=(Uri)data.getData();
                 intent.putExtra("image",photo);
-
-                String state = Environment.getExternalStorageState();
-                File mFileTemp;
-                if(Environment.MEDIA_MOUNTED.equals(state)){
-                    mFileTemp = new File(Environment.getExternalStorageDirectory(), TEMP_PHOTO_JPG);
-
-                }else{
-                    mFileTemp = new File(getFilesDir(), TEMP_PHOTO_JPG);
-                }
-                if(!mFileTemp.exists()){
-                    mFileTemp.mkdirs();
-                }
-
-
-                try {
-                    InputStream io = getContentResolver().openInputStream(photo);
-                    FileOutputStream fo = new FileOutputStream(mFileTemp);
-
-                    copyStream(io,fo);
-
-                    fo.close();
-                    io.close();
-
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                intent.putExtra("image_path",mFileTemp.getPath());
-                startActivity(intent);
+                makeTempAndUpload(intent,photo,TEMP_PHOTO_JPG);
             }
+        }
+        else if(requestCode==DOC)
+        {
+            if(resultCode==RESULT_OK)
+            {
+                if(!TextUtils.isEmpty(mMessage.getText())) {
+                    Uri uri = data.getData();
+                    makeTempAndUpload(new Intent(), uri, "temp_doc.pdf");
+                }
+                else
+                {
+                    Toast.makeText(this, "Please add a message first!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    private void makeTempAndUpload(Intent intent, final Uri uri, String type) {
+        final Messages messages=new Messages();
+        String state = Environment.getExternalStorageState();
+        File mFileTemp;
+        if(Environment.MEDIA_MOUNTED.equals(state)){
+            mFileTemp = new File(Environment.getExternalStorageDirectory(), type);
+
+        }else{
+            mFileTemp = new File(getFilesDir(), type);
+        }
+            messages.setText(mMessage.getText().toString());
+            mMessage.setText("");
+
+        try {
+            InputStream io = getContentResolver().openInputStream(uri);
+            FileOutputStream fo = new FileOutputStream(mFileTemp);
+
+            copyStream(io,fo);
+
+            fo.close();
+            io.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(type.equals(TEMP_PHOTO_JPG)) {
+            intent.putExtra("path", mFileTemp.getPath());
+            startActivity(intent);
+        }
+        else
+        {
+            final long timestamp=System.currentTimeMillis();
+            String name="A"+timestamp+".pdf";
+            final StorageReference storageReference= FirebaseStorage.getInstance().getReference().child("Uploads").child(name);
+
+            try {
+                FileInputStream fis=new FileInputStream(mFileTemp);
+                UploadTask uploadTask=storageReference.putStream(fis);
+                Task<Uri> uriTask=uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                    @Override
+                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+
+                        return storageReference.getDownloadUrl();
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        if(task.isSuccessful()) {
+                            List<String> list=messages.getHashTag();
+                            int count=0;
+                            for(int i=0;i<list.size();i++) {
+                                String ctgry=list.get(i);
+                                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("message").child(ctgry).push();
+                                String key = mDatabase.getKey();
+                                Uri uri=task.getResult();
+                                Map map = new HashMap();
+                                map.put("timestamp", timestamp);
+                                map.put("type", "doc");
+                                map.put("link", uri.toString());
+                                map.put("from", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                map.put("text", messages.getText());
+                                DatabaseReference mRef=FirebaseDatabase.getInstance().getReference();
+                                mRef.child("message").child(ctgry).child(key).setValue(map);
+                                count++;
+                            }
+                            if(count==0)
+                            {
+                                Toast.makeText(ChatActivity.this, "Your category was not well defined!", Toast.LENGTH_LONG).show();
+                            }
+                            mMessage.setText("");
+                        }
+                        else
+                        {
+                            Toast.makeText(ChatActivity.this, "Task Failed! "+task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                });
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 

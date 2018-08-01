@@ -43,22 +43,24 @@ public class PollAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         Poll poll=(Poll)mList.get(position);
         ((PollHolder)holder).onBind(poll);
+        mRef=FirebaseDatabase.getInstance().getReference();
         mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mRef=FirebaseDatabase.getInstance().getReference();
-                mRef.child("Poll").addValueEventListener(new ValueEventListener() {
+
+                mRef.child("Poll").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot){
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         int count=0;
                         String pushId="";
                         for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
                         {
-                            if(count==position)
+                            if(count==mList.size()-1-position)
                             {
                                 pushId=dataSnapshot1.getKey();
-                                Intent i=new Intent(context,VoteActivity.class);
-                                break;
+                                Intent intent=new Intent(context,VoteActivity.class);
+                                intent.putExtra("pushId",pushId);
+                                context.startActivity(intent);
                             }
                             count++;
                         }
@@ -66,11 +68,12 @@ public class PollAdapter extends RecyclerView.Adapter {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                        Toast.makeText(context, "" +databaseError.getCode(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
         });
+
     }
 
     @Override
@@ -86,22 +89,16 @@ public class PollAdapter extends RecyclerView.Adapter {
     }
     class PollHolder extends RecyclerView.ViewHolder
     {
-        TextView title,description,percentVoted,percentFavour;
+        TextView title,description;
         public PollHolder(View itemView) {
             super(itemView);
             title=(TextView)itemView.findViewById(R.id.title2);
             description=(TextView)itemView.findViewById(R.id.description2);
-            percentFavour=(TextView)itemView.findViewById(R.id.percentFavour);
-            percentVoted=(TextView)itemView.findViewById(R.id.percentVoted);
         }
         public void onBind(Poll poll)
         {
             title.setText(poll.getTitle());
             description.setText(poll.getDescription());
-            int perVote= (int) ((poll.getVoted())/((double)(poll.getVoted()+poll.getNotVoted())));
-            int perInFav= (int) ((poll.getForTheIssue())/((double)(poll.getAgainstTheIssue()+poll.getForTheIssue())));
-            percentVoted.setText("% Voted :"+perVote);
-            percentFavour.setText("% in favour :"+perInFav);
         }
     }
 }

@@ -1,5 +1,6 @@
 package chat.chat.chat;
 
+import android.app.DownloadManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,23 +18,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -46,24 +50,20 @@ class MessageAdapter extends RecyclerView.Adapter
     private static final int SENT_MESSAGE=2;
     private static final int SENT_FILE=3;
     private static final int RECEIVED_FILE=4;
+
+    public MessageAdapter(List<Messages> mList, Context mContext) {
+        this.mList = mList;
+        this.mContext = mContext;
+    }
+
+    private Context mContext;
     private ImageView downloadView;
     private final int IMG=0;
     //private static final int SENT_DOC=5;
 
-    public MessageAdapter(List<Messages> mList, ChatActivity chatActivity) {
-        this.mList = mList;
-        this.chatActivity = chatActivity;
-    }
-
     private View mView;
-    private TextView tv;
-    public MessageAdapter(List<Messages> mList, ChatFragment chatFragment) {
-        this.mList = mList;
-        this.chatFragment = chatFragment;
-    }
 
-    private ChatFragment chatFragment;
-    private ChatActivity chatActivity;
+    private TextView tv;
     MessageAdapter(List<Messages> list)
     {
         mList=list;
@@ -82,65 +82,47 @@ class MessageAdapter extends RecyclerView.Adapter
             mView=view;
             return  new SentMessageHolder(view);
         }
-        else
+        else if(viewType==SENT_FILE)
         {
             view=LayoutInflater.from(parent.getContext()).inflate(R.layout.sent_file_layout,parent,false);
             mView=view;
             return new SentImageHolder(view);
+        }
+        else
+        {
+            view=LayoutInflater.from(parent.getContext()).inflate(R.layout.received_file_layout,parent,false);
+            mView=view;
+            return new ReceivedImageHolder(view);
+
         }
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Messages messages=(Messages)mList.get(position);
-        if(chatActivity!=null) {
-            final ClipboardManager clipboardManager = (ClipboardManager) chatActivity.getSystemService(Context.CLIPBOARD_SERVICE);
-            final TextView tv;
-            if(getItemViewType(position)==RECIEVED_MESSAGE||getItemViewType(position)==SENT_MESSAGE) {
-                if (getItemViewType(position) == RECIEVED_MESSAGE) {
-                    tv = (TextView) mView.findViewById(R.id.messview);
-                } else
-                    tv = (TextView) mView.findViewById(R.id.text);
-                if(tv!=null) {
-                    tv.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            String message = tv.getText().toString();
-                            ClipData myClip;
-                            myClip = ClipData.newPlainText("text", message);
-                            clipboardManager.setPrimaryClip(myClip);
-
-                            Toast.makeText(chatActivity.getApplicationContext(), "Text Copied", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
+        final ClipboardManager clipboardManager;
+        clipboardManager=(ClipboardManager)mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+        final TextView tv;
+        if(getItemViewType(position)==RECIEVED_MESSAGE||getItemViewType(position)==SENT_MESSAGE) {
+            if (getItemViewType(position) == RECIEVED_MESSAGE) {
+                tv = (TextView) mView.findViewById(R.id.messview);
+            } else
+                tv = (TextView) mView.findViewById(R.id.text);
+            if(tv!=null) {
+                tv.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        String message = tv.getText().toString();
+                        ClipData myClip;
+                        myClip = ClipData.newPlainText("text", message);
+                        clipboardManager.setPrimaryClip(myClip);
+                        Toast.makeText(mContext,"Text Copied!",Toast.LENGTH_LONG).show();
+                        return true;
+                    }
+                });
             }
         }
-        if(chatFragment!=null) {
-            final ClipboardManager clipboardManager = (ClipboardManager) chatFragment.getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
 
-            if (getItemViewType(position) == RECIEVED_MESSAGE || getItemViewType(position) == SENT_MESSAGE) {
-                if (getItemViewType(position) == RECIEVED_MESSAGE) {
-                    tv = (TextView) mView.findViewById(R.id.messview);
-                } else {
-                    tv = (TextView) mView.findViewById(R.id.text);
-                }
-                if(tv!=null) {
-                    tv.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            String message = tv.getText().toString();
-                            ClipData myClip;
-                            myClip = ClipData.newPlainText("text", message);
-                            clipboardManager.setPrimaryClip(myClip);
-
-                            Toast.makeText(chatFragment.getActivity(), "Text Copied", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            }
-
-        }
 
         if(getItemViewType(position)==RECIEVED_MESSAGE) {
             ((ReceivedMessageHolder) holder).bind(messages);
@@ -155,7 +137,7 @@ class MessageAdapter extends RecyclerView.Adapter
         }
         else
         {
-
+            ((ReceivedImageHolder)holder).bind(messages);
         }
     }
 
@@ -206,11 +188,18 @@ class MessageAdapter extends RecyclerView.Adapter
                                 fos.close();
                             } catch (FileNotFoundException e) {
                                 e.printStackTrace();
+
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                             finally {
                                 Picasso.get().load(finalMyFile).into(downloadView);
+                                downloadView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        showInGallery(finalMyFile, messages);
+                                    }
+                                });
                             }
                         }
 
@@ -235,9 +224,18 @@ class MessageAdapter extends RecyclerView.Adapter
                 @Override
                 public void onClick(View view) {
                     //Toast.makeText(chatActivity, "Gallery!", Toast.LENGTH_SHORT).show();
+                    showInGallery(finalMyFile1,messages);
                 }
             });
         }
+    }
+
+    private void showInGallery(File finalMyFile, Messages messages) {
+        Intent intent = new Intent(mContext, ImageViewer.class);
+        intent.putExtra("file", finalMyFile);
+        intent.putExtra("text", messages.getText());
+        mContext.startActivity(intent);
+
     }
 
     @Override
@@ -258,15 +256,104 @@ class MessageAdapter extends RecyclerView.Adapter
         {
             messageView.setText(messages.getText());
             timeView.setText(date(messages.getTimestamp()));
-            loadImage(messages,downloadView);
+            if(messages.getType().equals("image")) {
+                loadImage(messages, downloadView);
+            }
+            else
+            {
+                loadDoc(downloadView, messages);
+            }
         }
 
     }
-    private class ReceivedImageHolder extends RecyclerView.ViewHolder {
-
+    private class ReceivedImageHolder extends RecyclerView.ViewHolder
+    {
+        ImageView downloadView;
+        TextView messageView,timeView,displayName;
         public ReceivedImageHolder(View itemView) {
             super(itemView);
+            downloadView=(ImageView)itemView.findViewById(R.id.downloadoption);
+            messageView=(TextView) itemView.findViewById(R.id.messview);
+            timeView=(TextView)itemView.findViewById(R.id.recTimeView);
+            displayName=(TextView)itemView.findViewById(R.id.displayname);
         }
+        public void bind(Messages messages)
+        {
+            messageView.setText(messages.getText());
+            timeView.setText(date(messages.getTimestamp()));
+            if(messages.getType().equals("image")) {
+                loadImage(messages, downloadView);
+            }
+            else
+            {
+                loadDoc(downloadView,messages);
+            }
+            loadDisplayName(messages,displayName);
+
+        }
+    }
+
+    private void loadDoc(final ImageView downloadView, final Messages messages) {
+        String root=Environment.getExternalStorageDirectory().toString();
+        File myFile=new File(root);
+        if(!myFile.exists())
+        {
+            myFile.mkdirs();
+        }
+        final String name="A"+messages.getTimestamp()+".pdf";
+        myFile=new File(root+"/ChatApp",name);
+        if(!myFile.exists())
+        {
+            downloadView.setImageResource(R.drawable.download_icon);
+            final File finalMyFile = myFile;
+            downloadView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        finalMyFile.createNewFile();
+                        StorageReference mStorage=FirebaseStorage.getInstance().getReference().child("Uploads").child(name);
+                        mStorage.getFile(finalMyFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                downloadView.setImageResource(R.drawable.doc);
+                                downloadView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        displayPDF(finalMyFile);
+                                    }
+                                });
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(mContext, "Failed!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+        else
+        {
+            downloadView.setImageResource(R.drawable.doc);
+            final File finalMyFile1 = myFile;
+            downloadView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    displayPDF(finalMyFile1);
+                }
+            });
+        }
+
+    }
+    private void displayPDF(File finalMyFile) {
+        Intent intent=new Intent();
+        intent.setType("application/pdf");
+        intent.setData(Uri.fromFile(finalMyFile));
+        intent.setAction(Intent.ACTION_VIEW);
+        mContext.startActivity(intent);
     }
 
     private class ReceivedMessageHolder extends RecyclerView.ViewHolder {
@@ -280,22 +367,7 @@ class MessageAdapter extends RecyclerView.Adapter
         }
         void bind(Messages messages)
         {
-            DatabaseReference mRef=FirebaseDatabase.getInstance().getReference();
-
-            mRef.child("Users").child(messages.getFrom()).child("Name").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.getValue()!=null) {
-                        String name = dataSnapshot.getValue().toString();
-                        displayName.setText(name);
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
+            loadDisplayName(messages,displayName);
             text.setText(messages.getText());
             recTimeView.setText(date(messages.getTimestamp()));
         }
@@ -315,6 +387,27 @@ class MessageAdapter extends RecyclerView.Adapter
             text.setText(messages.getText());
             timeView.setText(date(messages.getTimestamp()));
         }
+    }
+    public void loadDisplayName(Messages messages, final TextView displayName)
+    {
+        DatabaseReference mRef=FirebaseDatabase.getInstance().getReference();
+
+        mRef.child("Users").child(messages.getFrom()).child("Name").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue()!=null) {
+                    String name = dataSnapshot.getValue().toString();
+                    if (displayName != null) {
+                        displayName.setText(name);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
   public String date(long timeStamp)

@@ -1,19 +1,24 @@
 package chat.chat.chat;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class Poll {
     String title,description;
-    public Poll()
+    public Poll(String titleStr, String descriptionStr, long timestamp, int i, int count, List list)
     {
-
-    }
-    public Poll(String title, String description, long timestamp, int forTheIssue, int againstTheIssue, int voted, int notVoted) {
-        this.title = title;
-        this.description = description;
+        this.title = titleStr;
+        this.description = descriptionStr;
         this.timestamp = timestamp;
-        this.forTheIssue = forTheIssue;
-        this.againstTheIssue = againstTheIssue;
-        this.voted = voted;
-        this.notVoted = notVoted;
+        this.voted = i;
+        this.notVoted = count;
+        optionsMap=new HashMap<>();
+        for(int a=0;a<list.size();a++)
+        {
+            optionsMap.put((String) list.get(a),0);
+        }
+
     }
 
     public String getTitle() {
@@ -40,22 +45,6 @@ public class Poll {
         this.timestamp = timestamp;
     }
 
-    public int getForTheIssue() {
-        return forTheIssue;
-    }
-
-    public void setForTheIssue(int forTheIssue) {
-        this.forTheIssue = forTheIssue;
-    }
-
-    public int getAgainstTheIssue() {
-        return againstTheIssue;
-    }
-
-    public void setAgainstTheIssue(int againstTheIssue) {
-        this.againstTheIssue = againstTheIssue;
-    }
-
     public int getVoted() {
         return voted;
     }
@@ -73,5 +62,20 @@ public class Poll {
     }
 
     long timestamp;
-    int forTheIssue,againstTheIssue,voted,notVoted;
+    int voted;
+    int notVoted;
+
+    public Map<String, Integer> getOptionsMap() {
+        return optionsMap;
+    }
+
+    public void setOptionsMap(Map<String, Integer> optionsMap) {
+        this.optionsMap = optionsMap;
+    }
+
+    Map<String,Integer> optionsMap;
+    public Poll()
+    {
+
+    }
 }

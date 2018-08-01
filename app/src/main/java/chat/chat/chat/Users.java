@@ -1,5 +1,8 @@
 package chat.chat.chat;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Users {
     private String CR;
     private String Name;
@@ -31,7 +34,6 @@ public class Users {
     public void setUsername(String username) {
         this.username = username;
     }
-
     private String username;
     public Users(String CR,String Name,String username,long latestTimestamp,String isUnseen)
     {

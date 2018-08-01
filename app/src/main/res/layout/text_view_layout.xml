@@ -47,6 +47,7 @@
             android:layout_below="@+id/circleview"
             android:layout_marginLeft="10dp"
             android:background="@drawable/message_background"
+            android:longClickable="true"
             android:maxWidth="@dimen/message_max_width"
             android:text="@string/text"
             android:textColor="@color/white"

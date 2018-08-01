@@ -33,7 +33,7 @@ public class NoticeViewer extends AppCompatActivity {
         setContentView(R.layout.activity_notice_viewer);
 
 
-        messageAdapter=new MessageAdapter(mList);
+        messageAdapter=new MessageAdapter(mList,NoticeViewer.this);
         recyclerView=(RecyclerView)findViewById(R.id.noticeViewerRecycler);
         linearLayoutManager =new LinearLayoutManager(this);
         recyclerView.setHasFixedSize(true);

@@ -68,7 +68,13 @@ public class PollFragment extends Fragment {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Poll poll=dataSnapshot.getValue(Poll.class);
                 if(poll!=null) {
-                    mList.add(poll);
+                    if(mList.size()!=0) {
+                        mList.add(0, poll);
+                    }
+                    else
+                    {
+                        mList.add(poll);
+                    }
                     pollAdapter.notifyDataSetChanged();
                 }
             }
@@ -80,7 +86,10 @@ public class PollFragment extends Fragment {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
+                if(getActivity()!=null) {
+                    startActivity(getActivity().getIntent());
+                    getActivity().finish();
+                }
             }
 
             @Override

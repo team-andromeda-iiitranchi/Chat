@@ -25,6 +25,7 @@
         android:layout_alignEnd="@+id/timeView"
         android:layout_below="@+id/timeView"
         android:background="@drawable/sent_message_background"
+        android:longClickable="true"
         android:maxWidth="@dimen/message_max_width"
         android:text="@string/sent_text"
         android:textColor="@color/white"

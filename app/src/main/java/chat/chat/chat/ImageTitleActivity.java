@@ -50,7 +50,7 @@ public class ImageTitleActivity extends AppCompatActivity {
         mSendBtn=(ImageView)findViewById(R.id.imgSendBtn);
         editText=(EditText)findViewById(R.id.imgTitle);
         final Uri photo=(Uri)getIntent().getExtras().get("image");
-        final String filePath = getIntent().getStringExtra("image_path");
+        final String filePath = getIntent().getStringExtra("path");
         mRef=FirebaseDatabase.getInstance().getReference();
 //        final Bitmap compressedFile = (Bitmap)getIntent().getParcelableExtra("image_bm");
         mSendBtn.setOnClickListener(new View.OnClickListener() {
@@ -59,6 +59,7 @@ public class ImageTitleActivity extends AppCompatActivity {
                 if (!TextUtils.isEmpty(editText.getText())) {
                     try {
 
+                        startActivity(new Intent(ImageTitleActivity.this,ChatActivity.class));
                         Bitmap compressedFile = BitmapFactory.decodeFile(filePath);
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         compressedFile.compress(Bitmap.CompressFormat.JPEG, 60, baos);
@@ -67,7 +68,7 @@ public class ImageTitleActivity extends AppCompatActivity {
                         final Messages message=new Messages();
                         final String uid= FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
                         message.setText(editText.getText().toString());
-
+                        editText.setText("");
 
                         final List<String> categ;
                         categ=message.getHashTag();
@@ -100,7 +101,8 @@ public class ImageTitleActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<Uri> task) {
                                 if(task.isSuccessful())
                                 {
-
+                                    File file=new File(filePath);
+                                    file.delete();
                                     int count=0;//to check if message has been pushed
                                     for(int i=0;i<categ.size();i++) {
                                         String ctgry=categ.get(i);
@@ -125,9 +127,6 @@ public class ImageTitleActivity extends AppCompatActivity {
                                     {
                                         Toast.makeText(ImageTitleActivity.this, "Task Successful!", Toast.LENGTH_LONG).show();
                                     }
-                                    editText.setText("");
-                                    startActivity(new Intent(ImageTitleActivity.this,ChatActivity.class));
-                                    finish();
 
                                 }
                                 else
@@ -140,6 +139,8 @@ public class ImageTitleActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(ImageTitleActivity.this, "There was an error uploading the image!", Toast.LENGTH_SHORT).show();
+                    }finally {
+                        finish();
                     }
                 }
                 else
