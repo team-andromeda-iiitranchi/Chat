@@ -32,6 +32,7 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText mUser,mName,mPass,mCpass;
     private Button mSignUp;
     FirebaseAuth mAuth;
+    private Map map;
     private DatabaseReference mRef;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,25 +76,28 @@ public class SignUpActivity extends AppCompatActivity {
                 if(task.isSuccessful())
                 {
                     String uid;
-
+                    map=new HashMap();
                     uid=mAuth.getCurrentUser().getUid();
                     mRef= FirebaseDatabase.getInstance().getReference();
-                    Map map=new HashMap();
+                    Map map1=new HashMap();
+                    String keyForFirstPoll=mRef.child("Users").child(uid).child("polls").push().getKey();
+                    map1.put(keyForFirstPoll,"1");
                     map.put("Name",name);
                     map.put("CR","false");
                     map.put("username",user.substring(0,user.indexOf("@")));
                     map.put("latestTimestamp",ServerValue.TIMESTAMP);
                     map.put("isUnseen","true");
+                    map.put("polls",map1);
                     mRef.child("Users").child(uid).setValue(map);
                     DatabaseReference databaseReference=mRef.child("CR").child("messages").child(uid).push();
                     String messageId=databaseReference.getKey();
-                    Map map1=new HashMap();
-                    map1.put("type","null");
-                    map1.put("link","default");
-                    map1.put("timestamp",ServerValue.TIMESTAMP);
-                    map1.put("text","Send your messages from here.");
-                    map1.put("from",uid);
-                    mRef.child("CR").child("messages").child(uid).child(messageId).setValue(map1);
+                    Map map2=new HashMap();
+                    map2.put("type","null");
+                    map2.put("link","default");
+                    map2.put("timestamp",ServerValue.TIMESTAMP);
+                    map2.put("text","Send your messages from here.");
+                    map2.put("from",uid);
+                    mRef.child("CR").child("messages").child(uid).child(messageId).setValue(map2);
                     //mRef.child("CR").child("messages").child(uid).child("timestamp").setValue(ServerValue.TIMESTAMP);
                     Toast.makeText(getApplicationContext(),"Authentication Successful!",Toast.LENGTH_LONG).show();
                     startActivity(new Intent(SignUpActivity.this,MainActivity.class));

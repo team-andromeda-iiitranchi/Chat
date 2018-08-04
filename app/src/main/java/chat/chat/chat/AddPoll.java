@@ -2,6 +2,7 @@ package chat.chat.chat;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,11 +13,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,7 +24,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import chat.chat.R;
 
@@ -36,6 +38,7 @@ public class AddPoll extends AppCompatActivity {
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
     private FieldAdapter fieldAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,15 +110,52 @@ public class AddPoll extends AppCompatActivity {
         databaseReference.child("Users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int count=(int)dataSnapshot.getChildrenCount();
-                Poll poll=new Poll(titleStr,descriptionStr,timestamp, 0,count,list);
-                DatabaseReference mRef=FirebaseDatabase.getInstance().getReference();
-                DatabaseReference mRootRef=mRef.child("Poll").push();
-                String key=mRootRef.getKey();
+                int count = (int) dataSnapshot.getChildrenCount();
+                Poll poll = new Poll(titleStr, descriptionStr, timestamp, count, list);
+                DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
+                DatabaseReference mRootRef = mRef.child("Poll").push();
+                final String key = mRootRef.getKey();
                 mRef.child("Poll").child(key).setValue(poll);
-                Toast.makeText(getApplicationContext(),"Successfully added the poll!",Toast.LENGTH_LONG).show();
-                startActivity(new Intent(AddPoll.this,OptionsActivity.class));
+                Toast.makeText(getApplicationContext(), "Successfully added the poll!", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(AddPoll.this, OptionsActivity.class));
                 finish();
+                databaseReference.child("Users").removeEventListener(this);
+                addPerUser(key);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+    public void addPerUser(final String key)
+    {
+        DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference();
+        databaseReference.child("Users").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                String key1=dataSnapshot.getKey();
+                DatabaseReference mDatabase=FirebaseDatabase.getInstance().getReference().child("Users").child(key1).child("polls");
+                Map map=new HashMap();
+                map.put(key,"0");
+                mDatabase.updateChildren(map);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
             }
 
             @Override

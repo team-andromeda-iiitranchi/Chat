@@ -11,11 +11,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Iterator;
@@ -42,39 +45,9 @@ public class PollAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         Poll poll=(Poll)mList.get(position);
-        ((PollHolder)holder).onBind(poll);
-        mRef=FirebaseDatabase.getInstance().getReference();
-        mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                mRef.child("Poll").addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        int count=0;
-                        String pushId="";
-                        for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
-                        {
-                            if(count==mList.size()-1-position)
-                            {
-                                pushId=dataSnapshot1.getKey();
-                                Intent intent=new Intent(context,VoteActivity.class);
-                                intent.putExtra("pushId",pushId);
-                                context.startActivity(intent);
-                            }
-                            count++;
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Toast.makeText(context, "" +databaseError.getCode(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
-
+        ((PollHolder)holder).onBind(poll,position);
     }
+
 
     @Override
     public int getItemCount() {
@@ -90,15 +63,80 @@ public class PollAdapter extends RecyclerView.Adapter {
     class PollHolder extends RecyclerView.ViewHolder
     {
         TextView title,description;
+        View view;
         public PollHolder(View itemView) {
             super(itemView);
             title=(TextView)itemView.findViewById(R.id.title2);
             description=(TextView)itemView.findViewById(R.id.description2);
+            view=itemView;
         }
-        public void onBind(Poll poll)
+        public void onBind(Poll poll, final int position)
         {
             title.setText(poll.getTitle());
             description.setText(poll.getDescription());
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String uid= FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    mRef=FirebaseDatabase.getInstance().getReference();
+                    mRef.child("Users").child(uid).child("polls").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            int count = 0;
+                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                String data = dataSnapshot1.getValue().toString();
+                                if (data.equals("0"))
+                                    count++;
+                            }
+                            int count2 = 0;
+                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                String k = dataSnapshot1.getKey();
+                                String data = dataSnapshot1.getValue().toString();
+                                if (data.equals("0")) {
+
+                                    if (count - 1 - count2 == position) {
+                                        Intent i = new Intent(context, VoteActivity.class);
+                                        i.putExtra("pushId", k);
+                                        context.startActivity(i);
+                                        break;
+                                    }
+                                    count2++;
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+            });
+            view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    String uid=FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference();
+                    databaseReference.child("Users").child(uid).child("CR").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            String isCr=dataSnapshot.getValue().toString();
+                            if(isCr.equals("true"))
+                            {
+                                //start dialog
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                    return true;
+                }
+            });
+
         }
     }
 }

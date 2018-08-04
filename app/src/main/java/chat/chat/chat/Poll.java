@@ -6,13 +6,12 @@ import java.util.Map;
 
 public class Poll {
     String title,description;
-    public Poll(String titleStr, String descriptionStr, long timestamp, int i, int count, List list)
+    public Poll(String titleStr, String descriptionStr, long timestamp, int count, List list)
     {
         this.title = titleStr;
         this.description = descriptionStr;
         this.timestamp = timestamp;
-        this.voted = i;
-        this.notVoted = count;
+        this.total = count;
         optionsMap=new HashMap<>();
         for(int a=0;a<list.size();a++)
         {
@@ -45,25 +44,16 @@ public class Poll {
         this.timestamp = timestamp;
     }
 
-    public int getVoted() {
-        return voted;
+    public int getTotal() {
+        return total;
     }
 
-    public void setVoted(int voted) {
-        this.voted = voted;
-    }
-
-    public int getNotVoted() {
-        return notVoted;
-    }
-
-    public void setNotVoted(int notVoted) {
-        this.notVoted = notVoted;
+    public void setTotal(int total) {
+        this.total = total;
     }
 
     long timestamp;
-    int voted;
-    int notVoted;
+    int total;
 
     public Map<String, Integer> getOptionsMap() {
         return optionsMap;

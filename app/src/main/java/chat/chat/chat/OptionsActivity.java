@@ -22,16 +22,22 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import chat.chat.R;
 
@@ -57,17 +63,62 @@ public class OptionsActivity extends AppCompatActivity {
                     startActivity(new Intent(OptionsActivity.this,MainActivity.class));
                     finish();
                 }
+                else
+                {
+                    mViewPager=(ViewPager)findViewById(R.id.tabPager);
+                    mSectionsPagerAdapter=new SectionsPagerAdapter(getSupportFragmentManager());
+                    mViewPager.setAdapter(mSectionsPagerAdapter);
+                    mViewPager.setOffscreenPageLimit(3);
+
+                    tabLayout=(TabLayout)findViewById(R.id.tabLayout);
+                    tabLayout.setupWithViewPager(mViewPager);
+                    mViewPager.setCurrentItem(1);
+
+                    DatabaseReference mRef=FirebaseDatabase.getInstance().getReference();
+                    String uid=FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    final List votedList=new ArrayList();
+                    DatabaseReference mDatabaseReference=FirebaseDatabase.getInstance().getReference();
+                    Query q=mRef.child("Users").equalTo(uid);
+                    q.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            Users users= dataSnapshot.getValue(Users.class);
+                            Map map=users.getPolls();
+                            if(map!=null) {
+                                Iterator iterator=map.entrySet().iterator();
+                                while (iterator.hasNext())
+                                {
+                                    Map.Entry pair= (Map.Entry) iterator.next();
+                                    votedList.add(pair.getKey());
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
             }
         });
 
-        mViewPager=(ViewPager)findViewById(R.id.tabPager);
-        mSectionsPagerAdapter=new SectionsPagerAdapter(getSupportFragmentManager());
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setOffscreenPageLimit(3);
 
-        tabLayout=(TabLayout)findViewById(R.id.tabLayout);
-        tabLayout.setupWithViewPager(mViewPager);
-        mViewPager.setCurrentItem(1);
 
 
     }
