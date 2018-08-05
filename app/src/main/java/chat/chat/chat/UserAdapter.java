@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentContainer;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -21,11 +24,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.awt.font.TextAttribute;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import chat.chat.R;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserAdapter extends RecyclerView.Adapter {
     private List mList;
@@ -102,13 +113,75 @@ public class UserAdapter extends RecyclerView.Adapter {
     }
     private class UserHolder extends RecyclerView.ViewHolder{
         TextView displayName;
+        CircleImageView circleImageView;
         public UserHolder(View itemView) {
             super(itemView);
             displayName=(TextView)itemView.findViewById(R.id.displayName);
+            circleImageView= (CircleImageView) itemView.findViewById(R.id.picture);
         }
         public void bind(Users users)
         {
             displayName.setText(users.getName());
+            DatabaseReference mReference=FirebaseDatabase.getInstance().getReference();
+            Query q=mReference.child("Users").orderByChild("username").equalTo(users.getUsername());
+            q.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    String uid="";
+                    for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
+                    {
+                        uid=dataSnapshot1.getKey();
+                    }
+                    if(!uid.equals("")) {
+                        setUserImage(circleImageView, uid);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
         }
     }
+    public void setUserImage(final CircleImageView userImage, String uid) {
+        String root= Environment.getExternalStorageDirectory().toString();
+        File myFile=new File(root+"/ChatApp/thumbnails");
+        if(!myFile.exists())
+        {
+            myFile.mkdirs();
+        }
+        String name=uid+".jpg";
+        myFile=new File(myFile,name);
+        if(myFile.exists())
+        {
+            Picasso.get().load(myFile).into(userImage);
+        }
+        else
+        {
+            try {
+                myFile.createNewFile();
+                StorageReference mStorage= FirebaseStorage.getInstance().getReference().child("thumbnails").child(uid+".jpg");
+                final File finalMyFile = myFile;
+                mStorage.getFile(myFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        Picasso.get().load(finalMyFile).into(userImage);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        finalMyFile.delete();
+                        Picasso.get().load(R.drawable.default_pic).into(userImage);
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(chatFragment.getActivity(),"See if Storage permission is granted to app!",Toast.LENGTH_LONG).show();
+            }
+
+
+        }
+    }
+
 }

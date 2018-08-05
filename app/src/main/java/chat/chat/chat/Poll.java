@@ -15,7 +15,7 @@ public class Poll {
         optionsMap=new HashMap<>();
         for(int a=0;a<list.size();a++)
         {
-            optionsMap.put((String) list.get(a),0);
+            optionsMap.put((String) list.get(a),0l);
         }
 
     }
@@ -55,15 +55,15 @@ public class Poll {
     long timestamp;
     int total;
 
-    public Map<String, Integer> getOptionsMap() {
+    public Map<String, Long> getOptionsMap() {
         return optionsMap;
     }
 
-    public void setOptionsMap(Map<String, Integer> optionsMap) {
+    public void setOptionsMap(Map<String, Long> optionsMap) {
         this.optionsMap = optionsMap;
     }
 
-    Map<String,Integer> optionsMap;
+    Map<String,Long> optionsMap;
     public Poll()
     {
 

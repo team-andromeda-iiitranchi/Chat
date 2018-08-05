@@ -73,52 +73,19 @@ public class PollFragment extends Fragment {
         mRef= FirebaseDatabase.getInstance().getReference();
         //mList=new ArrayList<>();
 
-        mRef.child("Users").child(uid).child("polls").addChildEventListener(new ChildEventListener() {
+        mRef.child("Poll").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                final String key=dataSnapshot.getKey();
-                String data=dataSnapshot.getValue().toString();
-                //Toast.makeText(getActivity(), key+" "+data, Toast.LENGTH_SHORT).show();
-                if(data.equals("0"))
+                Poll poll=dataSnapshot.getValue(Poll.class);
+                if(mList.size()!=0)
                 {
-                    DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference().child("Poll");
-                    Query q=databaseReference.orderByKey().equalTo(key);
-                    q.addChildEventListener(new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                            Poll poll=dataSnapshot.getValue(Poll.class);
-                            if(mList.size()!=0) {
-                                mList.add(0, poll);
-                            }
-                            else
-                            {
-                                mList.add(poll);
-                            }
-                            pollAdapter.notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                        }
-
-                        @Override
-                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
+                    mList.add(0,poll);
                 }
+                else
+                {
+                    mList.add(poll);
+                }
+                pollAdapter.notifyDataSetChanged();
             }
 
             @Override

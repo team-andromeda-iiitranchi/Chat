@@ -136,7 +136,13 @@ public class OptionsActivity extends AppCompatActivity {
         if(item.getItemId()==R.id.logout)
         {
             FirebaseAuth.getInstance().signOut();
-            //startActivity(OptionsActivity.this,MainActivity.class);
+            startActivity(new Intent(OptionsActivity.this,MainActivity.class));
+        }
+        if(item.getItemId()==R.id.account)
+        {
+            Intent intent=new Intent(OptionsActivity.this,AccountActivity.class);
+            startActivity(intent);
+
         }
         return  true;
     }

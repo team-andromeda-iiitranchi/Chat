@@ -42,6 +42,7 @@ import java.util.Date;
 import java.util.List;
 
 import chat.chat.R;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 class MessageAdapter extends RecyclerView.Adapter
 {
@@ -242,6 +243,47 @@ class MessageAdapter extends RecyclerView.Adapter
     public int getItemCount() {
         return mList.size();
     }
+
+    public void setUserImage(final CircleImageView userImage, String uid) {
+        String root=Environment.getExternalStorageDirectory().toString();
+        File myFile=new File(root+"/ChatApp/thumbnails");
+        if(!myFile.exists())
+        {
+            myFile.mkdirs();
+        }
+        String name=uid+".jpg";
+        myFile=new File(myFile,name);
+        if(myFile.exists())
+        {
+            Picasso.get().load(myFile).into(userImage);
+        }
+        else
+        {
+            try {
+                myFile.createNewFile();
+                StorageReference mStorage=FirebaseStorage.getInstance().getReference().child("thumbnails").child(uid+".jpg");
+                final File finalMyFile = myFile;
+                mStorage.getFile(myFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        Picasso.get().load(finalMyFile).into(userImage);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        finalMyFile.delete();
+                        Picasso.get().load(R.drawable.default_pic).into(userImage);
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(mContext,"See if Storage permission is granted to app!",Toast.LENGTH_LONG).show();
+            }
+
+
+        }
+    }
+
     private class SentImageHolder extends RecyclerView.ViewHolder
     {
         TextView messageView,timeView;
@@ -270,17 +312,20 @@ class MessageAdapter extends RecyclerView.Adapter
     {
         ImageView downloadView;
         TextView messageView,timeView,displayName;
+        CircleImageView circleImageView;
         public ReceivedImageHolder(View itemView) {
             super(itemView);
             downloadView=(ImageView)itemView.findViewById(R.id.downloadoption);
             messageView=(TextView) itemView.findViewById(R.id.messview);
             timeView=(TextView)itemView.findViewById(R.id.recTimeView);
             displayName=(TextView)itemView.findViewById(R.id.displayname);
+            circleImageView= (CircleImageView) itemView.findViewById(R.id.circleview);
         }
         public void bind(Messages messages)
         {
             messageView.setText(messages.getText());
             timeView.setText(date(messages.getTimestamp()));
+            setUserImage(circleImageView,messages.getFrom());
             if(messages.getType().equals("image")) {
                 loadImage(messages, downloadView);
             }
@@ -358,18 +403,21 @@ class MessageAdapter extends RecyclerView.Adapter
 
     private class ReceivedMessageHolder extends RecyclerView.ViewHolder {
         TextView displayName,text,recTimeView;
-        ImageView displayPic;
+        CircleImageView displayPic;
         public ReceivedMessageHolder(View view) {
             super(view);
             displayName=(TextView)view.findViewById(R.id.displayname);
             text=(TextView)view.findViewById(R.id.messview);
             recTimeView=(TextView)view.findViewById(R.id.recTimeView);
+            displayPic= (CircleImageView) view.findViewById(R.id.circleview);
+
         }
         void bind(Messages messages)
         {
             loadDisplayName(messages,displayName);
             text.setText(messages.getText());
             recTimeView.setText(date(messages.getTimestamp()));
+            setUserImage(displayPic,messages.getFrom());
         }
     }
 

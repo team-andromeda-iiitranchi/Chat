@@ -57,8 +57,10 @@ public class VoteActivity extends AppCompatActivity {
                     Map.Entry pair= (Map.Entry) iterator.next();
                     textView.setText(pair.getKey().toString());
                     LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    params.setMargins(8,15,8,15);
-                    int pad=15;
+                    params.setMargins(8,20,8,20);
+                    textView.setLayoutParams(params);
+                    textView.setTextSize(20);
+                    int pad=20;
                     textView.setPadding(pad+pad,pad,pad,pad);
                     linearLayout.addView(textView);
                     textView.setOnClickListener(new View.OnClickListener() {

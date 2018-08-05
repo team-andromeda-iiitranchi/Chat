@@ -267,18 +267,14 @@ public class ChatFragment extends Fragment {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 String uid=dataSnapshot.getKey().toString();
-                try
-                {
-                    Users users=dataSnapshot.getValue(Users.class);
-                    DatabaseReference mDatabase=FirebaseDatabase.getInstance().getReference();
-                    if(users.getCR().equals("false"))
-                    {
-                        usersList.add(0,users);
-                        mUserAdapter.notifyDataSetChanged();
-                    }
+                Users users = dataSnapshot.getValue(Users.class);
+                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+                if (users.getCR().equals("false")) {
+                    usersList.add(0, users);
+                    mUserAdapter.notifyDataSetChanged();
                 }
-                catch(Exception e)
-                {}
+
+
             }
 
             @Override

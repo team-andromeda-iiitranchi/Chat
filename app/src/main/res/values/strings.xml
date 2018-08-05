@@ -22,4 +22,5 @@
     <string name="title_activity_add_poll">AddPoll</string>
     <string name="title_activity_vote">VoteActivity</string>
     <string name="categories">Categories :</string>
+    <string name="set_pro_pic">Change profile Picture</string>
 </resources>
