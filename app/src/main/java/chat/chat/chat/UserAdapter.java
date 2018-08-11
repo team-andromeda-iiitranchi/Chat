@@ -35,6 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import chat.chat.ChatApp;
 import chat.chat.R;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -153,7 +154,7 @@ public class UserAdapter extends RecyclerView.Adapter {
         }
         String name=uid+".jpg";
         myFile=new File(myFile,name);
-        if(myFile.exists())
+        if(myFile.exists()&&myFile.length()!=0)
         {
             Picasso.get().load(myFile).into(userImage);
         }

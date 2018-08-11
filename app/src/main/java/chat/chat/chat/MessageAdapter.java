@@ -41,6 +41,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import chat.chat.ChatApp;
 import chat.chat.R;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -253,7 +254,7 @@ class MessageAdapter extends RecyclerView.Adapter
         }
         String name=uid+".jpg";
         myFile=new File(myFile,name);
-        if(myFile.exists())
+        if(myFile.exists()&&myFile.length()!=0)
         {
             Picasso.get().load(myFile).into(userImage);
         }

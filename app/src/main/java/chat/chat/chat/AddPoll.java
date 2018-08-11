@@ -21,13 +21,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
+import chat.chat.ChatApp;
 import chat.chat.R;
 
 public class AddPoll extends AppCompatActivity {
@@ -107,19 +110,21 @@ public class AddPoll extends AppCompatActivity {
     private void setPoll(final String titleStr, final String descriptionStr, final List list) {
         final long timestamp=System.currentTimeMillis();
         final DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference();
-        databaseReference.child("Users").addValueEventListener(new ValueEventListener() {
+        Query q=databaseReference.child("Sections").child(ChatApp.rollInfo);
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int count = (int) dataSnapshot.getChildrenCount();
+                Long count =dataSnapshot.getValue(Long.class);
+                if(count!=1)
+                    count++;
                 Poll poll = new Poll(titleStr, descriptionStr, timestamp, count, list);
                 DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
-                DatabaseReference mRootRef = mRef.child("Poll").push();
+                DatabaseReference mRootRef = mRef.child(ChatApp.rollInfo).child("Poll").push();
                 final String key = mRootRef.getKey();
-                mRef.child("Poll").child(key).setValue(poll);
+                mRef.child(ChatApp.rollInfo).child("Poll").child(key).setValue(poll);
                 Toast.makeText(getApplicationContext(), "Successfully added the poll!", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(AddPoll.this, OptionsActivity.class));
                 finish();
-                databaseReference.child("Users").removeEventListener(this);
                 addPerUser(key);
             }
 

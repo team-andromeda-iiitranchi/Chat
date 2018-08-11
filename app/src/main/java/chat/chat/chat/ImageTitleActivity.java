@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import chat.chat.ChatApp;
 import chat.chat.R;
 import id.zelory.compressor.Compressor;
 
@@ -106,7 +107,7 @@ public class ImageTitleActivity extends AppCompatActivity {
                                     int count=0;//to check if message has been pushed
                                     for(int i=0;i<categ.size();i++) {
                                         String ctgry=categ.get(i);
-                                        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("message").child(ctgry).push();
+                                        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child(ChatApp.rollInfo).child("message").child(ctgry).push();
                                         String key = mDatabase.getKey();
                                         Uri uri=task.getResult();
                                         Map map = new HashMap();
@@ -115,7 +116,7 @@ public class ImageTitleActivity extends AppCompatActivity {
                                         map.put("from", uid);
                                         map.put("type","image");
                                         map.put("link",uri.toString());
-                                        mRef.child("message").child(ctgry).child(key).setValue(map);
+                                        mRef.child(ChatApp.rollInfo).child("message").child(ctgry).child(key).setValue(map);
                                         count++;
                                     }
                                     //Message has not been sent due to improper hashtag

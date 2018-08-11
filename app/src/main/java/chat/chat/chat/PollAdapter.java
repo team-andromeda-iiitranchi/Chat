@@ -21,6 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
+import chat.chat.ChatApp;
 import chat.chat.R;
 
 public class PollAdapter extends RecyclerView.Adapter {

@@ -62,6 +62,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import chat.chat.ChatApp;
 import chat.chat.R;
 
 public class ChatActivity extends AppCompatActivity {
@@ -148,7 +149,7 @@ public class ChatActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLinearLayout);
         mRecyclerView.setAdapter(messageAdapter);
-        loadMessages(mRef.child("message"));
+        loadMessages(mRef.child(ChatApp.rollInfo).child("message"));
 
         }
 
@@ -256,7 +257,7 @@ public class ChatActivity extends AppCompatActivity {
             map.put("from", uid);
             map.put("type","null");
             map.put("link","default");
-            mRef.child("message").child(ctgry).child(key).setValue(map);
+            mRef.child(ChatApp.rollInfo).child("message").child(ctgry).child(key).setValue(map);
             count++;
         }
         //Message has not been sent due to improper hashtag
@@ -362,7 +363,7 @@ public class ChatActivity extends AppCompatActivity {
                                 map.put("from", FirebaseAuth.getInstance().getCurrentUser().getUid());
                                 map.put("text", messages.getText());
                                 DatabaseReference mRef=FirebaseDatabase.getInstance().getReference();
-                                mRef.child("message").child(ctgry).child(key).setValue(map);
+                                mRef.child(ChatApp.rollInfo).child("message").child(ctgry).child(key).setValue(map);
                                 count++;
                             }
                             if(count==0)

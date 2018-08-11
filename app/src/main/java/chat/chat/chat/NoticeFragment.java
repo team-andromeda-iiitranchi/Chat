@@ -26,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import chat.chat.ChatApp;
 import chat.chat.R;
 
 /**
@@ -75,7 +76,7 @@ public class NoticeFragment extends Fragment {
     public void loadHashtags()
     {
 
-        mRef.child("message").addChildEventListener(new ChildEventListener() {
+        mRef.child(ChatApp.rollInfo).child("message").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 String name=dataSnapshot.getKey();
@@ -108,7 +109,7 @@ public class NoticeFragment extends Fragment {
     }
     public void onItemClicked(final String name)
     {
-        mRef.child("message").addChildEventListener(new ChildEventListener() {
+        mRef.child(ChatApp.rollInfo).child("message").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 if(dataSnapshot.getKey().equals(name))

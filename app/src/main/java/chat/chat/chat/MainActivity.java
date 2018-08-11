@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import chat.chat.ChatApp;
 import chat.chat.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -48,9 +49,14 @@ public class MainActivity extends AppCompatActivity {
                 {
                     Toast.makeText(getApplicationContext(),"Empty Field!",Toast.LENGTH_LONG).show();
                 }
+                else if(name.length()<8)
+                {
+                    Toast.makeText(MainActivity.this, "Invalid Registration No.!", Toast.LENGTH_SHORT).show();
+                }
                 else
                 {
                     name=name+"@abc.com";
+                    final String finalName = name;
                     mAuth.signInWithEmailAndPassword(name,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {

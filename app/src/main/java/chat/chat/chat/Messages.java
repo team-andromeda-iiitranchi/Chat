@@ -83,8 +83,8 @@ public class Messages {
         int isPresent=text.indexOf("#");
         String str=text;
         List<String> list=new ArrayList<>();
+        list.add("An");
         if(isPresent==-1||isPresent==str.length()-1) {
-            list.add("An");
             return list;
         }
         while(isPresent!=-1) {
@@ -114,10 +114,6 @@ public class Messages {
             }
             isPresent=str.indexOf("#");
 
-        }
-        if(list==null)
-        {
-            list.add("An");
         }
         return list;
     }

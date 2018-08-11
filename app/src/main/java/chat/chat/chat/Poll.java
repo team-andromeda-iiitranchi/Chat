@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class Poll {
     String title,description;
-    public Poll(String titleStr, String descriptionStr, long timestamp, int count, List list)
+    public Poll(String titleStr, String descriptionStr, long timestamp, long count, List list)
     {
         this.title = titleStr;
         this.description = descriptionStr;
@@ -44,7 +44,7 @@ public class Poll {
         this.timestamp = timestamp;
     }
 
-    public int getTotal() {
+    public long getTotal() {
         return total;
     }
 
@@ -53,7 +53,7 @@ public class Poll {
     }
 
     long timestamp;
-    int total;
+    long total;
 
     public Map<String, Long> getOptionsMap() {
         return optionsMap;

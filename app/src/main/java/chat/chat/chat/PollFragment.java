@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import chat.chat.ChatApp;
 import chat.chat.R;
 
 /**
@@ -73,7 +74,7 @@ public class PollFragment extends Fragment {
         mRef= FirebaseDatabase.getInstance().getReference();
         //mList=new ArrayList<>();
 
-        mRef.child("Poll").addChildEventListener(new ChildEventListener() {
+        mRef.child(ChatApp.rollInfo).child("Poll").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Poll poll=dataSnapshot.getValue(Poll.class);

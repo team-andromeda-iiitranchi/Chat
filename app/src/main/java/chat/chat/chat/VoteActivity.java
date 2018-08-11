@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import chat.chat.ChatApp;
 import chat.chat.R;
 
 public class VoteActivity extends AppCompatActivity {
@@ -40,7 +41,7 @@ public class VoteActivity extends AppCompatActivity {
         description= (TextView) findViewById(R.id.description);
         linearLayout= (LinearLayout) findViewById(R.id.linearLayout);
         final String pushId=getIntent().getStringExtra("pushId");
-        mRef= FirebaseDatabase.getInstance().getReference().child("Poll").child(pushId);
+        mRef= FirebaseDatabase.getInstance().getReference().child(ChatApp.rollInfo).child("Poll").child(pushId);
         final ValueEventListener valueEventListener=new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -67,7 +68,7 @@ public class VoteActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
                             Toast.makeText(VoteActivity.this, "Hmm...", Toast.LENGTH_SHORT).show();
-                            final DatabaseReference mRef=FirebaseDatabase.getInstance().getReference().child("Poll").child(pushId).child("optionsMap").child(textView.getText().toString());
+                            final DatabaseReference mRef=FirebaseDatabase.getInstance().getReference().child(ChatApp.rollInfo).child("Poll").child(pushId).child("optionsMap").child(textView.getText().toString());
                             mRef.runTransaction(new Transaction.Handler() {
                                 @NonNull
                                 @Override
@@ -104,7 +105,7 @@ public class VoteActivity extends AppCompatActivity {
 
             }
         };
-        mRef.addValueEventListener(valueEventListener);
+        mRef.addListenerForSingleValueEvent(valueEventListener);
 
     }
 }

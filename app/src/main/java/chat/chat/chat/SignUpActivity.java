@@ -2,6 +2,8 @@ package chat.chat.chat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -20,8 +22,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +38,7 @@ import chat.chat.R;
 public class SignUpActivity extends AppCompatActivity {
     private EditText mUser,mName,mPass,mCpass;
     private Button mSignUp;
+    private String rollInfo;
     FirebaseAuth mAuth;
     private Map map;
     private DatabaseReference mRef;
@@ -52,15 +60,25 @@ public class SignUpActivity extends AppCompatActivity {
                 String name, user, pass, cpass;
                 name = mName.getText().toString();
                 user = mUser.getText().toString();
-                pass = mPass.getText().toString();
-                cpass = mCpass.getText().toString();
-                if (TextUtils.isEmpty(name) || TextUtils.isEmpty(user) || TextUtils.isEmpty(pass) || TextUtils.isEmpty(cpass)) {
-                    Toast.makeText(getApplicationContext(), "Empty Field!", Toast.LENGTH_LONG).show();
-                } else if (!pass.equals(cpass)) {
-                    Toast.makeText(getApplicationContext(), "Passwords do not match!", Toast.LENGTH_LONG).show();
-                } else {
-                    user=user+"@abc.com";
-                    createUser(name,user,pass);
+                if(user.length()<8)
+                {
+                    Toast.makeText(getApplicationContext(),"Invalid Regisration No.!",Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    rollInfo=user.substring(0,8);
+                    pass = mPass.getText().toString();
+                    cpass = mCpass.getText().toString();
+                    if (TextUtils.isEmpty(name) || TextUtils.isEmpty(user) || TextUtils.isEmpty(pass) || TextUtils.isEmpty(cpass)) {
+                        Toast.makeText(getApplicationContext(), "Empty Field!", Toast.LENGTH_LONG).show();
+                    } else if (!pass.equals(cpass)) {
+                        Toast.makeText(getApplicationContext(), "Passwords do not match!", Toast.LENGTH_LONG).show();
+                    } else {
+                        user=user+"@abc.com";
+                        createUser(name,user,pass);
+                    }
+
+
                 }
 
             }
@@ -97,7 +115,62 @@ public class SignUpActivity extends AppCompatActivity {
                     map2.put("timestamp",ServerValue.TIMESTAMP);
                     map2.put("text","Send your messages from here.");
                     map2.put("from",uid);
-                    mRef.child("CR").child("messages").child(uid).child(messageId).setValue(map2);
+                    mRef.child(rollInfo).child("CR").child("messages").child(uid).child(messageId).setValue(map2);
+                    DatabaseReference mRef1=mRef.child("Sections");
+                    //since sections are never incremented from 1 to 2
+                    //1 is added to count when considering for poll
+                    mRef1.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if(dataSnapshot!=null)
+                            {
+                                if(dataSnapshot.hasChild(rollInfo))
+                                {
+                                    mRef.child("Sections").child(rollInfo).runTransaction(new Transaction.Handler() {
+                                        @NonNull
+                                        @Override
+                                        public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                                            Long val=mutableData.getValue(Long.class);
+                                            val+=1;
+                                            mRef.child("Sections").child(rollInfo).setValue(val);
+                                            return Transaction.success(mutableData);
+                                        }
+
+                                        @Override
+                                        public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
+
+                                        }
+                                    });
+                                }
+                                else
+                                {
+                                    mRef.child("Sections").child(rollInfo).runTransaction(new Transaction.Handler() {
+                                        @NonNull
+                                        @Override
+                                        public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                                            Long val=1l;
+                                            mRef.child("Sections").child(rollInfo).setValue(val);
+                                            return Transaction.success(mutableData);
+                                        }
+
+                                        @Override
+                                        public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
+
+                                        }
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                Toast.makeText(SignUpActivity.this, "Null hai sections!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                     //mRef.child("CR").child("messages").child(uid).child("timestamp").setValue(ServerValue.TIMESTAMP);
                     Toast.makeText(getApplicationContext(),"Authentication Successful!",Toast.LENGTH_LONG).show();
                     startActivity(new Intent(SignUpActivity.this,MainActivity.class));

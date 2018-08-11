@@ -31,6 +31,7 @@ import chat.chat.R;
 public class SignUpActivity extends AppCompatActivity {
     private EditText mUser,mName,mPass,mCpass;
     private Button mSignUp;
+    private String rollInfo;
     FirebaseAuth mAuth;
     private Map map;
     private DatabaseReference mRef;

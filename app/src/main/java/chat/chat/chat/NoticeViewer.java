@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
+import chat.chat.ChatApp;
 import chat.chat.R;
 
 public class NoticeViewer extends AppCompatActivity {
@@ -55,7 +56,7 @@ public class NoticeViewer extends AppCompatActivity {
     public void loadMessages(String name)
     {
         DatabaseReference mRef= FirebaseDatabase.getInstance().getReference();
-        mRef.child("message").child(name).addChildEventListener(new ChildEventListener() {
+        mRef.child(ChatApp.rollInfo).child("message").child(name).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Messages messages=dataSnapshot.getValue(Messages.class);

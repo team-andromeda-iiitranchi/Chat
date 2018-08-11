@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import chat.chat.ChatApp;
 import chat.chat.R;
 
 /**
@@ -92,7 +93,6 @@ public class ChatFragment extends Fragment {
                         inflateForOthers(view);
                     }
                     Log.e("INFLATE : ", "CR update " + isCR);
-                    databaseReference.removeEventListener(this);
                 }
 
                 @Override
@@ -116,7 +116,7 @@ public class ChatFragment extends Fragment {
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(messageAdapter);
         final FirebaseUser mCurrentUser=FirebaseAuth.getInstance().getCurrentUser();
-        loadMessages(mRef.child("CR").child("messages").child(mCurrentUser.getUid()));
+        loadMessages(mRef.child(ChatApp.rollInfo).child("CR").child("messages").child(mCurrentUser.getUid()));
 
         if(mCurrentUser!=null) {
             mSendBtn = (ImageView) inflatedLayout.findViewById(R.id.send);
@@ -138,7 +138,6 @@ public class ChatFragment extends Fragment {
     private void loadMessages(DatabaseReference mRootRef) {
         FirebaseUser mCurrentUser=FirebaseAuth.getInstance().getCurrentUser();
         if(mCurrentUser!=null) {
-            String uid=mCurrentUser.getUid();
             mRootRef.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -232,7 +231,7 @@ public class ChatFragment extends Fragment {
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(messageAdapter);
         final FirebaseUser mCurrentUser=FirebaseAuth.getInstance().getCurrentUser();
-        loadMessages(mRef.child("CR").child("messages").child(uid));
+        loadMessages(mRef.child(ChatApp.rollInfo).child("CR").child("messages").child(uid));
         if(mCurrentUser!=null) {
             mSendBtn = (ImageView) inflatedLayout.findViewById(R.id.send);
             mMessage = (EditText) inflatedLayout.findViewById(R.id.message);
@@ -268,8 +267,8 @@ public class ChatFragment extends Fragment {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 String uid=dataSnapshot.getKey().toString();
                 Users users = dataSnapshot.getValue(Users.class);
-                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-                if (users.getCR().equals("false")) {
+                String rollInf=users.getUsername().substring(0,8);
+                if (users.getCR().equals("false")&&ChatApp.rollInfo.equalsIgnoreCase(rollInf)) {
                     usersList.add(0, users);
                     mUserAdapter.notifyDataSetChanged();
                 }
@@ -299,7 +298,7 @@ public class ChatFragment extends Fragment {
         });
     }
     private void sendMessage(final String message,final String uid) {
-        DatabaseReference mDatabase=FirebaseDatabase.getInstance().getReference().child("CR").child("messages").child(uid).push();
+        DatabaseReference mDatabase=FirebaseDatabase.getInstance().getReference().child(ChatApp.rollInfo).child("CR").child("messages").child(uid).push();
         final String key=mDatabase.getKey();
 
         final Map map=new HashMap();
@@ -316,7 +315,7 @@ public class ChatFragment extends Fragment {
             userUpdate.child("isUnseen").setValue("true");
         }
 
-        final DatabaseReference databaseReference=mRef.child("CR").child("messages");
+        final DatabaseReference databaseReference=mRef.child(ChatApp.rollInfo).child("CR").child("messages");
         databaseReference.child(uid).child(key).setValue(map);
     }
 }

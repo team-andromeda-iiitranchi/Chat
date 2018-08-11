@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import chat.chat.ChatApp;
+
 public class PollDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
@@ -37,21 +39,31 @@ public class PollDialog extends DialogFragment {
                 if(i==0)
                 {
                     final DatabaseReference mRef= FirebaseDatabase.getInstance().getReference();
-                    mRef.child("Poll").child(pushId).addListenerForSingleValueEvent(new ValueEventListener() {
+                    mRef.child(ChatApp.rollInfo).child("Poll").child(pushId).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             Poll poll=dataSnapshot.getValue(Poll.class);
                             Map<String,Long> options=poll.getOptionsMap();
                             Iterator iterator=options.entrySet().iterator();
+                            Iterator iterator1=options.entrySet().iterator();
                             String message="#Poll ended:\n"+"Title : "+poll.getTitle()+"\nDescription : "+poll.getDescription()+"\n";
+                            long tot=0;
                             while(iterator.hasNext())
                             {
                                 Map.Entry pair= (Map.Entry) iterator.next();
+                                tot+=(long)pair.getValue();
+
+                            }
+                            while(iterator1.hasNext())
+                            {
+                                Map.Entry pair= (Map.Entry) iterator1.next();
                                 String key= (String) pair.getKey();
-                                double val=((double)(100*(Long)pair.getValue()))/poll.getTotal();
-                                String appendStr="\n"+String.format(key+" : %.2f",val)+"%(of Total)";
+                                double val=((double)(100*(Long)pair.getValue()))/tot;
+                                String appendStr="\n"+String.format(key+" : %.2f",val)+"%";
                                 message+=appendStr;
                             }
+                            String appendStr="\n\n% Voted :"+String.format("%.2f",((double)tot)/poll.getTotal())+"%";
+                            message+=appendStr;
                             long timestamp=System.currentTimeMillis();
                             String uid=FirebaseAuth.getInstance().getCurrentUser().getUid();
                             Map putMap=new HashMap();
@@ -60,10 +72,10 @@ public class PollDialog extends DialogFragment {
                             putMap.put("text",message);
                             putMap.put("link","default");
                             putMap.put("type","null");
-                            DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference().child("message").child("Poll").push();
+                            DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference().child(ChatApp.rollInfo).child("message").child("Poll").push();
                             String key=databaseReference.getKey();
                             databaseReference.setValue(putMap);
-                            mRef.child("Poll").child(pushId).removeValue();
+                            mRef.child(ChatApp.rollInfo).child("Poll").child(pushId).removeValue();
                         }
 
                         @Override
