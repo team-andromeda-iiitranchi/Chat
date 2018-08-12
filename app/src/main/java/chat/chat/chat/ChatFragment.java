@@ -6,9 +6,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -180,7 +183,7 @@ public class ChatFragment extends Fragment {
 
     private void inflateForCR(View view) {
         //Inflation
-        LayoutInflater inflater1=LayoutInflater.from(getContext());
+        LayoutInflater inflater1=LayoutInflater.from(getActivity());
         inflatedLayout=inflater1.inflate(R.layout.cr_chat_layout,null,false);
         relativeLayout.addView(inflatedLayout);
 
@@ -197,7 +200,7 @@ public class ChatFragment extends Fragment {
     {
         messagesList.clear();
         //Add back button on toolbar
-        OptionsActivity optionsActivity=(OptionsActivity)getActivity();
+        final OptionsActivity optionsActivity=(OptionsActivity)getActivity();
         final android.support.v7.widget.Toolbar toolbar=optionsActivity.getToolBar();
         final ActionBar actionBar=optionsActivity.getSupportActionBar();
         actionBar.setDisplayShowHomeEnabled(true);
@@ -212,6 +215,11 @@ public class ChatFragment extends Fragment {
                 actionBar.setDisplayHomeAsUpEnabled(false);
                 actionBar.setDisplayShowHomeEnabled(false);
                 ((ViewGroup)inflatedLayout.getParent()).removeView(inflatedLayout);
+
+
+                optionsActivity.initDrawer();
+
+
                 inflateForCR(mView);
             }
         });
