@@ -69,7 +69,6 @@ public class UserAdapter extends RecyclerView.Adapter {
         mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                //Log.e("ITEMCLICK :",""+position);
                 String username=users.getUsername();
                 final DatabaseReference mRef= FirebaseDatabase.getInstance().getReference().child("Users");
                 Query q=mRef.orderByChild("username").equalTo(username);

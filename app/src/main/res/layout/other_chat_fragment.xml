@@ -55,6 +55,7 @@
             android:layout_height="73dp"
             android:layout_alignParentBottom="true"
             android:clickable="true"
+            android:longClickable="true"
             android:paddingBottom="20dp"
             android:paddingRight="20dp"
             android:paddingTop="20dp"

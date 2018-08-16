@@ -74,6 +74,7 @@ public class AddPoll extends AppCompatActivity {
         mAddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mAddBtn.setOnClickListener(null);
                 List list=new ArrayList();
                 int count=0;
                 for(int i=0;i<mList.size();i++)
@@ -89,6 +90,7 @@ public class AddPoll extends AppCompatActivity {
                     else
                     {
                         list.add(mEdit.getText().toString());
+
                     }
                 }
                 titleStr = title.getText().toString();

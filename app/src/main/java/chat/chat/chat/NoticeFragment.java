@@ -2,16 +2,21 @@ package chat.chat.chat;
 
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,18 +34,18 @@ import java.util.List;
 import chat.chat.ChatApp;
 import chat.chat.R;
 
+import static android.app.Activity.RESULT_OK;
+import static chat.chat.chat.ChatActivity.TEMP_PHOTO_JPG;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class NoticeFragment extends Fragment {
-    private RecyclerView recyclerView;
     ImageView noticeTextView;
-    private LinearLayoutManager linearLayoutManager;
-    private List<Hashtag> mList=new ArrayList<>();
-    private HashtagAdapter hashtagAdapter;
 
     private DatabaseReference mRef;
-
+    private ScrollView scrollView;
+    private LinearLayout linearLayout;
     public NoticeFragment() {
         // Required empty public constructor
     }
@@ -58,66 +63,35 @@ public class NoticeFragment extends Fragment {
                 startActivity(new Intent(getActivity(),ChatActivity.class));
             }
         });
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
 
         mRef= FirebaseDatabase.getInstance().getReference();
 
-        hashtagAdapter=new HashtagAdapter(mList,NoticeFragment.this);
-        linearLayoutManager=new LinearLayoutManager(getActivity());
-        recyclerView=(RecyclerView)view.findViewById(R.id.noticeRecyclerView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(hashtagAdapter);
-
-        loadHashtags();
-
-        return view;
-
-    }
-    public void loadHashtags()
-    {
-
+        scrollView= (ScrollView) view.findViewById(R.id.noticeScroll);
+        linearLayout= (LinearLayout) view.findViewById(R.id.linearLayoutNotice);
+        //LinearLayout.LayoutParams params=new LinearLayout.LayoutParams();
         mRef.child(ChatApp.rollInfo).child("message").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                String name=dataSnapshot.getKey();
-                Hashtag hashtag=new Hashtag();
-                hashtag.setName(name);
-                mList.add(hashtag);
-                hashtagAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-    public void onItemClicked(final String name)
-    {
-        mRef.child(ChatApp.rollInfo).child("message").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                if(dataSnapshot.getKey().equals(name))
+                final String key=dataSnapshot.getKey();
+                if(!key.equals("An"))
                 {
-                    Intent i=new Intent(getActivity(),NoticeViewer.class);
-                    i.putExtra("Name",name);
-                    startActivity(i);
-
+                    TextView textView=new TextView(getActivity());
+                    textView.setText(key);
+                    textView.setTextSize(20);
+                    int pad=20;
+                    textView.setPadding(pad,pad,pad,pad);
+                    textView.setBackground(getResources().getDrawable(R.drawable.user_border));
+                    linearLayout.addView(textView);
+                    textView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent=new Intent(getActivity(),NoticeViewer.class);
+                            intent.putExtra("Name",key);
+                            startActivity(intent);
+                        }
+                    });
                 }
             }
 
@@ -141,5 +115,9 @@ public class NoticeFragment extends Fragment {
 
             }
         });
+
+        return view;
+
     }
+
 }

@@ -1,6 +1,7 @@
 package chat.chat.chat;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,8 +13,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,6 +35,8 @@ import java.util.Map;
 
 import chat.chat.ChatApp;
 import chat.chat.R;
+
+import static chat.chat.chat.ChatActivity.TEMP_PHOTO_JPG;
 
 public class OptionsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -207,6 +213,35 @@ public class OptionsActivity extends AppCompatActivity
     public Toolbar getToolBar()
     {
         return toolbar;
+    }
+    private final int IMG=0;
+    private final int DOC=1;
+    private EditText mMessage;
+    @Override
+    public void onActivityResult(int requestCode,int resultCode,Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        mMessage=ChatFragment.mMessage;
+        UploadHelper uploadHelper = new UploadHelper(OptionsActivity.this, mMessage,"ChatFragment");
+        if (requestCode == IMG) {
+            if (resultCode == RESULT_OK) {
+                Intent intent = new Intent(OptionsActivity.this, ImageTitleActivity.class);
+                Uri photo = data.getData();
+                intent.putExtra("image", photo);
+                intent.putExtra("context","ChatFragment");
+                intent.putExtra("receiver",ChatFragment.receiver);
+                uploadHelper.makeTempAndUpload(intent, photo, TEMP_PHOTO_JPG);
+            }
+        } else if (requestCode == DOC) {
+            if (resultCode == RESULT_OK) {
+                if (!TextUtils.isEmpty(mMessage.getText())) {
+                    Uri uri = data.getData();
+                    uploadHelper.makeTempAndUpload(new Intent(), uri, "temp_doc.pdf");
+                } else {
+                    Toast.makeText(OptionsActivity.this, "Please add a message first!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 package chat.chat.chat;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -43,6 +44,7 @@ public class ImageTitleActivity extends AppCompatActivity {
     private ImageView mSendBtn;
     private EditText editText;
     private ImageView imageView;
+    private String context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,15 +54,16 @@ public class ImageTitleActivity extends AppCompatActivity {
         editText=(EditText)findViewById(R.id.imgTitle);
         final Uri photo=(Uri)getIntent().getExtras().get("image");
         final String filePath = getIntent().getStringExtra("path");
+        context=getIntent().getStringExtra("context");
         mRef=FirebaseDatabase.getInstance().getReference();
+        final UploadHelper uploadHelper=new UploadHelper(ImageTitleActivity.this,context);
 //        final Bitmap compressedFile = (Bitmap)getIntent().getParcelableExtra("image_bm");
         mSendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!TextUtils.isEmpty(editText.getText())) {
                     try {
-
-                        startActivity(new Intent(ImageTitleActivity.this,ChatActivity.class));
+                        activityCaller();
                         Bitmap compressedFile = BitmapFactory.decodeFile(filePath);
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         compressedFile.compress(Bitmap.CompressFormat.JPEG, 60, baos);
@@ -93,6 +96,7 @@ public class ImageTitleActivity extends AppCompatActivity {
                             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
                                 if(!task.isSuccessful())
                                 {
+                                    Toast.makeText(ImageTitleActivity.this, "Failed", Toast.LENGTH_SHORT).show();
                                     throw task.getException();
                                 }
                                 return mStorageRef.getDownloadUrl();
@@ -104,29 +108,20 @@ public class ImageTitleActivity extends AppCompatActivity {
                                 {
                                     File file=new File(filePath);
                                     file.delete();
-                                    int count=0;//to check if message has been pushed
-                                    for(int i=0;i<categ.size();i++) {
-                                        String ctgry=categ.get(i);
-                                        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child(ChatApp.rollInfo).child("message").child(ctgry).push();
-                                        String key = mDatabase.getKey();
-                                        Uri uri=task.getResult();
-                                        Map map = new HashMap();
-                                        map.put("timestamp", timestamp);
-                                        map.put("text", message.getText());
-                                        map.put("from", uid);
-                                        map.put("type","image");
-                                        map.put("link",uri.toString());
-                                        mRef.child(ChatApp.rollInfo).child("message").child(ctgry).child(key).setValue(map);
-                                        count++;
+                                    mRef=FirebaseDatabase.getInstance().getReference();
+                                    if(context.equals("ChatActivity")) {
+                                        uploadHelper.putAtRef(mRef, categ, task, timestamp, message, uid,"image");
                                     }
-                                    //Message has not been sent due to improper hashtag
-                                    if(count==0)
+                                    else if(context.equals("ChatFragment"));
                                     {
-                                        Toast.makeText(ImageTitleActivity.this, "Your category was not well defined!", Toast.LENGTH_LONG).show();
-                                    }
-                                    else
-                                    {
-                                        Toast.makeText(ImageTitleActivity.this, "Task Successful!", Toast.LENGTH_LONG).show();
+                                        try {
+                                            String receiver = getIntent().getStringExtra("receiver");
+                                            uploadHelper.putAtCRRef(mRef, task, timestamp, message, uid, receiver, "image");
+                                        }
+                                        catch (Exception e)
+                                        {
+
+                                        }
                                     }
 
                                 }
@@ -152,6 +147,19 @@ public class ImageTitleActivity extends AppCompatActivity {
         });
         imageView.setFocusable(true);
         imageView.setImageURI(photo);
+    }
+
+
+    public  void activityCaller()
+    {
+        if(context.equals("ChatActivity"))
+        {
+            startActivity(new Intent(ImageTitleActivity.this,ChatActivity.class));
+        }
+        else if(context.equals("ChatFragment"))
+        {
+            //
+        }
     }
 
     private DatabaseReference mRef;

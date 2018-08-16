@@ -1,18 +1,13 @@
 package chat.chat.chat;
 
 
-import android.app.ProgressDialog;
-import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -22,11 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.firebase.client.ServerValue;
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,6 +39,9 @@ import java.util.Map;
 import chat.chat.ChatApp;
 import chat.chat.R;
 
+import static android.app.Activity.RESULT_OK;
+import static chat.chat.chat.ChatActivity.TEMP_PHOTO_JPG;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -57,16 +52,14 @@ public class ChatFragment extends Fragment {
     private MessageAdapter messageAdapter;
     private LinearLayoutManager linearLayoutManager;
     private DatabaseReference mRef;
-    private int usertype;
     private ImageView mSendBtn;
-    private EditText mMessage;
+    public static EditText mMessage;
     private View inflatedLayout;
     private RelativeLayout relativeLayout;
     private final List<Users> usersList=new ArrayList<>();
     private final List<Messages> messagesList=new ArrayList<>();
     private View mView;
-    private ProgressDialog progressBar;
-    private Toolbar mToolbar;
+    static String receiver;
     public ChatFragment() {
         // Required empty public constructor
     }
@@ -120,7 +113,7 @@ public class ChatFragment extends Fragment {
         mRecyclerView.setAdapter(messageAdapter);
         final FirebaseUser mCurrentUser=FirebaseAuth.getInstance().getCurrentUser();
         loadMessages(mRef.child(ChatApp.rollInfo).child("CR").child("messages").child(mCurrentUser.getUid()));
-
+        receiver=mCurrentUser.getUid();
         if(mCurrentUser!=null) {
             mSendBtn = (ImageView) inflatedLayout.findViewById(R.id.send);
             mMessage = (EditText) inflatedLayout.findViewById(R.id.message);
@@ -132,6 +125,15 @@ public class ChatFragment extends Fragment {
                         mMessage.setText("");
                     }
 
+                }
+            });
+            mSendBtn.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    PickerDialogFragment pickerDialogFragment=new PickerDialogFragment();
+                    pickerDialogFragment.show(getActivity().getFragmentManager(),"picker");
+
+                    return true;
                 }
             });
         }
@@ -198,6 +200,7 @@ public class ChatFragment extends Fragment {
     }
     public void inflateForCROnItemClicked(final String uid)
     {
+        receiver=uid;
         messagesList.clear();
         //Add back button on toolbar
         final OptionsActivity optionsActivity=(OptionsActivity)getActivity();
@@ -251,6 +254,16 @@ public class ChatFragment extends Fragment {
                         mMessage.setText("");
                     }
 
+                }
+            });
+            mSendBtn.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+
+                    PickerDialogFragment pickerDialogFragment=new PickerDialogFragment();
+                    pickerDialogFragment.show(getActivity().getFragmentManager(),"picker");
+
+                    return true;
                 }
             });
         }

@@ -149,7 +149,7 @@ public class ChatActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLinearLayout);
         mRecyclerView.setAdapter(messageAdapter);
-        loadMessages(mRef.child(ChatApp.rollInfo).child("message"));
+        loadMessages(mRef.child(ChatApp.rollInfo).child("message").child("An"));
 
         }
 
@@ -157,21 +157,8 @@ public class ChatActivity extends AppCompatActivity {
         mRootRef.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
-                        {
-                            Messages messages=dataSnapshot1.getValue(Messages.class);
-                            addSort(messages);
-
-                        }
-
-
-                        /*Collections.sort(messagesList, new Comparator<Messages>() {
-                            @Override
-                            public int compare(Messages lhs, Messages rhs) {
-                                // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
-                                return lhs.getTimestamp() > rhs.getTimestamp() ? 1 : (lhs.getTimestamp() < rhs.getTimestamp()) ? -1 : 0;
-                            }
-                        });*/
+                        Messages messages=dataSnapshot.getValue(Messages.class);
+                        messagesList.add(messages);
                         messageAdapter.notifyDataSetChanged();
                         mRecyclerView.scrollToPosition(messagesList.size()-1);
                     }
@@ -209,40 +196,10 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    public void addSort(Messages messages)
-    {
-        if(messagesList.isEmpty())
-        {
-            messagesList.add(messages);
-        }
-        else
-        {
-            int count=0;
-            for(int i=0;i<messagesList.size();i++)
-            {
-                int comp=messages.compareTo(messagesList.get(i));
-                if(comp>0)
-                {
-                    messagesList.add(i,messages);
-                    count++;
-                    break;
-                }
-                else if(comp==0)
-                {
-                    count++;
-                    break;
-                }
-            }
-            if(count==0)
-            {
-                messagesList.add(messages);
-            }
-        }
-    }
 
     private void sendMessage(final Messages message,final String uid) {
 
-        List<String> categ=new ArrayList<>();
+        List<String> categ;
         categ=message.getHashTag();
         long timestamp=System.currentTimeMillis();
         int count=0;//to check if message has been pushed
@@ -273,6 +230,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        UploadHelper uploadHelper=new UploadHelper(ChatActivity.this,mMessage,"ChatActivity");
         if(requestCode==IMG)
         {
             if(resultCode==RESULT_OK)
@@ -280,7 +238,9 @@ public class ChatActivity extends AppCompatActivity {
                 Intent intent=new Intent(ChatActivity.this,ImageTitleActivity.class);
                 Uri photo=(Uri)data.getData();
                 intent.putExtra("image",photo);
-                makeTempAndUpload(intent,photo,TEMP_PHOTO_JPG);
+                intent.putExtra("context","ChatActivity");
+                uploadHelper.makeTempAndUpload(intent,photo,TEMP_PHOTO_JPG);
+                finish();
             }
         }
         else if(requestCode==DOC)
@@ -289,7 +249,7 @@ public class ChatActivity extends AppCompatActivity {
             {
                 if(!TextUtils.isEmpty(mMessage.getText())) {
                     Uri uri = data.getData();
-                    makeTempAndUpload(new Intent(), uri, "temp_doc.pdf");
+                    uploadHelper.makeTempAndUpload(new Intent(), uri, "temp_doc.pdf");
                 }
                 else
                 {
@@ -298,101 +258,12 @@ public class ChatActivity extends AppCompatActivity {
             }
         }
     }
-
-    private void makeTempAndUpload(Intent intent, final Uri uri, String type) {
-        final Messages messages=new Messages();
-        String state = Environment.getExternalStorageState();
-        File mFileTemp;
-        if(Environment.MEDIA_MOUNTED.equals(state)){
-            mFileTemp = new File(Environment.getExternalStorageDirectory(), type);
-
-        }else{
-            mFileTemp = new File(getFilesDir(), type);
-        }
-            messages.setText(mMessage.getText().toString());
-            mMessage.setText("");
-
-        try {
-            InputStream io = getContentResolver().openInputStream(uri);
-            FileOutputStream fo = new FileOutputStream(mFileTemp);
-
-            copyStream(io,fo);
-
-            fo.close();
-            io.close();
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if(type.equals(TEMP_PHOTO_JPG)) {
-            intent.putExtra("path", mFileTemp.getPath());
-            startActivity(intent);
-        }
-        else
-        {
-            final long timestamp=System.currentTimeMillis();
-            String name="A"+timestamp+".pdf";
-            final StorageReference storageReference= FirebaseStorage.getInstance().getReference().child("Uploads").child(name);
-
-            try {
-                FileInputStream fis=new FileInputStream(mFileTemp);
-                UploadTask uploadTask=storageReference.putStream(fis);
-                Task<Uri> uriTask=uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                    @Override
-                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-
-                        return storageReference.getDownloadUrl();
-                    }
-                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        if(task.isSuccessful()) {
-                            List<String> list=messages.getHashTag();
-                            int count=0;
-                            for(int i=0;i<list.size();i++) {
-                                String ctgry=list.get(i);
-                                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("message").child(ctgry).push();
-                                String key = mDatabase.getKey();
-                                Uri uri=task.getResult();
-                                Map map = new HashMap();
-                                map.put("timestamp", timestamp);
-                                map.put("type", "doc");
-                                map.put("link", uri.toString());
-                                map.put("from", FirebaseAuth.getInstance().getCurrentUser().getUid());
-                                map.put("text", messages.getText());
-                                DatabaseReference mRef=FirebaseDatabase.getInstance().getReference();
-                                mRef.child(ChatApp.rollInfo).child("message").child(ctgry).child(key).setValue(map);
-                                count++;
-                            }
-                            if(count==0)
-                            {
-                                Toast.makeText(ChatActivity.this, "Your category was not well defined!", Toast.LENGTH_LONG).show();
-                            }
-                            mMessage.setText("");
-                        }
-                        else
-                        {
-                            Toast.makeText(ChatActivity.this, "Task Failed! "+task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                });
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
-    private void copyStream(InputStream input, OutputStream output) throws IOException{
-        byte[] buffer = new byte[1024];
-        int bytesRead;
-        while ((bytesRead = input.read(buffer))!= -1){
-            output.write(buffer,0,bytesRead);
-        }
+    @Override
+    public void onBackPressed()
+    {
+        Intent i=new Intent(ChatActivity.this,OptionsActivity.class);
+        startActivity(i);
+        finish();
     }
 
 }

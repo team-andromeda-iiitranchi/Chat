@@ -89,6 +89,7 @@ public class Messages {
         }
         while(isPresent!=-1) {
             String start = str.substring(isPresent + 1);
+            str=start;
             int isSpace = start.indexOf(" ");
             String full;
             if (isSpace == -1) {
