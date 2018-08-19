@@ -265,5 +265,5 @@ public class ChatActivity extends AppCompatActivity {
         startActivity(i);
         finish();
     }
-
+    
 }

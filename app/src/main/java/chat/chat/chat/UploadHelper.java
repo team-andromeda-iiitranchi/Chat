@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,9 +43,9 @@ public class UploadHelper {
     }
 
     private Context mContext;
-    private TextView mMessage;
+    private EditText mMessage;
 
-    public UploadHelper(Context mContext, TextView mMessage,String context) {
+    public UploadHelper(Context mContext, EditText mMessage, String context) {
         this.mContext = mContext;
         this.mMessage=mMessage;
         this.context=context;
@@ -153,13 +154,15 @@ public class UploadHelper {
             String ctgry=categ.get(i);
             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child(ChatApp.rollInfo).child("message").child(ctgry).push();
             String key = mDatabase.getKey();
-            Uri uri=task.getResult();
+            Uri uri = task.getResult();
+
             Map map = new HashMap();
             map.put("timestamp", timestamp);
             map.put("text", message.getText());
             map.put("from", uid);
             map.put("type",type);
-            map.put("link",uri.toString());
+            map.put("link", uri.toString());
+
             mRef.child(ChatApp.rollInfo).child("message").child(ctgry).child(key).setValue(map);
             count++;
         }

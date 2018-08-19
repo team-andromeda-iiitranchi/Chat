@@ -26,6 +26,15 @@ public class Messages {
         this.text = text;
     }
 
+    public Messages(String from, String text, String sender, String link, String type, long timestamp) {
+        this.from = from;
+        this.text = text;
+        this.sender = sender;
+        this.link = link;
+        this.type = type;
+        this.timestamp = timestamp;
+    }
+
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
@@ -33,11 +42,22 @@ public class Messages {
     String from;
     String text;
 
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
+    String sender;
+
     public Messages(String from, String text, String link, String type, long timestamp) {
         this.from = from;
         this.text = text;
         this.link = link;
         this.type = type;
+        this.sender="Student";
         this.timestamp = timestamp;
     }
 

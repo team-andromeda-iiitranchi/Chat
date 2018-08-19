@@ -52,6 +52,10 @@ class MessageAdapter extends RecyclerView.Adapter
     private static final int SENT_MESSAGE=2;
     private static final int SENT_FILE=3;
     private static final int RECEIVED_FILE=4;
+    private static final int RECEIVED_FILE_FACULTY=5;
+    private static final int RECEIVED_FILE_DIRECTOR=6;
+    private static final int RECEIVED_FACULTY_MESSAGE=7;
+    private static final int RECEIVED_DIRECTOR_MESSAGE=8;
 
     public MessageAdapter(List<Messages> mList, Context mContext) {
         this.mList = mList;
@@ -90,12 +94,36 @@ class MessageAdapter extends RecyclerView.Adapter
             mView=view;
             return new SentImageHolder(view);
         }
-        else
+        else if(viewType==RECEIVED_FILE)
         {
             view=LayoutInflater.from(parent.getContext()).inflate(R.layout.received_file_layout,parent,false);
             mView=view;
             return new ReceivedImageHolder(view);
 
+        }
+        else if(viewType==RECEIVED_DIRECTOR_MESSAGE)
+        {
+            view=LayoutInflater.from(parent.getContext()).inflate(R.layout.dir_receive,parent,false);
+            mView=view;
+            return  new ReceivedMessageHolder(view);
+        }
+        else if(viewType==RECEIVED_FACULTY_MESSAGE)
+        {
+            view=LayoutInflater.from(parent.getContext()).inflate(R.layout.faculty_receive,parent,false);
+            mView=view;
+            return new ReceivedMessageHolder(view);
+        }
+        else if(viewType==RECEIVED_FILE_DIRECTOR)
+        {
+            view=LayoutInflater.from(parent.getContext()).inflate(R.layout.dir_file,parent,false);
+            mView=view;
+            return new ReceivedImageHolder(view);
+        }
+        else
+        {
+            view=LayoutInflater.from(parent.getContext()).inflate(R.layout.faculty_file,parent,false);
+            mView=view;
+            return new ReceivedMessageHolder(view);
         }
     }
 
@@ -105,8 +133,9 @@ class MessageAdapter extends RecyclerView.Adapter
         final ClipboardManager clipboardManager;
         clipboardManager=(ClipboardManager)mContext.getSystemService(Context.CLIPBOARD_SERVICE);
         final TextView tv;
-        if(getItemViewType(position)==RECIEVED_MESSAGE||getItemViewType(position)==SENT_MESSAGE) {
-            if (getItemViewType(position) == RECIEVED_MESSAGE) {
+        int itemType=getItemViewType(position);
+        if(itemType==RECIEVED_MESSAGE||itemType==SENT_MESSAGE||itemType==RECEIVED_DIRECTOR_MESSAGE||itemType==RECEIVED_FACULTY_MESSAGE) {
+            if (itemType == RECIEVED_MESSAGE||itemType==RECEIVED_DIRECTOR_MESSAGE||itemType==RECEIVED_FACULTY_MESSAGE) {
                 tv = (TextView) mView.findViewById(R.id.messview);
             } else
                 tv = (TextView) mView.findViewById(R.id.text);
@@ -137,6 +166,22 @@ class MessageAdapter extends RecyclerView.Adapter
         {
             ((SentImageHolder) holder).bind(messages);
         }
+        else if(getItemViewType(position)==RECEIVED_FILE)
+        {
+            ((ReceivedImageHolder)holder).bind(messages);
+        }
+        else if(getItemViewType(position)==RECEIVED_DIRECTOR_MESSAGE)
+        {
+            ((ReceivedMessageHolder) holder).bind(messages);
+        }
+        else if(getItemViewType(position)==RECEIVED_FACULTY_MESSAGE)
+        {
+            ((ReceivedMessageHolder)holder).bind(messages);
+        }
+        else if(getItemViewType(position)==RECEIVED_FILE_DIRECTOR)
+        {
+            ((ReceivedImageHolder)holder).bind(messages);
+        }
         else
         {
             ((ReceivedImageHolder)holder).bind(messages);
@@ -152,6 +197,14 @@ class MessageAdapter extends RecyclerView.Adapter
             return SENT_MESSAGE;
         }
         else if(messages.getType().equals("null")&&!(messages.getFrom().equals(currentUserUid))) {
+            if(messages.getSender().equalsIgnoreCase("Faculty"))
+            {
+                return RECEIVED_FACULTY_MESSAGE;
+            }
+            else if(messages.getSender().equalsIgnoreCase("Director"))
+            {
+                return RECEIVED_DIRECTOR_MESSAGE;
+            }
             return RECIEVED_MESSAGE;
         }
         else if(messages.getFrom().equals(currentUserUid))
@@ -160,8 +213,17 @@ class MessageAdapter extends RecyclerView.Adapter
         }
         else
         {
+            if(messages.getSender().equalsIgnoreCase("FACULTY"))
+            {
+                return RECEIVED_FILE_FACULTY;
+            }
+            else if(messages.getSender().equalsIgnoreCase("Director"))
+            {
+                return RECEIVED_FILE_DIRECTOR;
+            }
             return RECEIVED_FILE;
         }
+
     }
 
     void loadImage(final Messages messages, final ImageView downloadView)

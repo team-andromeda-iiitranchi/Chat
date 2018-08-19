@@ -51,12 +51,24 @@ public class NoticeViewer extends AppCompatActivity {
             name1=name1.toUpperCase();
         }
         getSupportActionBar().setTitle(name1);
-        loadMessages(name);
+        DatabaseReference mRef=FirebaseDatabase.getInstance().getReference();
+        if(ChatApp.user.getCR().equals("director"))
+        {
+            mRef=mRef.child("Director").child("Notices");
+        }
+        else if (ChatApp.user.getCR().equals("faculty"))
+        {
+            mRef=mRef.child("Faculty").child(ChatApp.user.getUsername()).child("Notices");
+        }
+        else
+        {
+            mRef=mRef.child(ChatApp.rollInfo).child("message");
+        }
+        loadMessages(mRef,name);
     }
-    public void loadMessages(String name)
+    public void loadMessages(DatabaseReference mRef,String name)
     {
-        DatabaseReference mRef= FirebaseDatabase.getInstance().getReference();
-        mRef.child(ChatApp.rollInfo).child("message").child(name).addChildEventListener(new ChildEventListener() {
+        mRef.child(name).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Messages messages=dataSnapshot.getValue(Messages.class);

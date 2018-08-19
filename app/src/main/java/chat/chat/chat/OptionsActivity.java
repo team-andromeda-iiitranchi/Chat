@@ -79,23 +79,30 @@ public class OptionsActivity extends AppCompatActivity
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                             Users users= dataSnapshot.getValue(Users.class);
+                            ChatApp.user=users;
                             ChatApp.rollInfo=users.getUsername().substring(0,8);
 
-                            mSectionsPagerAdapter=new SectionsPagerAdapter(getSupportFragmentManager());
-                            mViewPager.setAdapter(mSectionsPagerAdapter);
-                            mViewPager.setOffscreenPageLimit(3);
-                            tabLayout.setupWithViewPager(mViewPager);
-                            mViewPager.setCurrentItem(1);
+                            if(!(users.getCR().equalsIgnoreCase("Faculty")||users.getCR().equalsIgnoreCase("Director"))) {
+                                mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+                                mViewPager.setAdapter(mSectionsPagerAdapter);
+                                mViewPager.setOffscreenPageLimit(3);
+                                tabLayout.setupWithViewPager(mViewPager);
+                                mViewPager.setCurrentItem(1);
 
 
-                            Map map=users.getPolls();
-                            if(map!=null) {
-                                Iterator iterator=map.entrySet().iterator();
-                                while (iterator.hasNext())
-                                {
-                                    Map.Entry pair= (Map.Entry) iterator.next();
-                                    votedList.add(pair.getKey());
+                                Map map = users.getPolls();
+                                if (map != null) {
+                                    Iterator iterator = map.entrySet().iterator();
+                                    while (iterator.hasNext()) {
+                                        Map.Entry pair = (Map.Entry) iterator.next();
+                                        votedList.add(pair.getKey());
+                                    }
                                 }
+                            }
+                            else
+                            {
+                                startActivity(new Intent(OptionsActivity.this,AuthNotice.class));
+                                finish();
                             }
                         }
 
@@ -190,10 +197,6 @@ public class OptionsActivity extends AppCompatActivity
 
         }
         else if(id==R.id.faculty)
-        {
-
-        }
-        else if(id==R.id.cr)
         {
 
         }

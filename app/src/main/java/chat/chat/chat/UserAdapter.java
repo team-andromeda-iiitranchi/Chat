@@ -42,6 +42,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class UserAdapter extends RecyclerView.Adapter {
     private List mList;
     private ChatFragment chatFragment;
+
+    public UserAdapter(List mList, Context mContext) {
+        this.mList = mList;
+        this.mContext = mContext;
+    }
+
+    private Context mContext;
     public UserAdapter() {
     }
 
@@ -49,6 +56,7 @@ public class UserAdapter extends RecyclerView.Adapter {
         this.mList = mList;
         this.chatFragment=chatFragment;
     }
+
     private View mView;
 
     @Override

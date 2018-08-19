@@ -17,10 +17,6 @@
             android:icon="@drawable/faculty"
             android:title="Faculty" />
         <item
-            android:id="@+id/cr"
-            android:icon="@drawable/student"
-            android:title="CRs" />
-        <item
             android:id="@+id/student"
             android:icon="@drawable/student"
             android:title="Students" />
