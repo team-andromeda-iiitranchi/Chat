@@ -2,6 +2,8 @@ package chat.chat.chat;
 
 
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -32,6 +34,8 @@ import java.util.Map;
 import chat.chat.ChatApp;
 import chat.chat.R;
 
+import static android.content.Context.CONNECTIVITY_SERVICE;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -59,8 +63,16 @@ public class PollFragment extends Fragment {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i=new Intent(getActivity(),AddPoll.class);
-                startActivity(i);
+                ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(CONNECTIVITY_SERVICE);
+                NetworkInfo info = cm.getActiveNetworkInfo();
+                boolean isConnected = info != null && info.isConnectedOrConnecting();
+                if (isConnected) {
+                    Intent i = new Intent(getActivity(), AddPoll.class);
+                    startActivity(i);
+                }
+                else {
+                    Toast.makeText(getActivity(), "Not Connected to the Internet!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

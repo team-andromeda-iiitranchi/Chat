@@ -1,6 +1,8 @@
 package chat.chat.chat;
 
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -74,34 +76,37 @@ public class AddPoll extends AppCompatActivity {
         mAddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mAddBtn.setOnClickListener(null);
-                List list=new ArrayList();
-                int count=0;
-                for(int i=0;i<mList.size();i++)
-                {
-                    RelativeLayout relativeLayout= (RelativeLayout) mList.get(i);
-                    EditText mEdit= (EditText)relativeLayout.findViewById(R.id.edtField);
-                    if(TextUtils.isEmpty(mEdit.getText()))
-                    {
-                        Toast.makeText(getApplicationContext(),"All fields must be filled!",Toast.LENGTH_LONG).show();
-                        count++;
-                        break;
+                ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+                NetworkInfo info = cm.getActiveNetworkInfo();
+                boolean isConnected = info != null && info.isConnectedOrConnecting();
+                if (isConnected) {
+                    mAddBtn.setOnClickListener(null);
+                    List list = new ArrayList();
+                    int count = 0;
+                    for (int i = 0; i < mList.size(); i++) {
+                        RelativeLayout relativeLayout = (RelativeLayout) mList.get(i);
+                        EditText mEdit = (EditText) relativeLayout.findViewById(R.id.edtField);
+                        if (TextUtils.isEmpty(mEdit.getText())) {
+                            Toast.makeText(getApplicationContext(), "All fields must be filled!", Toast.LENGTH_LONG).show();
+                            count++;
+                            break;
+                        } else {
+                            list.add(mEdit.getText().toString());
+
+                        }
                     }
-                    else
-                    {
-                        list.add(mEdit.getText().toString());
+                    titleStr = title.getText().toString();
+                    descriptionStr = description.getText().toString();
+                    if (!(mList.size() == 0 || mList.size() == 1 || count != 0) && !TextUtils.isEmpty(titleStr) && !TextUtils.isEmpty(descriptionStr)) {
+                        setPoll(titleStr, descriptionStr, list);
+                    } else if (mList.size() == 0) {
+                        Toast.makeText(getApplicationContext(), "Add more fields!", Toast.LENGTH_LONG).show();
 
                     }
                 }
-                titleStr = title.getText().toString();
-                descriptionStr = description.getText().toString();
-                if(!(mList.size()==0||mList.size()==1||count!=0)&&!TextUtils.isEmpty(titleStr)&&!TextUtils.isEmpty(descriptionStr)) {
-                    setPoll(titleStr, descriptionStr,list);
-                }
-                else if(mList.size()==0)
+                else
                 {
-                    Toast.makeText(getApplicationContext(),"Add more fields!",Toast.LENGTH_LONG).show();
-
+                    Toast.makeText(AddPoll.this, "Not Connected to the Internet!", Toast.LENGTH_SHORT).show();
                 }
             }
         });

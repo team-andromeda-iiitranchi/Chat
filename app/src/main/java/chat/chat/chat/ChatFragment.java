@@ -2,6 +2,8 @@ package chat.chat.chat;
 
 
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -40,6 +42,7 @@ import chat.chat.ChatApp;
 import chat.chat.R;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.CONNECTIVITY_SERVICE;
 import static chat.chat.chat.ChatActivity.TEMP_PHOTO_JPG;
 
 /**
@@ -120,19 +123,33 @@ public class ChatFragment extends Fragment {
             mSendBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!TextUtils.isEmpty(mMessage.getText())) {
-                        sendMessage(mMessage.getText().toString(), mCurrentUser.getUid());
-                        mMessage.setText("");
+                    ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(CONNECTIVITY_SERVICE);
+                    NetworkInfo info = cm.getActiveNetworkInfo();
+                    boolean isConnected = info != null && info.isConnectedOrConnecting();
+                    if (isConnected) {
+                        if (!TextUtils.isEmpty(mMessage.getText())) {
+                            sendMessage(mMessage.getText().toString(), mCurrentUser.getUid());
+                            mMessage.setText("");
+                        }
                     }
-
+                    else {
+                        Toast.makeText(getActivity(), "Not Connected to the Internet!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
             mSendBtn.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    PickerDialogFragment pickerDialogFragment=new PickerDialogFragment();
-                    pickerDialogFragment.show(getActivity().getFragmentManager(),"picker");
-
+                    ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(CONNECTIVITY_SERVICE);
+                    NetworkInfo info = cm.getActiveNetworkInfo();
+                    boolean isConnected = info != null && info.isConnectedOrConnecting();
+                    if (isConnected) {
+                        PickerDialogFragment pickerDialogFragment = new PickerDialogFragment();
+                        pickerDialogFragment.show(getActivity().getFragmentManager(), "picker");
+                    }
+                    else {
+                        Toast.makeText(getActivity(), "Not Connected to the Internet!", Toast.LENGTH_SHORT).show();
+                    }
                     return true;
                 }
             });
@@ -249,9 +266,18 @@ public class ChatFragment extends Fragment {
             mSendBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(CONNECTIVITY_SERVICE);
+                    NetworkInfo info = cm.getActiveNetworkInfo();
+                    boolean isConnected = info != null && info.isConnectedOrConnecting();
+                    if (isConnected) {
                     if (!TextUtils.isEmpty(mMessage.getText())) {
                         sendMessage(mMessage.getText().toString(),uid);
                         mMessage.setText("");
+                    }
+                    }
+                    else
+                    {
+                        Toast.makeText(optionsActivity, "Not Connected to the Internet!", Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -259,10 +285,17 @@ public class ChatFragment extends Fragment {
             mSendBtn.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-
-                    PickerDialogFragment pickerDialogFragment=new PickerDialogFragment();
-                    pickerDialogFragment.show(getActivity().getFragmentManager(),"picker");
-
+                    ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(CONNECTIVITY_SERVICE);
+                    NetworkInfo info = cm.getActiveNetworkInfo();
+                    boolean isConnected = info != null && info.isConnectedOrConnecting();
+                    if (isConnected) {
+                        PickerDialogFragment pickerDialogFragment = new PickerDialogFragment();
+                        pickerDialogFragment.show(getActivity().getFragmentManager(), "picker");
+                    }
+                    else
+                    {
+                        Toast.makeText(optionsActivity, "Not connected to the Internet!", Toast.LENGTH_SHORT).show();
+                    }
                     return true;
                 }
             });
@@ -327,6 +360,7 @@ public class ChatFragment extends Fragment {
         map.put("link","default");
         map.put("timestamp", ServerValue.TIMESTAMP);
         map.put("text",message);
+        map.put("sender","Student");
         map.put("from",FirebaseAuth.getInstance().getCurrentUser().getUid());
 
 

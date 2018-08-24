@@ -242,9 +242,9 @@ class MessageAdapter extends RecyclerView.Adapter
             downloadView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Picasso.get().load(messages.getLink()).into(new Target() {
+                   Picasso.get().load(messages.getLink()).into(new Target() {
                         @Override
-                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        public void onBitmapLoaded(Bitmap bitmap,Picasso.LoadedFrom from) {
                             try {
                                 FileOutputStream fos = new FileOutputStream(finalMyFile);
                                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
@@ -307,45 +307,6 @@ class MessageAdapter extends RecyclerView.Adapter
         return mList.size();
     }
 
-    public void setUserImage(final CircleImageView userImage, String uid) {
-        String root=Environment.getExternalStorageDirectory().toString();
-        File myFile=new File(root+"/ChatApp/thumbnails");
-        if(!myFile.exists())
-        {
-            myFile.mkdirs();
-        }
-        String name=uid+".jpg";
-        myFile=new File(myFile,name);
-        if(myFile.exists()&&myFile.length()!=0)
-        {
-            Picasso.get().load(myFile).into(userImage);
-        }
-        else
-        {
-            try {
-                myFile.createNewFile();
-                StorageReference mStorage=FirebaseStorage.getInstance().getReference().child("thumbnails").child(uid+".jpg");
-                final File finalMyFile = myFile;
-                mStorage.getFile(myFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        Picasso.get().load(finalMyFile).into(userImage);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        finalMyFile.delete();
-                        Picasso.get().load(R.drawable.default_pic).into(userImage);
-                    }
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(mContext,"See if Storage permission is granted to app!",Toast.LENGTH_LONG).show();
-            }
-
-
-        }
-    }
 
     private class SentImageHolder extends RecyclerView.ViewHolder
     {
@@ -388,7 +349,7 @@ class MessageAdapter extends RecyclerView.Adapter
         {
             messageView.setText(messages.getText());
             timeView.setText(date(messages.getTimestamp()));
-            setUserImage(circleImageView,messages.getFrom());
+            setUserImage(circleImageView,messages);
             if(messages.getType().equals("image")) {
                 loadImage(messages, downloadView);
             }
@@ -399,6 +360,28 @@ class MessageAdapter extends RecyclerView.Adapter
             loadDisplayName(messages,displayName);
 
         }
+    }
+
+    private void setUserImage(final CircleImageView circleImageView, Messages messages) {
+        DatabaseReference mRef=FirebaseDatabase.getInstance().getReference();
+        mRef.child("Users").child(messages.getFrom()).child("imageLink").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String link = dataSnapshot.getValue().toString();
+                if (!link.equals("null")) {
+                    Picasso.get().load(link).placeholder(mContext.getDrawable(R.drawable.default_pic)).into(circleImageView);
+                }
+                else
+                {
+                    Picasso.get().load(R.drawable.default_pic).into(circleImageView);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void loadDoc(final ImageView downloadView, final Messages messages) {
@@ -480,7 +463,7 @@ class MessageAdapter extends RecyclerView.Adapter
             loadDisplayName(messages,displayName);
             text.setText(messages.getText());
             recTimeView.setText(date(messages.getTimestamp()));
-            setUserImage(displayPic,messages.getFrom());
+            setUserImage(displayPic,messages);
         }
     }
 

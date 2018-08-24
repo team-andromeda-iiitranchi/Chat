@@ -1,6 +1,8 @@
 package chat.chat.chat;
 
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -39,8 +42,17 @@ public class AuthNotice extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               Intent intent=new Intent(AuthNotice.this, NoticeComposerActivity.class);
-               startActivity(intent);
+                ConnectivityManager cm= (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+                NetworkInfo info=cm.getActiveNetworkInfo();
+                boolean isConnected = info != null && info.isConnectedOrConnecting();
+                if(isConnected) {
+                    Intent intent = new Intent(AuthNotice.this, NoticeComposerActivity.class);
+                    startActivity(intent);
+                }
+                else
+                {
+                    Toast.makeText(AuthNotice.this,"Not Connected to the Internet!",Toast.LENGTH_LONG).show();
+                }
             }
         });
 

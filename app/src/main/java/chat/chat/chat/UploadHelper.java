@@ -36,12 +36,11 @@ import chat.chat.ChatApp;
 public class UploadHelper {
     private static final String TEMP_PHOTO_JPG = "temp_photo.jpg";
     private String context;
-
     public UploadHelper(Context mContext,String context) {
         this.mContext=mContext;
         this.context=context;
     }
-
+    private List<Integer> selectedItems;
     private Context mContext;
     private EditText mMessage;
 
@@ -49,6 +48,12 @@ public class UploadHelper {
         this.mContext = mContext;
         this.mMessage=mMessage;
         this.context=context;
+    }
+    public UploadHelper(Context mContext, EditText mMessage, String context,List<Integer> selectedItems) {
+        this.mContext = mContext;
+        this.mMessage=mMessage;
+        this.context=context;
+        this.selectedItems=selectedItems;
     }
 
     public void makeTempAndUpload(Intent intent, final Uri uri, String type) {
@@ -74,6 +79,7 @@ public class UploadHelper {
             io.close();
 
         } catch (FileNotFoundException e) {
+            Toast.makeText(mContext,"See if Storage Permission has been granted!",Toast.LENGTH_LONG).show();
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
@@ -106,7 +112,12 @@ public class UploadHelper {
                             String uid=FirebaseAuth.getInstance().getCurrentUser().getUid();
                             if(context.equals("ChatActivity")) {
                                 putAtRef(mRef, list, task, timestamp, messages, uid, "doc");
-                            }else
+                            }
+                            else if(context.equals("NoticeComposerActivity"))
+                            {
+                                ((NoticeComposerActivity)mContext).getLink(task.getResult(),"doc",messages.getText(),timestamp);
+                            }
+                            else
                             {
                                 try {
                                     String receiver = ChatFragment.receiver;
@@ -125,6 +136,10 @@ public class UploadHelper {
             }
 
         }
+    }
+
+    private void putAtAuthRef() {
+
     }
 
     private void copyStream(InputStream input, OutputStream output) throws IOException{
@@ -175,6 +190,10 @@ public class UploadHelper {
         {
             Toast.makeText(mContext, "Task Successful!", Toast.LENGTH_LONG).show();
         }
+
+    }
+    public void passer()
+    {
 
     }
 }

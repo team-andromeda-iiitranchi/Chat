@@ -3,8 +3,9 @@ package chat.chat.chat;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,10 +13,16 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -28,9 +35,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
+import chat.chat.ChatApp;
 import chat.chat.R;
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.reactivex.annotations.NonNull;
 
 public class AccountActivity extends AppCompatActivity {
     private Button setPic;
@@ -42,14 +53,43 @@ public class AccountActivity extends AppCompatActivity {
         
         setPic= (Button) findViewById(R.id.setPic);
         picture= (CircleImageView) findViewById(R.id.picture);
+        DatabaseReference mDatabase=FirebaseDatabase.getInstance().getReference();
+        String uid=FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mDatabase.child("Users").child(uid).child("imageLink").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@android.support.annotation.NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot!=null) {
+                    String link = dataSnapshot.getValue().toString();
+                    Picasso.get().load(link).placeholder(R.drawable.default_pic).into(picture);
+                }
+                else
+                {
+                    Picasso.get().load(R.drawable.default_pic).into(picture);
+                }
+            }
+
+            @Override
+            public void onCancelled(@android.support.annotation.NonNull DatabaseError databaseError) {
+
+            }
+        });
         
         setPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(intent,1);
+                ConnectivityManager cm= (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+                NetworkInfo info=cm.getActiveNetworkInfo();
+                boolean isConnected = info != null && info.isConnectedOrConnecting();
+                if(isConnected) {
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(intent, 1);
+                }
+                else
+                {
+                    Toast.makeText(AccountActivity.this, "Not Connected to the Internet!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         getSupportActionBar().setTitle("Account");
@@ -83,6 +123,12 @@ public class AccountActivity extends AppCompatActivity {
                 }).addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
+                            DatabaseReference mDatabase= FirebaseDatabase.getInstance().getReference();
+                            Map map=new HashMap();
+                            map.put("imageLink",uri.toString());
+                            String uid=FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            mDatabase.child("Users").child(uid).updateChildren(map);
+                            Picasso.get().load(uri.toString()).into(picture);
                         Toast.makeText(AccountActivity.this, "Success!", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {

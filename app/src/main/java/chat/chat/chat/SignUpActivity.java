@@ -1,6 +1,8 @@
 package chat.chat.chat;
 
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -59,30 +61,35 @@ public class SignUpActivity extends AppCompatActivity {
         mSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name, user, pass, cpass;
-                name = mName.getText().toString();
-                user = mUser.getText().toString();
-                if(user.length()<8)
-                {
-                    Toast.makeText(getApplicationContext(),"Invalid Regisration No.!",Toast.LENGTH_LONG).show();
+                ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+                NetworkInfo info = cm.getActiveNetworkInfo();
+                boolean isConnected = info != null && info.isConnectedOrConnecting();
+                if (isConnected) {
+                    String name, user, pass, cpass;
+                    name = mName.getText().toString();
+                    user = mUser.getText().toString();
+                    if (user.length() < 8) {
+                        Toast.makeText(getApplicationContext(), "Invalid Regisration No.!", Toast.LENGTH_LONG).show();
+                    } else {
+                        rollInfo = user.substring(0, 8);
+                        pass = mPass.getText().toString();
+                        cpass = mCpass.getText().toString();
+                        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(user) || TextUtils.isEmpty(pass) || TextUtils.isEmpty(cpass)) {
+                            Toast.makeText(getApplicationContext(), "Empty Field!", Toast.LENGTH_LONG).show();
+                        } else if (!pass.equals(cpass)) {
+                            Toast.makeText(getApplicationContext(), "Passwords do not match!", Toast.LENGTH_LONG).show();
+                        } else {
+                            user = user + "@abc.com";
+                            createUser(name, user, pass);
+                        }
+
+
+                    }
                 }
                 else
                 {
-                    rollInfo=user.substring(0,8);
-                    pass = mPass.getText().toString();
-                    cpass = mCpass.getText().toString();
-                    if (TextUtils.isEmpty(name) || TextUtils.isEmpty(user) || TextUtils.isEmpty(pass) || TextUtils.isEmpty(cpass)) {
-                        Toast.makeText(getApplicationContext(), "Empty Field!", Toast.LENGTH_LONG).show();
-                    } else if (!pass.equals(cpass)) {
-                        Toast.makeText(getApplicationContext(), "Passwords do not match!", Toast.LENGTH_LONG).show();
-                    } else {
-                        user=user+"@abc.com";
-                        createUser(name,user,pass);
-                    }
-
-
+                    Toast.makeText(SignUpActivity.this, "Not Connected to the Internet!", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
 
@@ -118,6 +125,7 @@ public class SignUpActivity extends AppCompatActivity {
                     map.put("latestTimestamp",ServerValue.TIMESTAMP);
                     map.put("isUnseen","true");
                     map.put("polls",map1);
+                    map.put("imageLink","null");
                     mRef.child("Users").child(uid).setValue(map);
                     if(user.indexOf("fac")==-1&&user.indexOf("dir")==-1)
                     {

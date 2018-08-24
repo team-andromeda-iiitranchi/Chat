@@ -6,6 +6,8 @@ import android.app.DownloadManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -79,6 +81,7 @@ public class ChatActivity extends AppCompatActivity {
     private final List<Messages> messagesList=new ArrayList<>();
     private LinearLayoutManager mLinearLayout;
     private LinearLayout bar;
+    private DatabaseReference mDb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,11 +106,20 @@ public class ChatActivity extends AppCompatActivity {
         mSendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!TextUtils.isEmpty(mMessage.getText())) {
-                    final Messages messages=new Messages();
-                    messages.setText(mMessage.getText().toString());
-                    sendMessage(messages, mCurrentUser.getUid());
-                    mMessage.setText("");
+                ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+                NetworkInfo info = cm.getActiveNetworkInfo();
+                boolean isConnected = info != null && info.isConnectedOrConnecting();
+                if (isConnected) {
+                    if (!TextUtils.isEmpty(mMessage.getText())) {
+                        final Messages messages = new Messages();
+                        messages.setText(mMessage.getText().toString());
+                        sendMessage(messages, mCurrentUser.getUid());
+                        mMessage.setText("");
+                    }
+                }
+                else
+                {
+                    Toast.makeText(ChatActivity.this, "Not Connected to the Internet!", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -116,8 +128,16 @@ public class ChatActivity extends AppCompatActivity {
         mSendBtn.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                PickerDialogFragment pickerDialogFragment=new PickerDialogFragment();
-                pickerDialogFragment.show(getFragmentManager(),"picker");
+                ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+                NetworkInfo info = cm.getActiveNetworkInfo();
+                boolean isConnected = info != null && info.isConnectedOrConnecting();
+                if (isConnected) {
+                    PickerDialogFragment pickerDialogFragment = new PickerDialogFragment();
+                    pickerDialogFragment.show(getFragmentManager(), "picker");
+                   
+                } else {
+                    Toast.makeText(ChatActivity.this, "Not Connected to the Internet!", Toast.LENGTH_SHORT).show();
+                }
                 return true;
             }
         });
@@ -149,7 +169,9 @@ public class ChatActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLinearLayout);
         mRecyclerView.setAdapter(messageAdapter);
-        loadMessages(mRef.child(ChatApp.rollInfo).child("message").child("An"));
+        mDb=mRef.child(ChatApp.rollInfo).child("message").child("An");
+        mDb.keepSynced(true);
+        loadMessages(mDb);
 
         }
 
@@ -158,9 +180,11 @@ public class ChatActivity extends AppCompatActivity {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         Messages messages=dataSnapshot.getValue(Messages.class);
-                        messagesList.add(messages);
-                        messageAdapter.notifyDataSetChanged();
-                        mRecyclerView.scrollToPosition(messagesList.size()-1);
+                        if(messages!=null) {
+                            messagesList.add(messages);
+                            messageAdapter.notifyDataSetChanged();
+                            mRecyclerView.scrollToPosition(messagesList.size() - 1);
+                        }
                     }
 
                     @Override
@@ -213,6 +237,7 @@ public class ChatActivity extends AppCompatActivity {
             map.put("text", message.getText());
             map.put("from", uid);
             map.put("type","null");
+            map.put("sender","Student");
             map.put("link","default");
             mRef.child(ChatApp.rollInfo).child("message").child(ctgry).child(key).setValue(map);
             count++;

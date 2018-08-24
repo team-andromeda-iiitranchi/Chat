@@ -1,6 +1,8 @@
 package chat.chat.chat;
 
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -60,7 +62,16 @@ public class LibraryActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(LibraryActivity.this,AddBook.class));
+                ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+                NetworkInfo info = cm.getActiveNetworkInfo();
+                boolean isConnected = info != null && info.isConnectedOrConnecting();
+                if (isConnected) {
+                    startActivity(new Intent(LibraryActivity.this, AddBook.class));
+                }
+                else
+                {
+                    Toast.makeText(LibraryActivity.this, "Not Connected to the Internet!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -78,6 +89,7 @@ public class LibraryActivity extends AppCompatActivity {
         {
             Intent intent=new Intent(LibraryActivity.this,OptionsActivity.class);
             startActivity(intent);
+            finish();
         }
     }
     public void downloadAndShow(String name,String bookName)
@@ -93,30 +105,37 @@ public class LibraryActivity extends AppCompatActivity {
         {
             generateIntentAndShow(myFile);
         }
-        else
-        {
-            try {
-                Toast.makeText(LibraryActivity.this,"Downloading!",Toast.LENGTH_LONG).show();
+        else {
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+            NetworkInfo info = cm.getActiveNetworkInfo();
+            boolean isConnected = info != null && info.isConnectedOrConnecting();
+            if (isConnected) {
+                try {
+                    Toast.makeText(LibraryActivity.this, "Downloading!", Toast.LENGTH_LONG).show();
 
-                myFile.createNewFile();
-                final File finalMyFile = myFile;
-                mStorage.child(name).child(bookName+".pdf").getFile(myFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        generateIntentAndShow(finalMyFile);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(LibraryActivity.this, "Failed to Download!", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                    myFile.createNewFile();
+                    final File finalMyFile = myFile;
+                    mStorage.child(name).child(bookName + ".pdf").getFile(myFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            generateIntentAndShow(finalMyFile);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(LibraryActivity.this, "Failed to Download!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
 
-            } catch (IOException e) {
-                e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-
+            else
+            {
+                Toast.makeText(LibraryActivity.this,"Not Connected to the Internet!",Toast.LENGTH_LONG).show();
+            }
         }
     }
     public void generateIntentAndShow(File myFile)

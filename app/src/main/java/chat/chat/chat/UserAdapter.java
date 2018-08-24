@@ -153,43 +153,25 @@ public class UserAdapter extends RecyclerView.Adapter {
         }
     }
     public void setUserImage(final CircleImageView userImage, String uid) {
-        String root= Environment.getExternalStorageDirectory().toString();
-        File myFile=new File(root+"/ChatApp/thumbnails");
-        if(!myFile.exists())
-        {
-            myFile.mkdirs();
-        }
-        String name=uid+".jpg";
-        myFile=new File(myFile,name);
-        if(myFile.exists()&&myFile.length()!=0)
-        {
-            Picasso.get().load(myFile).into(userImage);
-        }
-        else
-        {
-            try {
-                myFile.createNewFile();
-                StorageReference mStorage= FirebaseStorage.getInstance().getReference().child("thumbnails").child(uid+".jpg");
-                final File finalMyFile = myFile;
-                mStorage.getFile(myFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        Picasso.get().load(finalMyFile).into(userImage);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        finalMyFile.delete();
+        DatabaseReference mRef=FirebaseDatabase.getInstance().getReference();
+        mRef.child("Users").child(uid).child("imageLink").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot!=null) {
+                    String link = dataSnapshot.getValue().toString();
+                    if (!link.equals("null")) {
+                        Picasso.get().load(link).placeholder(R.drawable.default_pic).into(userImage);
+                    } else {
                         Picasso.get().load(R.drawable.default_pic).into(userImage);
                     }
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(chatFragment.getActivity(),"See if Storage permission is granted to app!",Toast.LENGTH_LONG).show();
+                }
             }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-        }
+            }
+        });
     }
 
 }

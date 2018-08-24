@@ -30,6 +30,10 @@ public class Messages {
         this.from = from;
         this.text = text;
         this.sender = sender;
+        if(sender==null||sender.equals(""))
+        {
+            this.sender="Student";
+        }
         this.link = link;
         this.type = type;
         this.timestamp = timestamp;

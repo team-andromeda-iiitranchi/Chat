@@ -6,13 +6,24 @@ public class Users {
     private String CR;
     private String Name;
 
-    public Users(String CR, String name, Map<String, Object> polls, String isUnseen, long latestTimestamp, String username) {
+    public String getImageLink() {
+        return imageLink;
+    }
+
+    public void setImageLink(String imageLink) {
+        this.imageLink = imageLink;
+    }
+
+    private String imageLink;
+
+    public Users(String CR, String name, Map<String, Object> polls, String isUnseen, long latestTimestamp, String username,String imageLink) {
         this.CR = CR;
         Name = name;
         this.polls = polls;
         this.isUnseen = isUnseen;
         this.latestTimestamp = latestTimestamp;
         this.username = username;
+        this.imageLink=imageLink;
     }
 
     public Map<String,Object> getPolls() {

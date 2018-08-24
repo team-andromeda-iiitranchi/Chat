@@ -1,6 +1,8 @@
 package chat.chat.chat;
 
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -44,24 +46,30 @@ public class AddBook extends AppCompatActivity {
         select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String topic=mtopic.getText().toString();
-                String name=mname.getText().toString();
-                if(!TextUtils.isEmpty(mname.getText())&&!TextUtils.isEmpty(mtopic.getText()))
-                {
-                    if(check(topic)&&check(name)) {
-                        Intent intent = new Intent();
-                        intent.setType("application/pdf");
-                        intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startActivityForResult(intent, 1);
-                    }
-                    else
-                    {
-                        Toast.makeText(AddBook.this, "Invalid names!", Toast.LENGTH_SHORT).show();
+                ConnectivityManager cm= (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+                NetworkInfo info=cm.getActiveNetworkInfo();
+                boolean isConnected = info != null && info.isConnectedOrConnecting();
+                if(isConnected){
+                    String topic = mtopic.getText().toString();
+                    String name = mname.getText().toString();
+                    topic = modify(topic);
+                    name = modify(name);
+                    if (!TextUtils.isEmpty(mname.getText()) && !TextUtils.isEmpty(mtopic.getText())) {
+                        if (check(topic) && check(name)) {
+                            Intent intent = new Intent();
+                            intent.setType("application/pdf");
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            startActivityForResult(intent, 1);
+                        } else {
+                            Toast.makeText(AddBook.this, "Invalid names!", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(AddBook.this, "Empty Fields!", Toast.LENGTH_SHORT).show();
                     }
                 }
                 else
                 {
-                    Toast.makeText(AddBook.this, "Empty Fields!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddBook.this,"Not Connected to the Internet!",Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -115,4 +123,26 @@ public class AddBook extends AppCompatActivity {
         }
         return true;
     }
+    public String modify(String str)
+    {
+        String newStr="";
+        for(int i=0;i<str.length();i++)
+        {
+            char c=str.charAt(i);
+            if(i==0||(c==' '&&Character.isLetter(c)))
+            {
+                c=Character.toUpperCase(c);
+            }
+            else
+            {
+                if(Character.isLetter(c))
+                {
+                    c=Character.toLowerCase(c);
+                }
+            }
+            newStr=newStr+c;
+        }
+        return newStr;
+    }
+
 }

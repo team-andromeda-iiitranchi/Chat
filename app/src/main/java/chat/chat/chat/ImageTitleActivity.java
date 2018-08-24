@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -20,8 +22,13 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -40,7 +47,7 @@ import chat.chat.R;
 import id.zelory.compressor.Compressor;
 
 
-public class ImageTitleActivity extends AppCompatActivity {
+public class ImageTitleActivity extends AppCompatActivity implements ChooserDialog.ChooserDialogListener{
     private ImageView mSendBtn;
     private EditText editText;
     private ImageView imageView;
@@ -102,6 +109,7 @@ public class ImageTitleActivity extends AppCompatActivity {
                                 return mStorageRef.getDownloadUrl();
                             }
                         }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+
                             @Override
                             public void onComplete(@NonNull Task<Uri> task) {
                                 if(task.isSuccessful())
@@ -112,7 +120,7 @@ public class ImageTitleActivity extends AppCompatActivity {
                                     if(context.equals("ChatActivity")) {
                                         uploadHelper.putAtRef(mRef, categ, task, timestamp, message, uid,"image");
                                     }
-                                    else if(context.equals("ChatFragment"));
+                                    else if(context.equals("ChatFragment"))
                                     {
                                         try {
                                             String receiver = getIntent().getStringExtra("receiver");
@@ -122,6 +130,14 @@ public class ImageTitleActivity extends AppCompatActivity {
                                         {
 
                                         }
+                                    }
+                                    else if(context.equals("NoticeComposerActivity"))
+                                    {
+                                        initList();
+                                        ImageTitleActivity.this.link=task.getResult().toString();
+                                        ImageTitleActivity.this.text=message.getText();
+                                        ImageTitleActivity.this.timestamp=timestamp;
+                                        //startActivity(new Intent(ImageTitleActivity.this,AuthNotice.class));
                                     }
 
                                 }
@@ -136,7 +152,10 @@ public class ImageTitleActivity extends AppCompatActivity {
                         e.printStackTrace();
                         Toast.makeText(ImageTitleActivity.this, "There was an error uploading the image!", Toast.LENGTH_SHORT).show();
                     }finally {
-                        finish();
+                        if(!context.equals("NoticeComposerActivity"))
+                        {
+                            finish();
+                        }
                     }
                 }
                 else
@@ -149,7 +168,9 @@ public class ImageTitleActivity extends AppCompatActivity {
         imageView.setImageURI(photo);
     }
 
-
+    public String text;
+    long timestamp;
+    public String link;
     public  void activityCaller()
     {
         if(context.equals("ChatActivity"))
@@ -163,4 +184,139 @@ public class ImageTitleActivity extends AppCompatActivity {
     }
 
     private DatabaseReference mRef;
+    static String mList[];
+    List<Integer> selectedItems;
+    List<String> tempList=new ArrayList<>();
+    @Override
+    public void onPositiveButtonClicked(String[] mList, List<Integer> selectedItems) {
+        this.mList=mList;
+        this.selectedItems=selectedItems;
+
+        sendMessage();
+
+    }
+    public void sendMessage()
+    {
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String sender = ChatApp.user.getCR();
+        Map map = new HashMap();
+        editText.setText("");
+        map.put("text", text);
+        map.put("from", uid);
+        map.put("sender", sender);
+        map.put("link", link);
+        map.put("type", "image");
+        map.put("timestamp", timestamp);
+        Messages messages = new Messages(uid, text, sender, "default", "null", timestamp);
+        List<String> categ = messages.getHashTag();
+        String authStr = "To:\n";
+        for (int i = 0; i < selectedItems.size(); i++) {
+            String str = ImageTitleActivity.mList[selectedItems.get(i)];
+            if (str.indexOf("fac") != -1) {
+                ifFaculty(mDatabase, str, categ, map);
+            } else {
+                ifSection(mDatabase, str, categ, map);
+            }
+            authStr += str + "\n";
+        }
+        authStr += "\n" + text;
+        if (ChatApp.user.getCR().equals("director")) {
+            map.put("text", authStr);
+            for (int i = 0; i < categ.size(); i++) {
+                String ctgry = categ.get(i);
+                String key = mDatabase.child("Director").child("Notices").child(ctgry).push().getKey();
+                mDatabase.child("Director").child("Notices").child(ctgry).child(key).setValue(map);
+            }
+        }
+        if (ChatApp.user.getCR().equals("faculty")) {
+            map.put("text", authStr);
+            for (int i = 0; i < categ.size(); i++) {
+                String ctgry = categ.get(i);
+                String key = mDatabase.child("Faculty").child(ChatApp.user.getUsername()).child("Notices").child(ctgry).push().getKey();
+                mDatabase.child("Faculty").child(ChatApp.user.getUsername()).child("Notices").child(ctgry).child(key).setValue(map);
+            }
+        }
+        startActivity(new Intent(ImageTitleActivity.this, AuthNotice.class));
+        finish();
+    }
+    public void initList() {
+        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Sections");
+        mDatabase.runTransaction(new Transaction.Handler() {
+            @NonNull
+            @Override
+            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+
+                for(MutableData d:mutableData.getChildren())
+                {
+                    tempList.add(d.getKey());
+                }
+
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
+                DatabaseReference mReference=FirebaseDatabase.getInstance().getReference().child("Faculty");
+                mReference.runTransaction(new Transaction.Handler() {
+                    @NonNull
+                    @Override
+                    public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+
+                        for(MutableData d:mutableData.getChildren())
+                        {
+                            if(!d.getKey().equals(ChatApp.user.getUsername()))
+                            {
+                                tempList.add(d.getKey());
+                            }
+                        }
+
+                        return Transaction.success(mutableData);
+
+                    }
+
+                    @Override
+                    public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
+                        mList=new String[tempList.size()];
+                        for(int i=0;i<mList.length;i++)
+                        {
+                            mList[i]=tempList.get(i);
+                        }
+                        ChooserDialog c=new ChooserDialog();
+                        c.show(getFragmentManager(),"dialog");
+                    }
+                });
+            }
+        });
+    }
+    public void ifFaculty(DatabaseReference mDatabase, String str, List<String> categ, Map map)
+    {
+        int count=0;
+        for(int i=0;i<categ.size();i++)
+        {
+            String ctgry=categ.get(i);
+            String key=mDatabase.child("Faculty").child(str).child("Notices").child(ctgry).push().getKey();
+            mDatabase.child("Faculty").child(str).child("Notices").child(ctgry).child(key).setValue(map);
+            count++;
+        }
+        if(count==0)
+        {
+            Toast.makeText(ImageTitleActivity.this, "Your category was not well defined!", Toast.LENGTH_LONG).show();
+        }
+    }
+    public void ifSection(DatabaseReference mDatabase, String str, List<String> categ, Map map)
+    {
+        int count=0;
+        for(int i=0;i<categ.size();i++)
+        {
+            String ctgry=categ.get(i);
+            String key=mDatabase.child(str).child("message").child(ctgry).push().getKey();
+            mDatabase.child(str).child("message").child(ctgry).child(key).setValue(map);
+            count++;
+        }
+        if(count==0)
+        {
+            Toast.makeText(ImageTitleActivity.this, "Your category was not well defined!", Toast.LENGTH_LONG).show();
+        }
+    }
 }

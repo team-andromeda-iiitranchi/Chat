@@ -1,6 +1,8 @@
 package chat.chat.chat;
 
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -42,36 +44,39 @@ public class MainActivity extends AppCompatActivity {
         logIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name,pass;
-                name=user.getText().toString();
-                pass=password.getText().toString();
-                if(TextUtils.isEmpty(name)||TextUtils.isEmpty(pass))
-                {
-                    Toast.makeText(getApplicationContext(),"Empty Field!",Toast.LENGTH_LONG).show();
-                }
-                else if(name.length()<8)
-                {
-                    Toast.makeText(MainActivity.this, "Invalid Registration No.!", Toast.LENGTH_SHORT).show();
+                ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+                NetworkInfo info = cm.getActiveNetworkInfo();
+                boolean isConnected = info != null && info.isConnectedOrConnecting();
+                if (isConnected) {
+                    String name, pass;
+                    name = user.getText().toString();
+                    pass = password.getText().toString();
+                    if (TextUtils.isEmpty(name) || TextUtils.isEmpty(pass)) {
+                        Toast.makeText(getApplicationContext(), "Empty Field!", Toast.LENGTH_LONG).show();
+                    } else if (name.length() < 8) {
+                        Toast.makeText(MainActivity.this, "Invalid Registration No.!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        name = name + "@abc.com";
+                        final String finalName = name;
+                        mAuth.signInWithEmailAndPassword(name, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    startActivity(new Intent(MainActivity.this, OptionsActivity.class));
+                                    finish();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
                 }
                 else
                 {
-                    name=name+"@abc.com";
-                    final String finalName = name;
-                    mAuth.signInWithEmailAndPassword(name,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()) {
-                                startActivity(new Intent(MainActivity.this, OptionsActivity.class));
-                                finish();
-                            }
-                            else
-                            {
-                                Toast.makeText(getApplicationContext(), "Authentication failed.",Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
+                    Toast.makeText(MainActivity.this, "Not connected to the Internet!", Toast.LENGTH_SHORT).show();
                 }
             }
+
         });
         signUp=(Button)findViewById(R.id.signUp);
         signUp.setOnClickListener(new View.OnClickListener() {

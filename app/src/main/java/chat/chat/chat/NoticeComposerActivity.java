@@ -1,10 +1,14 @@
 package chat.chat.chat;
 
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,13 +31,15 @@ import java.util.Map;
 import chat.chat.ChatApp;
 import chat.chat.R;
 
+import static chat.chat.chat.ChatActivity.TEMP_PHOTO_JPG;
+
 public class NoticeComposerActivity extends AppCompatActivity implements ChooserDialog.ChooserDialogListener{
     private EditText mMessage;
     private Button mSendBtn,mDocSend;
     static String mList[];
     String text;
     private List<String> selectedSections=new ArrayList<>(),selectedFaculty=new ArrayList<>();
-    int facultyCount;
+    int caller=8;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,16 +53,41 @@ public class NoticeComposerActivity extends AppCompatActivity implements Chooser
         mSendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                initList();
+                ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+                NetworkInfo info = cm.getActiveNetworkInfo();
+                boolean isConnected = info != null && info.isConnectedOrConnecting();
+                if (isConnected) {
+                    caller = 0;
+                    if (!TextUtils.isEmpty(mMessage.getText())) {
+                        text = mMessage.getText().toString();
+                        initList();
+                    } else {
+                        Toast.makeText(NoticeComposerActivity.this, "Empty Field!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else
+                {
+                    Toast.makeText(NoticeComposerActivity.this, "Not connected to the internet!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         mDocSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+                NetworkInfo info = cm.getActiveNetworkInfo();
+                boolean isConnected = info != null && info.isConnectedOrConnecting();
+                if (isConnected) {
+                    //UploadHelper uploadHelper=new UploadHelper();
+                    PickerDialogFragment f = new PickerDialogFragment();
+                    f.show(getFragmentManager(), "Picker");
+                }
+                else
+                {
+                    Toast.makeText(NoticeComposerActivity.this, "Not connected to the internet!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
-        facultyCount=0;
     }
     public void initList()
     {
@@ -107,54 +138,16 @@ public class NoticeComposerActivity extends AppCompatActivity implements Chooser
 
 
     }
-
+    List<Integer> selectedItems;
     @Override
     public void onPositiveButtonClicked(String[] mList, List<Integer> selectedItems) {
-        DatabaseReference mDatabase=FirebaseDatabase.getInstance().getReference();
-        long timestamp=System.currentTimeMillis();
-        String uid=FirebaseAuth.getInstance().getCurrentUser().getUid();
-        String sender=ChatApp.user.getCR();
-        Map map=new HashMap();
-        text=mMessage.getText().toString();
-        mMessage.setText("");
-        map.put("text",text);
-        map.put("from",uid);
-        map.put("sender",sender);
-        map.put("link","default");
-        map.put("type","null");
-        map.put("timestamp",timestamp);
-        Messages messages=new Messages(uid,text,sender,"default","null",timestamp);
-        List<String> categ=messages.getHashTag();
-        for(int i=0;i<selectedItems.size();i++)
-        {
-            String str=mList[selectedItems.get(i)];
-            if(str.indexOf("fac")!=-1)
-            {
-                ifFaculty(mDatabase,str,categ,map);
-            }
-            else
-            {
-                ifSection(mDatabase,str,categ,map);
-            }
+        this.selectedItems=selectedItems;
+        if(caller==0) {
+            sendMessage("null","default",System.currentTimeMillis());
         }
-        if(ChatApp.user.getCR().equals("director"))
-        {
-            for(int i=0;i<categ.size();i++) {
-                String ctgry=categ.get(i);
-                String key=mDatabase.child("Director").child("Notices").child(ctgry).push().getKey();
-                mDatabase.child("Director").child("Notices").child(ctgry).child(key).setValue(map);
-            }
+        else {
+            sendMessage(type,link,timestamp);
         }
-        if(ChatApp.user.getCR().equals("faculty"))
-        {
-            for(int i=0;i<categ.size();i++) {
-                String ctgry=categ.get(i);
-                String key=mDatabase.child("Faculty").child(ChatApp.user.getUsername()).child("Notices").child(ctgry).push().getKey();
-                mDatabase.child("Faculty").child(ChatApp.user.getUsername()).child("Notices").child(ctgry).child(key).setValue(map);
-            }
-        }
-        startActivity(new Intent(NoticeComposerActivity.this,AuthNotice.class));
-        finish();
     }
     public void ifFaculty(DatabaseReference mDatabase, String str, List<String> categ, Map map)
     {
@@ -186,4 +179,103 @@ public class NoticeComposerActivity extends AppCompatActivity implements Chooser
             Toast.makeText(NoticeComposerActivity.this, "Your category was not well defined!", Toast.LENGTH_LONG).show();
         }
     }
+    private final int IMG=0;
+    private final int DOC=1;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UploadHelper uploadHelper=new UploadHelper(NoticeComposerActivity.this,mMessage,"NoticeComposerActivity",selectedItems);
+        if(requestCode==IMG)
+        {
+            if(resultCode==RESULT_OK)
+            {
+                caller=1;
+                Intent intent=new Intent(NoticeComposerActivity.this,ImageTitleActivity.class);
+                Uri photo=(Uri)data.getData();
+                intent.putExtra("image",photo);
+                intent.putExtra("context","NoticeComposerActivity");
+                uploadHelper.makeTempAndUpload(intent,photo,TEMP_PHOTO_JPG);
+                finish();
+            }
+        }
+        else if(requestCode==DOC)
+        {
+            if(resultCode==RESULT_OK)
+            {
+                caller=1;
+
+                if(!TextUtils.isEmpty(mMessage.getText())) {
+                    Uri uri = data.getData();
+                    uploadHelper.makeTempAndUpload(new Intent(), uri, "temp_doc.pdf");
+                }
+                else
+                {
+                    Toast.makeText(this, "Please add a message first!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
+    }
+    public void sendMessage(String type,String link,long timestamp)
+    {
+        if(selectedItems!=null) {
+            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            String sender = ChatApp.user.getCR();
+            Map map = new HashMap();
+            if(txt==null)
+            {
+                txt=text;
+            }
+            mMessage.setText("");
+            map.put("text", txt);
+            map.put("from", uid);
+            map.put("sender", sender);
+            map.put("link", link);
+            map.put("type", type);
+            map.put("timestamp", timestamp);
+            Messages messages = new Messages(uid, txt, sender, "default", "null", timestamp);
+            List<String> categ = messages.getHashTag();
+            String authStr = "To:\n";
+            for (int i = 0; i < selectedItems.size(); i++) {
+                String str = NoticeComposerActivity.mList[selectedItems.get(i)];
+                if (str.indexOf("fac") != -1) {
+                    ifFaculty(mDatabase, str, categ, map);
+                } else {
+                    ifSection(mDatabase, str, categ, map);
+                }
+                authStr += str + "\n";
+            }
+            authStr =text+ "\n\n" +authStr ;
+            if (ChatApp.user.getCR().equals("director")) {
+                map.put("text", authStr);
+                for (int i = 0; i < categ.size(); i++) {
+                    String ctgry = categ.get(i);
+                    String key = mDatabase.child("Director").child("Notices").child(ctgry).push().getKey();
+                    mDatabase.child("Director").child("Notices").child(ctgry).child(key).setValue(map);
+                }
+            }
+            if (ChatApp.user.getCR().equals("faculty")) {
+                map.put("text", authStr);
+                for (int i = 0; i < categ.size(); i++) {
+                    String ctgry = categ.get(i);
+                    String key = mDatabase.child("Faculty").child(ChatApp.user.getUsername()).child("Notices").child(ctgry).push().getKey();
+                    mDatabase.child("Faculty").child(ChatApp.user.getUsername()).child("Notices").child(ctgry).child(key).setValue(map);
+                }
+            }
+            startActivity(new Intent(NoticeComposerActivity.this, AuthNotice.class));
+            finish();
+        }
+    }
+    public void getLink(Uri uri,String type,String txt,long timestamp)
+    {
+        this.txt=txt;
+        link=uri.toString();
+        this.type=type;
+        this.timestamp=timestamp;
+        initList();
+    }
+
+    String link,type,txt;
+    long timestamp;
 }

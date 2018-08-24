@@ -52,7 +52,14 @@ public class ChooserDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        mList = NoticeComposerActivity.mList;
+        String activityName=getActivity().getClass().getSimpleName();
+        if(activityName.equals("NoticeComposerActivity")) {
+            mList = NoticeComposerActivity.mList;
+        }
+        else
+        {
+            mList=ImageTitleActivity.mList;
+        }
         builder.setTitle("Select Recipients")
                 .setMultiChoiceItems(mList, null, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
