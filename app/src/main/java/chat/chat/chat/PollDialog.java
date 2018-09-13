@@ -1,5 +1,6 @@
 package chat.chat.chat;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -26,10 +27,12 @@ import java.util.Map;
 import chat.chat.ChatApp;
 
 public class PollDialog extends DialogFragment {
+    Activity activity;
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
         Bundle bundle=getArguments();
+        activity=(Activity)getActivity();
         final String pushId=bundle.getString("pushId");
         AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
         String arr[]={"End Poll"};
@@ -62,7 +65,7 @@ public class PollDialog extends DialogFragment {
                                 String appendStr="\n"+String.format(key+" : %.2f",val)+"%";
                                 message+=appendStr;
                             }
-                            String appendStr="\n\n% Voted :"+String.format("%.2f",((double)tot)/poll.getTotal())+"%";
+                            String appendStr="\n\n% Voted :"+String.format("%.2f",(((double)tot)/poll.getTotal()*100))+"%";
                             message+=appendStr;
                             long timestamp=System.currentTimeMillis();
                             String uid=FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -70,10 +73,18 @@ public class PollDialog extends DialogFragment {
                             putMap.put("from",uid);
                             putMap.put("timestamp",timestamp);
                             putMap.put("text",message);
+                            if(ChatApp.user.getCR().equals("true")||ChatApp.user.getCR().equals("false")) {
+                                putMap.put("sender", "Student");
+                            }
+                            else
+                            {
+                                putMap.put("sender",ChatApp.user.getCR());
+                            }
                             putMap.put("link","default");
                             putMap.put("type","null");
                             DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference().child(ChatApp.rollInfo).child("message").child("Poll").push();
                             String key=databaseReference.getKey();
+                            mRef.child(ChatApp.rollInfo).child("message").child("An").child(key).setValue(putMap);
                             databaseReference.setValue(putMap);
                             mRef.child(ChatApp.rollInfo).child("Poll").child(pushId).removeValue();
                         }
@@ -97,7 +108,7 @@ public class PollDialog extends DialogFragment {
                                     databaseReference.child("Users").child(uid).child("polls").child(pushId).removeValue();
                                 }
                             }
-                            getActivity().startActivity(new Intent(getActivity(),getActivity().getClass()));
+                            activity.startActivity(new Intent(activity,OptionsActivity.class));
                         }
 
                         @Override

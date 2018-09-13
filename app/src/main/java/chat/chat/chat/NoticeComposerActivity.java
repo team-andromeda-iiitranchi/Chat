@@ -1,5 +1,6 @@
 package chat.chat.chat;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -206,6 +207,11 @@ public class NoticeComposerActivity extends AppCompatActivity implements Chooser
 
                 if(!TextUtils.isEmpty(mMessage.getText())) {
                     Uri uri = data.getData();
+                    ChatApp.mProgress=new ProgressDialog(this);
+                    ChatApp.mProgress.setTitle("Uploading...");
+                    ChatApp.mProgress.setMessage("Please wait while your document is being uploaded.");
+                    ChatApp.mProgress.setCanceledOnTouchOutside(true);
+                    ChatApp.mProgress.show();
                     uploadHelper.makeTempAndUpload(new Intent(), uri, "temp_doc.pdf");
                 }
                 else
@@ -246,7 +252,7 @@ public class NoticeComposerActivity extends AppCompatActivity implements Chooser
                 }
                 authStr += str + "\n";
             }
-            authStr =text+ "\n\n" +authStr ;
+            authStr =txt+ "\n\n" +authStr ;
             if (ChatApp.user.getCR().equals("director")) {
                 map.put("text", authStr);
                 for (int i = 0; i < categ.size(); i++) {
@@ -273,6 +279,7 @@ public class NoticeComposerActivity extends AppCompatActivity implements Chooser
         link=uri.toString();
         this.type=type;
         this.timestamp=timestamp;
+        ChatApp.mProgress.dismiss();
         initList();
     }
 

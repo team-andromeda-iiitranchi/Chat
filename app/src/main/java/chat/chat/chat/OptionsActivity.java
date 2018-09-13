@@ -1,5 +1,6 @@
 package chat.chat.chat;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -54,8 +55,11 @@ public class OptionsActivity extends AppCompatActivity
         setContentView(R.layout.activity_options);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        final ProgressDialog mProgress=new ProgressDialog(this);
 
-
+        mProgress.setTitle("Loading!");
+        mProgress.setMessage("Getting User's Data");
+        mProgress.setCanceledOnTouchOutside(false);
         initDrawer();
 
         FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
@@ -64,6 +68,8 @@ public class OptionsActivity extends AppCompatActivity
                 FirebaseUser mUser=firebaseAuth.getCurrentUser();
                 if(mUser==null)
                 {
+
+                    mProgress.dismiss();
                     startActivity(new Intent(OptionsActivity.this,MainActivity.class));
                     finish();
                 }
@@ -104,6 +110,7 @@ public class OptionsActivity extends AppCompatActivity
                                 startActivity(new Intent(OptionsActivity.this,AuthNotice.class));
                                 finish();
                             }
+                            mProgress.dismiss();
                         }
 
                         @Override

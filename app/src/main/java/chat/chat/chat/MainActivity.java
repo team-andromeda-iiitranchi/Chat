@@ -1,5 +1,6 @@
 package chat.chat.chat;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -56,6 +57,11 @@ public class MainActivity extends AppCompatActivity {
                     } else if (name.length() < 8) {
                         Toast.makeText(MainActivity.this, "Invalid Registration No.!", Toast.LENGTH_SHORT).show();
                     } else {
+                        final ProgressDialog mProgress=new ProgressDialog(MainActivity.this);
+                        mProgress.setTitle("Logging In");
+                        mProgress.setMessage("Please Wait...");
+                        mProgress.setCanceledOnTouchOutside(false);
+                        mProgress.show();
                         name = name + "@abc.com";
                         final String finalName = name;
                         mAuth.signInWithEmailAndPassword(name, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -67,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
                                 } else {
                                     Toast.makeText(getApplicationContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
                                 }
+                                mProgress.dismiss();
                             }
                         });
                     }

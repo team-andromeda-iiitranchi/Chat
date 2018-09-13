@@ -1,5 +1,6 @@
 package chat.chat.chat;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -69,6 +70,11 @@ public class ImageTitleActivity extends AppCompatActivity implements ChooserDial
             @Override
             public void onClick(View view) {
                 if (!TextUtils.isEmpty(editText.getText())) {
+                    final ProgressDialog mProgress=new ProgressDialog(ImageTitleActivity.this);
+                    mProgress.setTitle("Uploading...");
+                    mProgress.setMessage("Please wait while your image is being uploaded.");
+                    mProgress.setCanceledOnTouchOutside(true);
+                    mProgress.show();
                     try {
                         activityCaller();
                         Bitmap compressedFile = BitmapFactory.decodeFile(filePath);
@@ -93,6 +99,7 @@ public class ImageTitleActivity extends AppCompatActivity implements ChooserDial
                         uploadTask.addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
+                                mProgress.dismiss();
                                 Toast.makeText(ImageTitleActivity.this, "Upload Failed!", Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -101,6 +108,7 @@ public class ImageTitleActivity extends AppCompatActivity implements ChooserDial
 
                             @Override
                             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                mProgress.dismiss();
                                 if(!task.isSuccessful())
                                 {
                                     Toast.makeText(ImageTitleActivity.this, "Failed", Toast.LENGTH_SHORT).show();
@@ -145,6 +153,7 @@ public class ImageTitleActivity extends AppCompatActivity implements ChooserDial
                                 {
                                     Toast.makeText(ImageTitleActivity.this,"Failed!",Toast.LENGTH_LONG).show();
                                 }
+                                mProgress.dismiss();
                             }
                         });
 

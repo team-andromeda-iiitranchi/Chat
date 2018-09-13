@@ -1,5 +1,6 @@
 package chat.chat.chat;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -111,18 +112,24 @@ public class LibraryActivity extends AppCompatActivity {
             boolean isConnected = info != null && info.isConnectedOrConnecting();
             if (isConnected) {
                 try {
-                    Toast.makeText(LibraryActivity.this, "Downloading!", Toast.LENGTH_LONG).show();
+                    final ProgressDialog mProgress=new ProgressDialog(this);
+                    mProgress.setTitle("Downloading...");
+                    mProgress.setMessage("Please wait while your document is being downloaded.");
+                    mProgress.setCanceledOnTouchOutside(true);
+                    mProgress.show();
 
                     myFile.createNewFile();
                     final File finalMyFile = myFile;
                     mStorage.child(name).child(bookName + ".pdf").getFile(myFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            mProgress.dismiss();
                             generateIntentAndShow(finalMyFile);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
+                            mProgress.dismiss();
                             Toast.makeText(LibraryActivity.this, "Failed to Download!", Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -183,9 +190,15 @@ public class LibraryActivity extends AppCompatActivity {
     }
     public void loadTopics()
     {
+        final ProgressDialog mProgress=new ProgressDialog(this);
+        mProgress.setTitle("Loading...");
+        mProgress.setMessage("Please wait while the docs are being loaded.");
+        mProgress.setCanceledOnTouchOutside(true);
+        mProgress.show();
         mRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mProgress.dismiss();
                 for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
                 {
                     final String name=dataSnapshot1.getKey();

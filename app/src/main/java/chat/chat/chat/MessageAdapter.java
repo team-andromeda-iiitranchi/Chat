@@ -401,6 +401,7 @@ class MessageAdapter extends RecyclerView.Adapter
                 @Override
                 public void onClick(View view) {
                     try {
+                        downloadView.setOnClickListener(null);
                         finalMyFile.createNewFile();
                         StorageReference mStorage=FirebaseStorage.getInstance().getReference().child("Uploads").child(name);
                         mStorage.getFile(finalMyFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {

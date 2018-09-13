@@ -1,5 +1,6 @@
 package chat.chat.chat;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -52,6 +53,7 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Sign Up");
         mUser=(EditText)findViewById(R.id.username);
         mName=(EditText)findViewById(R.id.name);
         mPass=(EditText)findViewById(R.id.pwd);
@@ -97,6 +99,10 @@ public class SignUpActivity extends AppCompatActivity {
     }
     public void createUser(final String name,final String user,final String pass)
     {
+        final ProgressDialog mProgress=new ProgressDialog(this);
+        mProgress.setTitle("Creating Account");
+        mProgress.setCanceledOnTouchOutside(false);
+        mProgress.show();
         mAuth.createUserWithEmailAndPassword(user,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(Task<AuthResult> task) {
@@ -144,6 +150,7 @@ public class SignUpActivity extends AppCompatActivity {
                 {
                     Toast.makeText(getApplicationContext(),"Some error occured!",Toast.LENGTH_LONG).show();
                 }
+                mProgress.dismiss();
             }
         });
     }

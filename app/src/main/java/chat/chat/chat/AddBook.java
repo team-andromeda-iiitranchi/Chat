@@ -1,5 +1,6 @@
 package chat.chat.chat;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -88,11 +89,17 @@ public class AddBook extends AppCompatActivity {
                 InputStream fos=getContentResolver().openInputStream(data.getData());
                 StorageReference mStorage= FirebaseStorage.getInstance().getReference();
                 final DatabaseReference mRef= FirebaseDatabase.getInstance().getReference();
-                final String finalTopic = topic;
-                final String finalName = name+".pdf";
+                final String finalTopic = modify(topic);
+                final String finalName = modify(name+".pdf");
+                final ProgressDialog mProgress=new ProgressDialog(this);
+                mProgress.setTitle("Adding book");
+                mProgress.setMessage("Your book is being uploaded");
+                mProgress.setCanceledOnTouchOutside(false);
+                mProgress.show();
                 mStorage.child("Books").child(topic).child(finalName).putStream(fos).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        mProgress.dismiss();
                         mRef.child("Books").child(finalTopic).child(name).setValue(1);
                         finish();
                         startActivity(new Intent(AddBook.this,LibraryActivity.class));
@@ -126,10 +133,12 @@ public class AddBook extends AppCompatActivity {
     public String modify(String str)
     {
         String newStr="";
+        char d='0';
         for(int i=0;i<str.length();i++)
         {
             char c=str.charAt(i);
-            if(i==0||(c==' '&&Character.isLetter(c)))
+
+            if(i==0||(d==' '&&Character.isLetter(c)))
             {
                 c=Character.toUpperCase(c);
             }
@@ -140,6 +149,7 @@ public class AddBook extends AppCompatActivity {
                     c=Character.toLowerCase(c);
                 }
             }
+            d=c;
             newStr=newStr+c;
         }
         return newStr;

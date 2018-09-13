@@ -122,7 +122,6 @@ public class AddPoll extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Long count =dataSnapshot.getValue(Long.class);
-                if(count!=1)
                     count++;
                 Poll poll = new Poll(titleStr, descriptionStr, timestamp, count, list);
                 DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
