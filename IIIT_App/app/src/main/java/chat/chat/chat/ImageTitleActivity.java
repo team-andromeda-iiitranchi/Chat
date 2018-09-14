@@ -160,11 +160,6 @@ public class ImageTitleActivity extends AppCompatActivity implements ChooserDial
                     } catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(ImageTitleActivity.this, "There was an error uploading the image!", Toast.LENGTH_SHORT).show();
-                    }finally {
-                        if(!context.equals("NoticeComposerActivity"))
-                        {
-                            finish();
-                        }
                     }
                 }
                 else
@@ -188,7 +183,7 @@ public class ImageTitleActivity extends AppCompatActivity implements ChooserDial
         }
         else if(context.equals("ChatFragment"))
         {
-            //
+            startActivity(new Intent(ImageTitleActivity.this,OptionsActivity.class));
         }
     }
 
