@@ -158,6 +158,7 @@ public class UploadHelper {
         map.put("text", message.getText());
         map.put("from", uid);
         map.put("type",type);
+        map.put("sender",(ChatApp.user.getCR().equals("true")||ChatApp.user.getCR().equals("false"))?"Student":ChatApp.user.getCR());
         map.put("link",uri.toString());
         mRef.child(ChatApp.rollInfo).child("CR").child("messages").child(receiver).child(key).setValue(map);
     }
