@@ -195,6 +195,7 @@ public class SignUpActivity extends AppCompatActivity {
         map2.put("link","default");
         map2.put("timestamp",ServerValue.TIMESTAMP);
         map2.put("text","Send your messages from here.");
+        map2.put("sender","Student");
         map2.put("from",uid);
         mRef.child(rollInfo).child("CR").child("messages").child(uid).child(messageId).setValue(map2);
         DatabaseReference mRef1=mRef.child("Sections");

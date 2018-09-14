@@ -2,246 +2,71 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cc8dec06-dea9-48ac-bb6a-4cafe7efaf53" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/Chat/.gitignore" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/.idea/caches/build_file_checksums.ser" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/.idea/codeStyles/Project.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/.idea/gradle.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/.idea/misc.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/.idea/modules.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/.idea/runConfigurations.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/.idea/vcs.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/.gitignore" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/build.gradle" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/google-services.json" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/proguard-rules.pro" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/androidTest/java/chat/chat/chat/ApplicationTest.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/AndroidManifest.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/java/chat/chat/chat/AccountActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/java/chat/chat/chat/AddPoll.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/java/chat/chat/chat/ChatActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/java/chat/chat/chat/ChatFragment.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/java/chat/chat/chat/FieldAdapter.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/java/chat/chat/chat/Hashtag.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/java/chat/chat/chat/HashtagAdapter.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/java/chat/chat/chat/ImageTitleActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/java/chat/chat/chat/ImageViewer.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/java/chat/chat/chat/MainActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/java/chat/chat/chat/MessageAdapter.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/java/chat/chat/chat/Messages.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/java/chat/chat/chat/NoticeFragment.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/java/chat/chat/chat/NoticeViewer.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/java/chat/chat/chat/OptionsActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/java/chat/chat/chat/PickerDialogFragment.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/java/chat/chat/chat/Poll.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/java/chat/chat/chat/PollAdapter.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/java/chat/chat/chat/PollDialog.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/java/chat/chat/chat/PollFragment.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/java/chat/chat/chat/SectionsPagerAdapter.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/java/chat/chat/chat/SignUpActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/java/chat/chat/chat/UserAdapter.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/java/chat/chat/chat/Users.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/java/chat/chat/chat/VoteActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/drawable/border.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/drawable/btn_background.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/drawable/default_pic.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/drawable/doc.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/drawable/download_icon.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/drawable/edt_background.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/drawable/img_background.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/drawable/linear_background.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/drawable/list_background.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/drawable/logo.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/drawable/message_background.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/drawable/message_background2.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/drawable/notice_img.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/drawable/plus.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/drawable/send_btn.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/drawable/sent_message_background.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/drawable/user_border.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/activity_account.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/activity_add_poll.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/activity_chat.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/activity_image_viewer.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/activity_main.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/activity_notice_viewer.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/activity_options.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/activity_sign_up.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/activity_vote.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/all_users_layout.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/content_chat.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/content_main.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/content_options.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/content_sign_up.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/cr_chat_layout.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/edt_text_layout.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/fragment_chat.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/fragment_notice.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/fragment_poll.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/hashtag_layout.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/img_selector_layout.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/message_sent_layout.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/other_chat_fragment.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/poll_layout.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/received_file_layout.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/sent_file_layout.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/layout/text_view_layout.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/menu/menu_main.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/menu/menu_options_activits.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/mipmap-hdpi/ic_launcher.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/mipmap-mdpi/ic_launcher.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/mipmap-xhdpi/ic_launcher.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/values-v21/styles.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/values-w820dp/dimens.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/values/colors.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/values/dimens.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/values/strings.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/main/res/values/styles.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/app/src/test/java/chat/chat/chat/ExampleUnitTest.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/build.gradle" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/gradle.properties" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/gradle/wrapper/gradle-wrapper.jar" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/gradle/wrapper/gradle-wrapper.properties" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/gradlew" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/gradlew.bat" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/projectFilesBackup/.idea/workspace.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Chat/settings.gradle" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/README.md" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/.gitignore" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/google-services.json" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/proguard-rules.pro" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/androidTest/java/chat/chat/chat/ApplicationTest.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/ChatApp.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/AccountActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/AddBook.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/AddPoll.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/AuthNotice.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/CategoryViewer.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/ChatActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/ChatFragment.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/ChooserDialog.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/FieldAdapter.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/ImageTitleActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/ImageViewer.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/LibraryActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/MainActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/MessageAdapter.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/Messages.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/NoticeComposerActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/NoticeFragment.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/NoticeViewer.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/OptionsActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/PickerDialogFragment.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/Poll.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/PollAdapter.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/PollDialog.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/PollFragment.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/SectionsPagerAdapter.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/SignUpActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/UploadHelper.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/UserAdapter.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/Users.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/chat/chat/chat/VoteActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/bkg.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/border.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/btn_background.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/default_pic.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/dir_background.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/director.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/doc.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/download_icon.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/edt_background.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/faculty.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/faculty_background.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_menu_camera.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_menu_gallery.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_menu_manage.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_menu_send.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_menu_share.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_menu_slideshow.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/img_background.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/library.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/linear_background.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/list_background.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/logo.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/message_background.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/message_background2.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/notice_img.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/notices.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/plus.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/send_btn.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/sent_message_background.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/side_nav_bar.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/student.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/user_border.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_account.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_add_book.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_add_poll.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_auth_notice.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_category_viewer.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_chat.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_image_viewer.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_library.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_notice_composer.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_notice_viewer.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_options.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_sign_up.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_vote.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/all_users_layout.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/app_bar_options.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/content_chat.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/content_main.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/content_options.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/content_sign_up.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/cr_chat_layout.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/dir_file.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/dir_receive.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/edt_text_layout.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/faculty_file.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/faculty_receive.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_chat.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_notice.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_poll.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/hashtag_layout.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/img_selector_layout.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/message_sent_layout.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/nav_header_options.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/other_chat_fragment.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/poll_layout.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/received_file_layout.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/sent_file_layout.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/text_view_layout.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/menu/activity_options2_drawer.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/menu/auth_menu.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/menu/menu_main.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/menu/menu_options_activits.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/menu/options.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_launcher.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/ic_launcher.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/ic_launcher.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values-v21/styles.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values-w820dp/dimens.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/dimens.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/test/java/chat/chat/chat/ExampleUnitTest.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gradle.properties" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gradlew" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gradlew.bat" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/projectFilesBackup/.idea/workspace.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/settings.gradle" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/caches/build_file_checksums.ser" afterPath="$PROJECT_DIR$/IIIT_App/.idea/caches/build_file_checksums.ser" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__android_arch_core_common_1_0_0_jar.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__android_arch_lifecycle_common_1_0_0_jar.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__android_arch_lifecycle_runtime_1_0_0.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_android_support_appcompat_v7_23_1_1.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_android_support_constraint_constraint_layout_1_1_2.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_android_support_constraint_constraint_layout_solver_1_1_2_jar.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_android_support_design_23_1_1.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_android_support_exifinterface_27_1_0.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_android_support_multidex_1_0_1.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_android_support_recyclerview_v7_23_1_1.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_android_support_support_annotations_27_1_0_jar.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_android_support_support_compat_26_1_0.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_android_support_support_core_ui_26_1_0.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_android_support_support_core_utils_26_1_0.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_android_support_support_fragment_26_1_0.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_android_support_support_media_compat_26_1_0.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_android_support_support_v4_26_1_0.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_crashlytics_sdk_android_answers_1_4_3.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_crashlytics_sdk_android_beta_1_2_10.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_crashlytics_sdk_android_crashlytics_2_9_5.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_crashlytics_sdk_android_crashlytics_core_2_6_4.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_fasterxml_jackson_core_jackson_annotations_2_2_2_jar.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_fasterxml_jackson_core_jackson_core_2_2_2_jar.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_fasterxml_jackson_core_jackson_databind_2_2_2_jar.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_firebase_firebase_client_android_2_3_1_jar.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_firebase_firebase_client_jvm_2_3_1_jar.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_firebase_tubesock_0_0_11_jar.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_google_android_gms_play_services_ads_identifier_15_0_1.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_google_android_gms_play_services_base_15_0_1.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_google_android_gms_play_services_basement_15_0_1.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_google_android_gms_play_services_flags_15_0_1.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_google_android_gms_play_services_measurement_base_15_0_4.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_google_android_gms_play_services_stats_15_0_1.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_google_android_gms_play_services_tasks_15_0_1.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_google_firebase_firebase_analytics_16_0_0.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_google_firebase_firebase_analytics_impl_16_0_0.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_google_firebase_firebase_auth_16_0_2.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_google_firebase_firebase_auth_interop_16_0_0.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_google_firebase_firebase_common_16_0_0.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_google_firebase_firebase_core_16_0_0.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_google_firebase_firebase_database_16_0_1.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_google_firebase_firebase_database_collection_15_0_1.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_google_firebase_firebase_database_connection_16_0_1.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_google_firebase_firebase_iid_16_0_0.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_google_firebase_firebase_iid_interop_16_0_0.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_google_firebase_firebase_measurement_connector_16_0_0.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_google_firebase_firebase_measurement_connector_impl_16_0_0.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_google_firebase_firebase_messaging_11_8_0.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_google_firebase_firebase_messaging_license_11_8_0.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_google_firebase_firebase_storage_16_0_1.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_google_firebase_firebase_storage_common_16_0_1.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_squareup_okhttp3_okhttp_3_10_0_jar.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_squareup_okio_okio_1_14_0_jar.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__com_squareup_picasso_picasso_2_71828.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__de_hdodenhof_circleimageview_2_2_0.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__id_zelory_compressor_2_1_0.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__io_fabric_sdk_android_fabric_1_4_4.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__io_reactivex_rxjava2_rxjava_2_1_0_jar.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__junit_junit_4_12_jar.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__org_hamcrest_hamcrest_core_1_3_jar.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/libraries/Gradle__org_reactivestreams_reactive_streams_1_0_0_jar.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/misc.xml" afterPath="$PROJECT_DIR$/IIIT_App/.idea/misc.xml" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/modules.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IIIT_App/.idea/vcs.xml" afterPath="" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -1571,7 +1396,6 @@
     </navigator>
     <panes>
       <pane id="PackagesPane" />
-      <pane id="Scratches" />
       <pane id="AndroidView">
         <subPane>
           <expand>
@@ -1662,6 +1486,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scratches" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -1839,7 +1664,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="10" y="47" width="1366" height="741" extended-state="6" />
+    <frame x="0" y="27" width="1366" height="741" extended-state="6" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1851,7 +1676,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25341427" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2579666" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
