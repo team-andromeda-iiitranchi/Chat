@@ -96,11 +96,11 @@ public class AddBook extends AppCompatActivity {
                 mProgress.setMessage("Your book is being uploaded");
                 mProgress.setCanceledOnTouchOutside(false);
                 mProgress.show();
-                mStorage.child("Books").child(topic).child(finalName).putStream(fos).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                mStorage.child("Books").child(finalTopic).child(finalName).putStream(fos).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         mProgress.dismiss();
-                        mRef.child("Books").child(finalTopic).child(name).setValue(1);
+                        mRef.child("Books").child(finalTopic).child(finalName.substring(0,finalName.indexOf("."))).setValue(1);
                         finish();
                         startActivity(new Intent(AddBook.this,LibraryActivity.class));
                     }

@@ -22,7 +22,6 @@ public class ImageViewer extends AppCompatActivity {
         textView=(TextView)findViewById(R.id.textView);
         File file= (File) getIntent().getExtras().get("file");
         String text=getIntent().getStringExtra("text");
-        String context=getIntent().getStringExtra("context");
 
         imageView.setImageURI(Uri.fromFile(file));
         textView.setText(text);

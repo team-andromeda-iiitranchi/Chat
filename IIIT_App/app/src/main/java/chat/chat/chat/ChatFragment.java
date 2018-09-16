@@ -322,7 +322,7 @@ public class ChatFragment extends Fragment {
                 String uid=dataSnapshot.getKey().toString();
                 Users users = dataSnapshot.getValue(Users.class);
                 String rollInf=users.getUsername().substring(0,8);
-                if (users.getCR().equals("false")&&ChatApp.rollInfo.equalsIgnoreCase(rollInf)) {
+                if (users!=null&&users.getCR().equals("false")&&ChatApp.rollInfo.equalsIgnoreCase(rollInf)) {
                     usersList.add(0, users);
                     mUserAdapter.notifyDataSetChanged();
                 }

@@ -88,6 +88,9 @@ public class ChooserDialog extends DialogFragment {
                         ListView listView = ((AlertDialog) dialogInterface).getListView();
                         for (int a = 0; a < listView.getChildCount(); a++) {
                             listView.setItemChecked(a, false);
+                            if(selectedItems.contains(Integer.valueOf(a))){
+                                selectedItems.remove(Integer.valueOf(a));
+                            }
                         }
                     }
                 });
@@ -98,6 +101,9 @@ public class ChooserDialog extends DialogFragment {
                         ListView listView = ((AlertDialog) dialogInterface).getListView();
                         for (int a = 0; a < listView.getChildCount(); a++) {
                             listView.setItemChecked(a, true);
+                            if(!selectedItems.contains(Integer.valueOf(a))) {
+                                selectedItems.add(Integer.valueOf(a));
+                            }
                         }
                     }
                 });

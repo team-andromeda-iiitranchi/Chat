@@ -75,6 +75,10 @@ public class PollFragment extends Fragment {
                 }
             }
         });
+        if(ChatApp.user.getCR().equals("false"))
+        {
+            floatingActionButton.setVisibility(View.INVISIBLE);
+        }
 
         pollAdapter=new PollAdapter(mList,getActivity());
         recyclerView=(RecyclerView)view.findViewById(R.id.recView3);

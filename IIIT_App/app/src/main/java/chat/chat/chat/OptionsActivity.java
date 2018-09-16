@@ -199,18 +199,6 @@ public class OptionsActivity extends AppCompatActivity
         {
 
         }
-        else if(id==R.id.director)
-        {
-
-        }
-        else if(id==R.id.faculty)
-        {
-
-        }
-        else if(id==R.id.student)
-        {
-
-        }
         else if(id==R.id.library)
         {
             Intent intent=new Intent(OptionsActivity.this,LibraryActivity.class);

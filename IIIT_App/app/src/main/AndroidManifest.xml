@@ -46,8 +46,11 @@
         <activity android:name=".chat.LibraryActivity" />
         <activity android:name=".chat.AddBook" />
         <activity android:name=".chat.NoticeComposerActivity" />
-        <activity android:name=".chat.AuthNotice" />
-        <activity android:name=".chat.CategoryViewer"></activity>
+        <activity android:name=".chat.AuthNotice"
+            />
+        <activity android:name=".chat.CategoryViewer"
+            android:parentActivityName=".chat.OptionsActivity"
+            ></activity>
     </application>
 
 </manifest>

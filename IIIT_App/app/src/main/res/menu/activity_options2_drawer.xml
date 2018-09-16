@@ -8,18 +8,6 @@
             android:icon="@drawable/notices"
             android:title="Notice Corner"
             />
-        <item
-            android:id="@+id/director"
-            android:icon="@drawable/director"
-            android:title="Director" />
-        <item
-            android:id="@+id/faculty"
-            android:icon="@drawable/faculty"
-            android:title="Faculty" />
-        <item
-            android:id="@+id/student"
-            android:icon="@drawable/student"
-            android:title="Students" />
         <item android:id="@+id/library"
             android:icon="@drawable/library"
             android:title="E-Library"/>
