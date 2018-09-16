@@ -22,6 +22,7 @@
         <activity
             android:name=".chat.ChatActivity"
             android:label="@string/title_activity_chat"
+            android:parentActivityName=".chat.OptionsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".chat.SignUpActivity"
@@ -37,13 +38,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".chat.AddPoll" />
-        <activity android:name=".chat.VoteActivity" />
-        <activity android:name=".chat.NoticeViewer" />
-        <activity android:name=".chat.ImageTitleActivity" />
+        <activity android:name=".chat.AddPoll" android:parentActivityName=".chat.OptionsActivity"/>
+        <activity android:name=".chat.VoteActivity"
+            android:parentActivityName=".chat.OptionsActivity"/>
+        <activity android:name=".chat.NoticeViewer"
+            android:parentActivityName=".chat.OptionsActivity"/>
+        <activity android:name=".chat.ImageTitleActivity"
+            />
         <activity android:name=".chat.ImageViewer" />
-        <activity android:name=".chat.AccountActivity" />
-        <activity android:name=".chat.LibraryActivity" />
+        <activity android:name=".chat.AccountActivity"
+            android:parentActivityName=".chat.OptionsActivity"/>
+        <activity android:name=".chat.LibraryActivity"
+            android:parentActivityName=".chat.OptionsActivity"/>
         <activity android:name=".chat.AddBook" />
         <activity android:name=".chat.NoticeComposerActivity" />
         <activity android:name=".chat.AuthNotice"
