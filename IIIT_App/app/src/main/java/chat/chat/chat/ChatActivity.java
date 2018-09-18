@@ -6,6 +6,7 @@ import android.app.DownloadManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Path;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -95,14 +96,14 @@ public class ChatActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i=new Intent(ChatActivity.this,OptionsActivity.class);
+                Intent i = new Intent(ChatActivity.this, OptionsActivity.class);
                 startActivity(i);
                 finish();
             }
         });
 
-        mSendBtn=(ImageView)findViewById(R.id.send);
-        mMessage=(EditText)findViewById(R.id.message);
+        mSendBtn = (ImageView) findViewById(R.id.send);
+        mMessage = (EditText) findViewById(R.id.message);
         mSendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,9 +117,7 @@ public class ChatActivity extends AppCompatActivity {
                         sendMessage(messages, mCurrentUser.getUid());
                         mMessage.setText("");
                     }
-                }
-                else
-                {
+                } else {
                     Toast.makeText(ChatActivity.this, "Not Connected to the Internet!", Toast.LENGTH_SHORT).show();
                 }
 
@@ -134,7 +133,7 @@ public class ChatActivity extends AppCompatActivity {
                 if (isConnected) {
                     PickerDialogFragment pickerDialogFragment = new PickerDialogFragment();
                     pickerDialogFragment.show(getFragmentManager(), "picker");
-                   
+
                 } else {
                     Toast.makeText(ChatActivity.this, "Not Connected to the Internet!", Toast.LENGTH_SHORT).show();
                 }
@@ -142,13 +141,13 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        mRef= FirebaseDatabase.getInstance().getReference();
-        mAuth=FirebaseAuth.getInstance();
-        mCurrentUser=mAuth.getInstance().getCurrentUser();
+        mRef = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
+        mCurrentUser = mAuth.getInstance().getCurrentUser();
 
 
         //bar visibility changes
-        bar=(LinearLayout)findViewById(R.id.bar);
+        bar = (LinearLayout) findViewById(R.id.bar);
         mRef.child("Users").child(mCurrentUser.getUid().toString()).child("CR").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -163,13 +162,17 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
         //loading messages through adapter
-        messageAdapter=new MessageAdapter(messagesList,ChatActivity.this);
-        mRecyclerView=(RecyclerView)findViewById(R.id.scrollView);
-        mLinearLayout=new LinearLayoutManager(this);
+        messageAdapter = new MessageAdapter(messagesList, ChatActivity.this);
+        mRecyclerView = (RecyclerView) findViewById(R.id.scrollView);
+        mLinearLayout = new LinearLayoutManager(this);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLinearLayout);
         mRecyclerView.setAdapter(messageAdapter);
-        mDb=mRef.child(ChatApp.rollInfo).child("message").child("An");
+        if (ChatApp.rollInfo == null)
+        {
+            startActivity(new Intent(ChatActivity.this,OptionsActivity.class));
+        }
+            mDb=mRef.child(ChatApp.rollInfo).child("message").child("An");
         mDb.keepSynced(true);
         loadMessages(mDb);
 

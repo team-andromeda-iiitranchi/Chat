@@ -1,5 +1,6 @@
 package chat.chat.chat;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -46,11 +47,14 @@ import io.reactivex.annotations.NonNull;
 public class AccountActivity extends AppCompatActivity {
     private Button setPic;
     private CircleImageView picture;
+    private ProgressDialog mProgress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
-        
+        mProgress=new ProgressDialog(this);
+        mProgress.setTitle("Updating Your Profile Picture");
+        mProgress.setCanceledOnTouchOutside(false);
         setPic= (Button) findViewById(R.id.setPic);
         picture= (CircleImageView) findViewById(R.id.picture);
         DatabaseReference mDatabase=FirebaseDatabase.getInstance().getReference();
@@ -113,7 +117,7 @@ public class AccountActivity extends AppCompatActivity {
                 ByteArrayOutputStream boas=new ByteArrayOutputStream();
                 compressedFile.compress(Bitmap.CompressFormat.JPEG,40,boas);
                 byte ar[]=boas.toByteArray();
-
+                mProgress.show();
                 UploadTask uploadTask=mStorage.putBytes(ar);
                 Task<Uri> uriTask=uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     @Override
@@ -123,6 +127,7 @@ public class AccountActivity extends AppCompatActivity {
                 }).addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
+                            mProgress.dismiss();;
                             DatabaseReference mDatabase= FirebaseDatabase.getInstance().getReference();
                             Map map=new HashMap();
                             map.put("imageLink",uri.toString());
@@ -134,12 +139,14 @@ public class AccountActivity extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        mProgress.dismiss();
                         Toast.makeText(AccountActivity.this, "Failure!", Toast.LENGTH_SHORT).show();
                     }
                 });
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
+                mProgress.dismiss();
             } catch (IOException e) {
                 e.printStackTrace();
             }
