@@ -26,4 +26,10 @@ public class ImageViewer extends AppCompatActivity {
         imageView.setImageURI(Uri.fromFile(file));
         textView.setText(text);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        
+    }
 }

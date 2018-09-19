@@ -85,7 +85,7 @@ public class UploadHelper {
             e.printStackTrace();
         }
         if(type.equals(TEMP_PHOTO_JPG)) {
-            intent.putExtra("path", mFileTemp.getPath());
+            intent.putExtra("path", mFileTemp.getAbsolutePath());
             mContext.startActivity(intent);
         }
         else
@@ -137,11 +137,6 @@ public class UploadHelper {
 
         }
     }
-
-    private void putAtAuthRef() {
-
-    }
-
     private void copyStream(InputStream input, OutputStream output) throws IOException{
         byte[] buffer = new byte[1024];
         int bytesRead;
@@ -191,10 +186,6 @@ public class UploadHelper {
         {
             Toast.makeText(mContext, "Task Successful!", Toast.LENGTH_LONG).show();
         }
-
-    }
-    public void passer()
-    {
 
     }
 }
