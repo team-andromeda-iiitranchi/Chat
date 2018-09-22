@@ -77,21 +77,23 @@ public class NoticeFragment extends Fragment {
                 final String key=dataSnapshot.getKey();
                 if(!key.equals("An"))
                 {
-                    TextView textView=new TextView(getActivity());
-                    textView.setText(key);
-                    textView.setTextSize(20);
-                    int pad=20;
-                    textView.setPadding(pad,pad,pad,pad);
-                    textView.setBackground(getResources().getDrawable(R.drawable.user_border));
-                    linearLayout.addView(textView);
-                    textView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent intent=new Intent(getActivity(),NoticeViewer.class);
-                            intent.putExtra("Name",key);
-                            startActivity(intent);
-                        }
-                    });
+                    if(getActivity()!=null) {
+                        TextView textView = new TextView(getActivity());
+                        textView.setText(key);
+                        textView.setTextSize(20);
+                        int pad = 20;
+                        textView.setPadding(pad, pad, pad, pad);
+                        textView.setBackground(getResources().getDrawable(R.drawable.user_border));
+                        linearLayout.addView(textView);
+                        textView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(getActivity(), NoticeViewer.class);
+                                intent.putExtra("Name", key);
+                                startActivity(intent);
+                            }
+                        });
+                    }
                 }
             }
 

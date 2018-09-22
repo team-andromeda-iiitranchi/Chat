@@ -197,11 +197,11 @@ class MessageAdapter extends RecyclerView.Adapter
             return SENT_MESSAGE;
         }
         else if(messages.getType().equals("null")&&!(messages.getFrom().equals(currentUserUid))) {
-            if(messages.getSender().equalsIgnoreCase("Faculty"))
+            if(messages.getSender()!=null&&messages.getSender().equalsIgnoreCase("Faculty"))
             {
                 return RECEIVED_FACULTY_MESSAGE;
             }
-            else if(messages.getSender().equalsIgnoreCase("Director"))
+            else if(messages.getSender()!=null&&messages.getSender().equalsIgnoreCase("Director"))
             {
                 return RECEIVED_DIRECTOR_MESSAGE;
             }
@@ -213,11 +213,11 @@ class MessageAdapter extends RecyclerView.Adapter
         }
         else
         {
-            if(messages.getSender().equalsIgnoreCase("FACULTY"))
+            if(messages.getSender()!=null&&messages.getSender().equalsIgnoreCase("FACULTY"))
             {
                 return RECEIVED_FILE_FACULTY;
             }
-            else if(messages.getSender().equalsIgnoreCase("Director"))
+            else if(messages.getSender()!=null&&messages.getSender().equalsIgnoreCase("Director"))
             {
                 return RECEIVED_FILE_DIRECTOR;
             }

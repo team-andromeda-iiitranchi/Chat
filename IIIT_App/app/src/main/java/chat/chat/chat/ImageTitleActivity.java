@@ -145,6 +145,7 @@ public class ImageTitleActivity extends AppCompatActivity implements ChooserDial
                                         ImageTitleActivity.this.timestamp=timestamp;
                                         //startActivity(new Intent(ImageTitleActivity.this,AuthNotice.class));
                                     }
+                                    finish();
 
                                 }
                                 else

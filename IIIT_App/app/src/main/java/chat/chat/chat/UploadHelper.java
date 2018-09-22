@@ -171,6 +171,7 @@ public class UploadHelper {
             map.put("timestamp", timestamp);
             map.put("text", message.getText());
             map.put("from", uid);
+            map.put("sender",(ChatApp.user.getCR().equals("true")||ChatApp.user.getCR().equals("false"))?"Student":ChatApp.user.getCR());
             map.put("type",type);
             map.put("link", uri.toString());
 
