@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="chat.chat">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:name=".ChatApp"
+        android:allowBackup="true"
+        android:hardwareAccelerated="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".chat.MainActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleInstance"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".chat.ChatActivity"
+            android:label="@string/title_activity_chat"
+            android:launchMode="singleInstance"
+            android:parentActivityName=".chat.OptionsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".chat.SignUpActivity"
+            android:label="@string/title_activity_sign_up"
+            android:launchMode="singleInstance"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".chat.OptionsActivity"
+            android:label="@string/title_activity_options"
+            android:launchMode="singleInstance"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".chat.AddPoll"
+            android:launchMode="singleInstance"
+            android:parentActivityName=".chat.OptionsActivity" />
+        <activity
+            android:name=".chat.VoteActivity"
+            android:launchMode="singleInstance"
+            android:parentActivityName=".chat.OptionsActivity" />
+        <activity
+            android:name=".chat.NoticeViewer"
+            android:launchMode="singleInstance"
+            android:parentActivityName=".chat.OptionsActivity" />
+        <activity
+            android:name=".chat.ImageTitleActivity"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name=".chat.ImageViewer"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name=".chat.AccountActivity"
+            android:launchMode="singleInstance"
+            android:parentActivityName=".chat.OptionsActivity" />
+        <activity
+            android:name=".chat.LibraryActivity"
+            android:launchMode="singleInstance"
+            android:parentActivityName=".chat.OptionsActivity" />
+        <activity
+            android:name=".chat.AddBook"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name=".chat.NoticeComposerActivity"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name=".chat.AuthNotice"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name=".chat.CategoryViewer"
+            android:launchMode="singleInstance"
+            android:parentActivityName=".chat.OptionsActivity" />
+        <activity android:name=".SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".WelcomeActivity"></activity>
+    </application>
+
+</manifest>
