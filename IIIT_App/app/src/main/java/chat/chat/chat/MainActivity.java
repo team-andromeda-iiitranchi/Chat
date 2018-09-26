@@ -23,12 +23,21 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import chat.chat.ChatApp;
 import chat.chat.R;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String TAG = "MainActivity";
     private FirebaseAuth mAuth;
+    private DatabaseReference dbRef;
+    private DatabaseReference usersRef;
     private EditText user;
     private EditText password;
     private Button logIn,signUp;
@@ -41,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
         mAuth=FirebaseAuth.getInstance();
         user=(EditText)findViewById(R.id.user);
         password=(EditText)findViewById(R.id.password);
+        dbRef = FirebaseDatabase.getInstance().getReference();
+        usersRef= dbRef.child("Users");
+
         logIn=(Button)findViewById(R.id.logIn);
         logIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
                     String name, pass;
                     name = user.getText().toString();
                     pass = password.getText().toString();
+                    final String pwd = pass;
                     if (TextUtils.isEmpty(name) || TextUtils.isEmpty(pass)) {
                         Toast.makeText(getApplicationContext(), "Empty Field!", Toast.LENGTH_LONG).show();
                     } else if (name.length() < 8) {
@@ -62,20 +75,48 @@ public class MainActivity extends AppCompatActivity {
                         mProgress.setMessage("Please Wait...");
                         mProgress.setCanceledOnTouchOutside(false);
                         mProgress.show();
-                        name = name + "@abc.com";
+//                      name = name + "@abc.com";
+
                         final String finalName = name;
-                        mAuth.signInWithEmailAndPassword(name, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+
+                        Query q = usersRef.orderByChild("username").equalTo(finalName);
+
+                        q.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    startActivity(new Intent(MainActivity.this, OptionsActivity.class));
-                                    finish();
-                                } else {
-                                    Toast.makeText(getApplicationContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                Users user=null;
+                               for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
+                               {
+                                   user=dataSnapshot1.getValue(Users.class);
+                               }
+                                if(user!=null) {
+                                    mAuth.signInWithEmailAndPassword(user.getEmail(), pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<AuthResult> task) {
+
+                                            mProgress.dismiss();
+                                            if (task.isSuccessful()) {
+                                                startActivity(new Intent(MainActivity.this, OptionsActivity.class));
+
+                                                finish();
+                                            } else {
+                                                Toast.makeText(getApplicationContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
                                 }
-                                mProgress.dismiss();
+                                else
+                                {
+                                    Toast.makeText(MainActivity.this, "User Not Found!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
                             }
                         });
+
                     }
                 }
                 else

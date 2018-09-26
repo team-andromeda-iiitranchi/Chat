@@ -3,20 +3,16 @@ package chat.chat.chat;
 import java.util.Map;
 
 public class Users {
-    private String CR;
+    private String CR,username,email;
     private String Name;
-
-    public String getImageLink() {
-        return imageLink;
-    }
-
-    public void setImageLink(String imageLink) {
-        this.imageLink = imageLink;
-    }
-
+    private String isUnseen;
     private String imageLink;
+    private Map<String,Object> polls;
+    private long latestTimestamp;
 
-    public Users(String CR, String name, Map<String, Object> polls, String isUnseen, long latestTimestamp, String username,String imageLink) {
+    public Users(){}
+
+    public Users(String CR, String email, String name, Map<String, Object> polls, String isUnseen, long latestTimestamp, String username,String imageLink) {
         this.CR = CR;
         Name = name;
         this.polls = polls;
@@ -26,51 +22,14 @@ public class Users {
         this.imageLink=imageLink;
     }
 
-    public Map<String,Object> getPolls() {
-        return polls;
+
+    public Users(String CR, String name, Map<String, Object> polls, String isUnseen, long latestTimestamp, String username,String imageLink) {
+        this(CR,"",name,polls,isUnseen,latestTimestamp,username,imageLink);
     }
 
-    public void setPolls(Map<String,Object> polls) {
-        this.polls =polls;
-    }
-
-    private Map<String,Object> polls;
-    public String getIsUnseen() {
-        return isUnseen;
-    }
-
-    public void setIsUnseen(String isUnseen) {
-        this.isUnseen = isUnseen;
-    }
-
-    private String isUnseen;
-
-    public long getLatestTimestamp() {
-        return latestTimestamp;
-    }
-
-    public void setLatestTimestamp(long latestTimestamp) {
-        this.latestTimestamp = latestTimestamp;
-    }
-
-    private long latestTimestamp;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-    private String username;
     public Users(String CR,String Name,String username,long latestTimestamp,String isUnseen,Map<String,Object> polls)
     {
-        this.latestTimestamp=latestTimestamp;
-        this.CR=CR;
-        this.Name=Name;
-        this.username=username;
-        this.isUnseen=isUnseen;
-        this.polls=polls;
+        this(CR,Name,polls,isUnseen,latestTimestamp,username,"");
     }
 
     public String getCR() {
@@ -81,6 +40,22 @@ public class Users {
         this.CR = CR;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getName() {
         return Name;
     }
@@ -88,6 +63,50 @@ public class Users {
     public void setName(String name) {
         Name = name;
     }
-    public Users()
-    {}
+
+    public String getIsUnseen() {
+        return isUnseen;
+    }
+
+    public void setIsUnseen(String isUnseen) {
+        this.isUnseen = isUnseen;
+    }
+
+    public String getImageLink() {
+        return imageLink;
+    }
+
+    public void setImageLink(String imageLink) {
+        this.imageLink = imageLink;
+    }
+
+    public Map<String, Object> getPolls() {
+        return polls;
+    }
+
+    public void setPolls(Map<String, Object> polls) {
+        this.polls = polls;
+    }
+
+    public long getLatestTimestamp() {
+        return latestTimestamp;
+    }
+
+    public void setLatestTimestamp(long latestTimestamp) {
+        this.latestTimestamp = latestTimestamp;
+    }
+
+    @Override
+    public String toString() {
+        return "Users{" +
+                "CR='" + CR + '\'' +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", Name='" + Name + '\'' +
+                ", isUnseen='" + isUnseen + '\'' +
+                ", imageLink='" + imageLink + '\'' +
+                ", polls=" + polls +
+                ", latestTimestamp=" + latestTimestamp +
+                '}';
+    }
 }

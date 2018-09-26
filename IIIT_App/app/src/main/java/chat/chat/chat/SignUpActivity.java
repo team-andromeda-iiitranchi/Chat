@@ -13,6 +13,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +23,8 @@ import com.firebase.client.FirebaseException;
 import com.firebase.client.ServerValue;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
+
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,6 +33,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
@@ -37,14 +41,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import chat.chat.R;
 
 public class SignUpActivity extends AppCompatActivity {
-    private EditText mUser,mName,mPass,mCpass;
+    private EditText mUser,mName,mEmail, mPass,mCpass;
     private Button mSignUp;
     private String rollInfo;
-    FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
     private Map map;
     private DatabaseReference mRef;
     @Override
@@ -54,35 +59,47 @@ public class SignUpActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Sign Up");
+
         mUser=(EditText)findViewById(R.id.username);
         mName=(EditText)findViewById(R.id.name);
+        mEmail=(EditText)findViewById(R.id.email_id);
         mPass=(EditText)findViewById(R.id.pwd);
         mCpass=(EditText)findViewById(R.id.cpwd);
         mSignUp=(Button)findViewById(R.id.button);
+
         mAuth=FirebaseAuth.getInstance();
+
         mSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
                 NetworkInfo info = cm.getActiveNetworkInfo();
+
                 boolean isConnected = info != null && info.isConnectedOrConnecting();
                 if (isConnected) {
-                    String name, user, pass, cpass;
+                    String name, user, email, pass, cpass;
                     name = mName.getText().toString();
                     user = mUser.getText().toString();
+                    email = mEmail.getText().toString();
                     if (user.length() < 8) {
                         Toast.makeText(getApplicationContext(), "Invalid Regisration No.!", Toast.LENGTH_LONG).show();
                     } else {
-                        rollInfo = user.substring(0, 8);
+
+                        rollInfo = user.substring(0, 8);    // 2017ugcs
+
                         pass = mPass.getText().toString();
                         cpass = mCpass.getText().toString();
                         if (TextUtils.isEmpty(name) || TextUtils.isEmpty(user) || TextUtils.isEmpty(pass) || TextUtils.isEmpty(cpass)) {
                             Toast.makeText(getApplicationContext(), "Empty Field!", Toast.LENGTH_LONG).show();
+                        } else if ((TextUtils.isEmpty(email)&& !Patterns.EMAIL_ADDRESS.matcher(email).matches())) {
+                            Toast.makeText(getApplicationContext(), "Invalid Email!", Toast.LENGTH_LONG).show();
                         } else if (!pass.equals(cpass)) {
                             Toast.makeText(getApplicationContext(), "Passwords do not match!", Toast.LENGTH_LONG).show();
                         } else {
-                            user = user + "@abc.com";
-                            createUser(name, user, pass);
+//                            user = user + "@abc.com";   // email
+//                            createUser(name, user, pass);   // user --- email
+                            createUserWithEmail();
                         }
 
 
@@ -94,66 +111,106 @@ public class SignUpActivity extends AppCompatActivity {
                 }
             }
         });
-
-
     }
-    public void createUser(final String name,final String user,final String pass)
-    {
-        final ProgressDialog mProgress=new ProgressDialog(this);
+
+    String suName, suUser, suEmail, suPass;
+    ProgressDialog mProgress;
+
+    public void createUserWithEmail(){
+        mProgress=new ProgressDialog(this);
         mProgress.setTitle("Creating Account");
         mProgress.setCanceledOnTouchOutside(false);
         mProgress.show();
-        mAuth.createUserWithEmailAndPassword(user,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        checkUserExist();
+    }
+
+    public void checkUserExist()
+    {
+        DatabaseReference mRef=FirebaseDatabase.getInstance().getReference();
+        Query q=mRef.child("Users").orderByChild("username").equalTo(suUser);
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot!=null)
+                {
+                    boolean userExist = false;
+                    for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
+                    {
+                        userExist  = true;
+                    }
+
+                    if(userExist){
+                        signUpSetup();
+                    }else{
+                        mProgress.dismiss();
+                        Toast.makeText(SignUpActivity.this, "Registration number already registered", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void signUpSetup(){
+        mAuth.createUserWithEmailAndPassword(suEmail, suPass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(Task<AuthResult> task) {
-                if(task.isSuccessful())
-                {
+                if (task.isSuccessful()) {
                     String uid;
-                    map=new HashMap();
-                    uid=mAuth.getCurrentUser().getUid();
-                    mRef= FirebaseDatabase.getInstance().getReference();
-                    Map map1=new HashMap();
-                    String keyForFirstPoll=mRef.child("Users").child(uid).child("polls").push().getKey();
-                    map1.put(keyForFirstPoll,"1");
-                    map.put("Name",name);
-                    if(user.indexOf("fac")==-1&&user.indexOf("dir")==-1) {
+                    map = new HashMap();
+
+                    uid = mAuth.getCurrentUser().getUid();
+
+                    mRef = FirebaseDatabase.getInstance().getReference();
+
+                    Map map1 = new HashMap();
+
+                    String keyForFirstPoll = mRef.child("Users").child(uid).child("polls").push().getKey();
+
+
+                    map1.put(keyForFirstPoll, "1");
+
+                    map.put("Name", suName);
+
+                    if (suUser.indexOf("fac") == -1 && suUser.indexOf("dir") == -1) {
                         map.put("CR", "false");
+                    } else if (suUser.indexOf("fac") != -1) {
+                        map.put("CR", "faculty");
+                    } else {
+                        map.put("CR", "director");
                     }
-                    else if(user.indexOf("fac")!=-1)
-                    {
-                        map.put("CR","faculty");
-                    }
-                    else
-                    {
-                        map.put("CR","director");
-                    }
-                    map.put("username",user.substring(0,user.indexOf("@")));
-                    map.put("latestTimestamp",ServerValue.TIMESTAMP);
-                    map.put("isUnseen","true");
-                    map.put("polls",map1);
-                    map.put("imageLink","null");
+
+                    map.put("email", suEmail);
+                    map.put("username", suUser);
+                    map.put("latestTimestamp", ServerValue.TIMESTAMP);
+                    map.put("isUnseen", "true");
+                    map.put("polls", map1);
+                    map.put("imageLink", "null");
                     mRef.child("Users").child(uid).setValue(map);
-                    if(user.indexOf("fac")==-1&&user.indexOf("dir")==-1)
-                    {
+
+                    if (suUser.indexOf("fac") == -1 && suUser.indexOf("dir") == -1) {
                         sections(uid);
+                    } else if (suUser.indexOf("fac") != -1) {
+                        faculty(suUser, uid, suName);
                     }
-                    else if(user.indexOf("fac")!=-1)
-                    {
-                        faculty(user,uid,name);
-                    }
+
                     //mRef.child("CR").child("messages").child(uid).child("timestamp").setValue(ServerValue.TIMESTAMP);
-                    Toast.makeText(getApplicationContext(),"Authentication Successful!",Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(SignUpActivity.this,MainActivity.class));
+                    Toast.makeText(getApplicationContext(), "Authentication Successful!", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(SignUpActivity.this, MainActivity.class));
                     finish();
-                }
-                else
-                {
-                    Toast.makeText(getApplicationContext(),"Some error occured!",Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Some error occured!", Toast.LENGTH_LONG).show();
                 }
                 mProgress.dismiss();
             }
         });
+
     }
+
     public void faculty(String user,String uid,String name)
     {
         user=user.substring(0,user.indexOf("@"));
