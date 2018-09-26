@@ -10,7 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="chat.chat.chat.SignUpActivity"
-    android:background="@color/colorPrimary"
+    android:background="@color/gen_white"
     tools:showIn="@layout/activity_sign_up">
     <EditText
         android:layout_width="match_parent"
