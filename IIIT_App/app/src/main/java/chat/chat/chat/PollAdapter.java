@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,7 +39,10 @@ public class PollAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.poll_layout,parent,false);
         mView=view;
-        uid= FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(fUser!=null){
+            uid = fUser.getUid();
+        }
         mRef=FirebaseDatabase.getInstance().getReference();
         return new PollHolder(view);
     }
