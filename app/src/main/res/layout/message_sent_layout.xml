@@ -16,9 +16,11 @@
         android:textSize="11dp"
         android:padding="5dp"
         android:id="@+id/timeView"
+        android:textColor="@color/black_app"
         android:text="DD-MM-YYYY"/>
 
     <TextView
+        android:padding="15dp"
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,5 +31,7 @@
         android:maxWidth="@dimen/message_max_width"
         android:text="@string/sent_text"
         android:textColor="@color/white"
+        android:textStyle="bold"
+        android:fontFamily="serif-monospace"
         android:textSize="@dimen/message_text_size" />
 </RelativeLayout>

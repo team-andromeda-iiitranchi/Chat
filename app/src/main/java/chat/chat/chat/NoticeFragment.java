@@ -2,6 +2,7 @@ package chat.chat.chat;
 
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -78,6 +79,7 @@ public class NoticeFragment extends Fragment {
                 if(!key.equals("An"))
                 {
                     TextView textView=new TextView(getActivity());
+                    textView.setTextColor(Color.BLACK);
                     textView.setText(key);
                     textView.setTextSize(20);
                     int pad=20;

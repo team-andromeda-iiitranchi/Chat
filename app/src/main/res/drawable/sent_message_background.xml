@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/colorSecondary"/>
+    <solid android:color="#7db8cc"/>
     <corners android:bottomLeftRadius="@dimen/message_view_main_radius"
         android:bottomRightRadius="@dimen/message_view_main_radius"
         android:topLeftRadius="@dimen/message_view_main_radius"

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Chat</string>
+    <string name="app_name">IIIT RANCHI</string>
     <string name="action_settings">Settings</string>
     <string name="message_hint">Write you message here...</string>
     <string name="title_activity_chat">ChatActivity</string>
@@ -18,7 +18,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_options">Chat</string>
+    <string name="title_activity_options">IIIT RANCHI</string>
     <string name="title_activity_add_poll">AddPoll</string>
     <string name="title_activity_vote">VoteActivity</string>
     <string name="categories">Categories :</string>

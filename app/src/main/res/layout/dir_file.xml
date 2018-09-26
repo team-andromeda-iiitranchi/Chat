@@ -10,6 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:weightSum="1"
     android:orientation="vertical">
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -69,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="DD-MM-YYYY"
-            android:textColor="@color/gen_black"
+            android:textColor="@color/black_app"
             android:textSize="11dp"
             android:padding="5dp"/>
 

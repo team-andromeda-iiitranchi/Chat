@@ -69,6 +69,7 @@
             android:layout_height="wrap_content"
             android:text="DD-MM-YYYY"
             android:textSize="11dp"
+            android:textColor="@color/black_app"
             android:padding="5dp"/>
 
     </LinearLayout>

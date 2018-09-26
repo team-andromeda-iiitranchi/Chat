@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#e9d83e" />
+   <gradient
+       android:angle="45"
+       android:startColor="@color/grey_light"
+       android:endColor="@color/grey_color"
+       />
     <corners android:bottomLeftRadius="@dimen/message_view_main_radius"
         android:bottomRightRadius="@dimen/message_view_main_radius"
         android:topLeftRadius="4dp"

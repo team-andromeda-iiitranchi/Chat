@@ -12,6 +12,8 @@
     tools:context="chat.chat.chat.SignUpActivity"
     android:background="@color/gen_white"
     tools:showIn="@layout/activity_sign_up">
+
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

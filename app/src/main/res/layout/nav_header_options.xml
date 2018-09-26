@@ -2,30 +2,28 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/nav_header_height"
+    android:layout_height="wrap_content"
     android:background="@drawable/side_nav_bar"
-    android:backgroundTint="@color/gen_white"
-    >
+    android:backgroundTint="@color/gen_white">
+
     <TextView
-        android:layout_marginTop="10dp"
-        android:layout_width="353dp"
+        android:id="@+id/iiit"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
         android:inputType="textMultiLine"
         android:text="Indian Institute of Information Technology Ranchi"
         android:textColor="@color/blue_light"
         android:textSize="18dp"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:id="@+id/iiit"/>
+        android:textStyle="bold" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageView"
-        android:layout_width="150dp"
-        android:layout_height="131dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/iiit"
+        android:layout_width="188dp"
+        android:layout_height="126dp"
+        android:layout_below="@+id/iiit"
+        android:layout_centerHorizontal="true"
         android:contentDescription="@string/nav_header_desc"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:src="@drawable/logo" />
@@ -35,26 +33,12 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="18dp"
-        android:layout_marginEnd="24dp"
-        android:fontFamily="serif-monospace"
+        android:layout_below="@id/imageView"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="monospace"
         android:text="www.iiitranchi.ac.in"
-        android:textColor="@color/black_app" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="29dp"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="36dp"
-        android:textSize="15dp"
-        android:textStyle="italic"
-        android:fontFamily="serif"
-        android:text="Communication App"
-        android:textColor="@color/black" />
+        android:textColor="@color/black_app"
+        android:textSize="18sp" />
 
 
 </RelativeLayout>
