@@ -35,9 +35,9 @@
             android:layout_marginRight="5dp"
             android:layout_toEndOf="@+id/linearLayout"
             android:layout_weight="0"
-            android:background="@drawable/message_background2"
+            android:fontFamily="serif-monospace"
             android:text="@string/display_name"
-            android:textSize="10dp" />
+            android:textSize="12dp" />
 
         <TextView
             android:id="@+id/messview"
@@ -46,7 +46,7 @@
             android:layout_alignEnd="@+id/linearLayout"
             android:layout_below="@+id/circleview"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/dir_background"
+            android:background="@drawable/btn_background"
             android:longClickable="true"
             android:maxWidth="@dimen/message_max_width"
             android:text="@string/text"

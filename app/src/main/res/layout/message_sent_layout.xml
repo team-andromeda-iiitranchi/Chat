@@ -20,18 +20,18 @@
         android:text="DD-MM-YYYY"/>
 
     <TextView
-        android:padding="15dp"
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/timeView"
         android:layout_below="@+id/timeView"
         android:background="@drawable/sent_message_background"
+        android:fontFamily="casual"
         android:longClickable="true"
         android:maxWidth="@dimen/message_max_width"
+        android:padding="15dp"
         android:text="@string/sent_text"
         android:textColor="@color/white"
-        android:textStyle="bold"
-        android:fontFamily="serif-monospace"
-        android:textSize="@dimen/message_text_size" />
+        android:textSize="@dimen/message_text_size"
+        android:textStyle="bold" />
 </RelativeLayout>

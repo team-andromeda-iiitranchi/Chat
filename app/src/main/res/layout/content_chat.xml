@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="10dp"
     android:background="@drawable/msgback1"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="chat.chat.chat.ChatActivity"
@@ -18,9 +19,11 @@
         />
 
     <LinearLayout
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="8dp"
         android:id="@+id/bar"
         android:layout_width="match_parent"
-        android:layout_height="76dp"
+        android:layout_height="65dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
@@ -50,7 +53,7 @@
         <ImageView
             android:id="@+id/send"
             android:layout_width="57dp"
-            android:layout_height="73dp"
+            android:layout_height="65dp"
             android:layout_alignParentBottom="true"
             android:clickable="true"
             android:longClickable="true"

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:background="@color/gen_white"
+    android:paddingBottom="10dp"
     android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
@@ -11,10 +14,12 @@
             android:layout_above="@+id/bar"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:background="@drawable/msgback1"
+            android:background="@color/gen_white"
             />
 
     <LinearLayout
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="8dp"
         android:id="@+id/bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -47,7 +52,7 @@
         <ImageView
             android:id="@+id/send"
             android:layout_width="71dp"
-            android:layout_height="73dp"
+            android:layout_height="65dp"
             android:layout_alignParentBottom="true"
             android:clickable="true"
             android:longClickable="true"
@@ -57,7 +62,4 @@
             android:src="@drawable/send_btn" />
 
     </LinearLayout>
-
-
-
 </RelativeLayout>

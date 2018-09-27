@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Path;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -101,6 +102,7 @@ public class ChatActivity extends AppCompatActivity {
                 finish();
             }
         });
+        Typeface roboto = Typeface.createFromAsset(getAssets(),"font/Roboto-Regular.ttf");
 
         mSendBtn = (ImageView) findViewById(R.id.send);
         mMessage = (EditText) findViewById(R.id.message);

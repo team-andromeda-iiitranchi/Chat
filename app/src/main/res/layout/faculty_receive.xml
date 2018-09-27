@@ -35,9 +35,9 @@
             android:layout_marginRight="5dp"
             android:layout_toEndOf="@+id/linearLayout"
             android:layout_weight="0"
-            android:background="@drawable/message_background2"
+            android:fontFamily="serif-monospace"
             android:text="@string/display_name"
-            android:textSize="10dp" />
+            android:textSize="12dp" />
 
         <TextView
             android:id="@+id/messview"

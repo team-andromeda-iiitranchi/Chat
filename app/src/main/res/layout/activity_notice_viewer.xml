@@ -4,10 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/msgback1"
     tools:context=".chat.NoticeViewer">
+
+    <include layout="@layout/app_bar_layout"
+        android:id="@+id/activity_notice_view_toolbar"/>
+
     <android.support.v7.widget.RecyclerView
+        android:layout_marginTop="75dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/activity_notice_view_toolbar"
         android:id="@+id/noticeViewerRecycler">
 
     </android.support.v7.widget.RecyclerView>
