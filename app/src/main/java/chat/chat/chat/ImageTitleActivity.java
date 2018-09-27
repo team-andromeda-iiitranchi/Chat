@@ -145,7 +145,6 @@ public class ImageTitleActivity extends AppCompatActivity implements ChooserDial
                                         ImageTitleActivity.this.timestamp=timestamp;
                                         //startActivity(new Intent(ImageTitleActivity.this,AuthNotice.class));
                                     }
-                                    finish();
 
                                 }
                                 else
@@ -321,5 +320,10 @@ public class ImageTitleActivity extends AppCompatActivity implements ChooserDial
         {
             Toast.makeText(ImageTitleActivity.this, "Your category was not well defined!", Toast.LENGTH_LONG).show();
         }
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

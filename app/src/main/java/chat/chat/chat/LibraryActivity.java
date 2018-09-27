@@ -49,7 +49,7 @@ public class LibraryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_library);
 
-        getSupportActionBar().setTitle("E-Library");
+        //getSupportActionBar().setTitle("E-Library");
 
         mStorage= FirebaseStorage.getInstance().getReference().child("Books");
         mRef= FirebaseDatabase.getInstance().getReference().child("Books");
@@ -88,8 +88,8 @@ public class LibraryActivity extends AppCompatActivity {
         }
         else if(state==1)
         {
-            Intent intent=new Intent(LibraryActivity.this,OptionsActivity.class);
-            startActivity(intent);
+            //Intent intent=new Intent(LibraryActivity.this,OptionsActivity.class);
+            //startActivity(intent);
             finish();
         }
     }

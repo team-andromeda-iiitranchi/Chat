@@ -101,8 +101,8 @@ public class AddBook extends AppCompatActivity {
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         mProgress.dismiss();
                         mRef.child("Books").child(finalTopic).child(finalName.substring(0,finalName.indexOf("."))).setValue(1);
-                        finish();
                         startActivity(new Intent(AddBook.this,LibraryActivity.class));
+                        finish();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -154,5 +154,9 @@ public class AddBook extends AppCompatActivity {
         }
         return newStr;
     }
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

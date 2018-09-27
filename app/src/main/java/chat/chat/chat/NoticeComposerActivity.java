@@ -45,7 +45,7 @@ public class NoticeComposerActivity extends AppCompatActivity implements Chooser
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notice_composer);
-        getSupportActionBar().setTitle("Notice");
+        //getSupportActionBar().setTitle("Notice");
 
         mMessage= (EditText) findViewById(R.id.notice);
         mSendBtn= (Button) findViewById(R.id.sendBtn);

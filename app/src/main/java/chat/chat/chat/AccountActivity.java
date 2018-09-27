@@ -157,4 +157,10 @@ public class AccountActivity extends AppCompatActivity {
             //Toast.makeText(AccountActivity.this,"See if storage permission has been granted to app!",Toast.LENGTH_LONG).show();
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

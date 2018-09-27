@@ -82,6 +82,9 @@ public class SignUpActivity extends AppCompatActivity {
                     name = mName.getText().toString();
                     user = mUser.getText().toString();
                     email = mEmail.getText().toString();
+                    suEmail=email;
+                    suUser=user;
+                    suName=name;
                     if (user.length() < 8) {
                         Toast.makeText(getApplicationContext(), "Invalid Regisration No.!", Toast.LENGTH_LONG).show();
                     } else {
@@ -89,6 +92,7 @@ public class SignUpActivity extends AppCompatActivity {
                         rollInfo = user.substring(0, 8);    // 2017ugcs
 
                         pass = mPass.getText().toString();
+                        suPass=pass;
                         cpass = mCpass.getText().toString();
                         if (TextUtils.isEmpty(name) || TextUtils.isEmpty(user) || TextUtils.isEmpty(pass) || TextUtils.isEmpty(cpass)) {
                             Toast.makeText(getApplicationContext(), "Empty Field!", Toast.LENGTH_LONG).show();
@@ -139,7 +143,7 @@ public class SignUpActivity extends AppCompatActivity {
                         userExist  = true;
                     }
 
-                    if(userExist){
+                    if(!userExist){
                         signUpSetup();
                     }else{
                         mProgress.dismiss();

@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -55,7 +56,8 @@ public class AuthNotice extends AppCompatActivity {
                 }
             }
         });
-
+        Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         mList=new ArrayList<>();
         recyclerView= (RecyclerView) findViewById(R.id.recAuth);
         adapter=new MessageAdapter(mList,AuthNotice.this);
@@ -85,17 +87,16 @@ public class AuthNotice extends AppCompatActivity {
         {
             Intent intent=new Intent(AuthNotice.this,AccountActivity.class);
             startActivity(intent);
-
         }
         else if(item.getItemId()==R.id.logout)
         {
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(AuthNotice.this,MainActivity.class));
+            finish();
         }
         else if(item.getItemId()==R.id.archives)
         {
             startActivity(new Intent(AuthNotice.this,LibraryActivity.class));
-            finish();
         }
         else if(item.getItemId()==R.id.categories)
         {
@@ -135,4 +136,5 @@ public class AuthNotice extends AppCompatActivity {
             }
         });
     }
+
 }

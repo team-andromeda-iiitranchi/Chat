@@ -23,7 +23,6 @@
         <activity
             android:name=".chat.ChatActivity"
             android:label="@string/title_activity_chat"
-            android:launchMode="singleInstance"
             android:parentActivityName=".chat.OptionsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -46,9 +45,7 @@
             android:launchMode="singleInstance"
             android:parentActivityName=".chat.OptionsActivity" />
         <activity
-            android:name=".chat.NoticeViewer"
-            android:launchMode="singleInstance"
-            android:parentActivityName=".chat.OptionsActivity" />
+            android:name=".chat.NoticeViewer" />
         <activity
             android:name=".chat.ImageTitleActivity"
             android:launchMode="singleInstance" />
@@ -57,12 +54,10 @@
             android:launchMode="singleInstance" />
         <activity
             android:name=".chat.AccountActivity"
-            android:launchMode="singleInstance"
-            android:parentActivityName=".chat.OptionsActivity" />
+           />
         <activity
             android:name=".chat.LibraryActivity"
-            android:launchMode="singleInstance"
-            android:parentActivityName=".chat.OptionsActivity" />
+            />
         <activity
             android:name=".chat.AddBook"
             android:launchMode="singleInstance" />
@@ -71,11 +66,10 @@
             android:launchMode="singleInstance" />
         <activity
             android:name=".chat.AuthNotice"
-            android:launchMode="singleInstance" />
+             />
         <activity
             android:name=".chat.CategoryViewer"
-            android:launchMode="singleInstance"
-            android:parentActivityName=".chat.OptionsActivity" />
+            />
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
