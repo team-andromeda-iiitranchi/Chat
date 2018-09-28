@@ -88,6 +88,7 @@ public class VoteActivity extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
                                         Intent intent = new Intent(VoteActivity.this, OptionsActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                         startActivity(intent);
                                         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(uid).child("polls");

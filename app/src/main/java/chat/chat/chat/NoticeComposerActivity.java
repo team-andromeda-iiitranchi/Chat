@@ -269,7 +269,9 @@ public class NoticeComposerActivity extends AppCompatActivity implements Chooser
                     mDatabase.child("Faculty").child(ChatApp.user.getUsername()).child("Notices").child(ctgry).child(key).setValue(map);
                 }
             }
-            startActivity(new Intent(NoticeComposerActivity.this, AuthNotice.class));
+            Intent i=new Intent(NoticeComposerActivity.this, AuthNotice.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(i);
             finish();
         }
     }

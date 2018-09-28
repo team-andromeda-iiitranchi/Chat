@@ -48,6 +48,7 @@ public class AuthNotice extends AppCompatActivity {
                 boolean isConnected = info != null && info.isConnectedOrConnecting();
                 if(isConnected) {
                     Intent intent = new Intent(AuthNotice.this, NoticeComposerActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);
                 }
                 else
@@ -86,21 +87,28 @@ public class AuthNotice extends AppCompatActivity {
         if(item.getItemId()==R.id.account)
         {
             Intent intent=new Intent(AuthNotice.this,AccountActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         }
         else if(item.getItemId()==R.id.logout)
         {
             FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(AuthNotice.this,MainActivity.class));
+            Intent i=new Intent(AuthNotice.this,MainActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(i);
             finish();
         }
         else if(item.getItemId()==R.id.archives)
         {
-            startActivity(new Intent(AuthNotice.this,LibraryActivity.class));
+            Intent i=new Intent(AuthNotice.this,LibraryActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(i);
         }
         else if(item.getItemId()==R.id.categories)
         {
-            startActivity(new Intent(AuthNotice.this,CategoryViewer.class));
+            Intent i=new Intent(AuthNotice.this,CategoryViewer.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(i);
         }
         return super.onOptionsItemSelected(item);
     }

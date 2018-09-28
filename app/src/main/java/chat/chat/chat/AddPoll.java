@@ -129,7 +129,9 @@ public class AddPoll extends AppCompatActivity {
                 final String key = mRootRef.getKey();
                 mRef.child(ChatApp.rollInfo).child("Poll").child(key).setValue(poll);
                 Toast.makeText(getApplicationContext(), "Successfully added the poll!", Toast.LENGTH_LONG).show();
-                startActivity(new Intent(AddPoll.this, OptionsActivity.class));
+                Intent i=new Intent(AddPoll.this, OptionsActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(i);
                 finish();
                 addPerUser(key);
             }

@@ -58,6 +58,7 @@ public class CategoryViewer extends AppCompatActivity {
                         public void onClick(View view) {
                             Intent intent=new Intent(CategoryViewer.this,NoticeViewer.class);
                             intent.putExtra("Name",key);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                             startActivity(intent);
                         }
                     });

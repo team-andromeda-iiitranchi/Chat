@@ -32,4 +32,10 @@ public class ImageViewer extends AppCompatActivity {
         super.onDestroy();
         
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

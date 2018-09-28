@@ -101,7 +101,9 @@ public class AddBook extends AppCompatActivity {
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         mProgress.dismiss();
                         mRef.child("Books").child(finalTopic).child(finalName.substring(0,finalName.indexOf("."))).setValue(1);
-                        startActivity(new Intent(AddBook.this,LibraryActivity.class));
+                        Intent i=new Intent(AddBook.this,LibraryActivity.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        startActivity(i);
                         finish();
                     }
                 }).addOnFailureListener(new OnFailureListener() {

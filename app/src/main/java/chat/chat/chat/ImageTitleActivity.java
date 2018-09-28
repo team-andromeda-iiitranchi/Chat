@@ -177,11 +177,15 @@ public class ImageTitleActivity extends AppCompatActivity implements ChooserDial
     {
         if(context.equals("ChatActivity"))
         {
-            startActivity(new Intent(ImageTitleActivity.this,ChatActivity.class));
+            Intent i=new Intent(ImageTitleActivity.this,ChatActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(i);
         }
         else if(context.equals("ChatFragment"))
         {
-            startActivity(new Intent(ImageTitleActivity.this,OptionsActivity.class));
+            Intent i=new Intent(ImageTitleActivity.this,OptionsActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(i);
         }
     }
 
@@ -239,7 +243,9 @@ public class ImageTitleActivity extends AppCompatActivity implements ChooserDial
                 mDatabase.child("Faculty").child(ChatApp.user.getUsername()).child("Notices").child(ctgry).child(key).setValue(map);
             }
         }
-        startActivity(new Intent(ImageTitleActivity.this, AuthNotice.class));
+        Intent i=new Intent(ImageTitleActivity.this, AuthNotice.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivity(i);
         finish();
     }
     public void initList() {

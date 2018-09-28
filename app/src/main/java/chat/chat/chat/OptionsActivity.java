@@ -76,7 +76,9 @@ public class OptionsActivity extends AppCompatActivity
                 {
 
                     mProgress.dismiss();
-                    startActivity(new Intent(OptionsActivity.this,MainActivity.class));
+                    Intent i=new Intent(OptionsActivity.this,MainActivity.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                    startActivity(i);
                     finish();
                 }
                 else
@@ -113,7 +115,9 @@ public class OptionsActivity extends AppCompatActivity
                             }
                             else
                             {
-                                startActivity(new Intent(OptionsActivity.this,AuthNotice.class));
+                                Intent i=new Intent(OptionsActivity.this,AuthNotice.class);
+                                i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                startActivity(i);
                                 finish();
                             }
                             mProgress.dismiss();
@@ -194,11 +198,14 @@ public class OptionsActivity extends AppCompatActivity
         if(item.getItemId()==R.id.logout)
         {
             FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(OptionsActivity.this,MainActivity.class));
+            Intent i=new Intent(OptionsActivity.this,MainActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(i);
         }
         if(item.getItemId()==R.id.account)
         {
             Intent intent=new Intent(OptionsActivity.this,AccountActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
 
         }
@@ -219,6 +226,7 @@ public class OptionsActivity extends AppCompatActivity
         else if(id==R.id.library)
         {
             Intent intent=new Intent(OptionsActivity.this,LibraryActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -96,7 +96,9 @@ public class MainActivity extends AppCompatActivity {
 
                                             mProgress.dismiss();
                                             if (task.isSuccessful()) {
-                                                startActivity(new Intent(MainActivity.this, OptionsActivity.class));
+                                                Intent i=new Intent(MainActivity.this, OptionsActivity.class);
+                                                i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                                startActivity(i);
 
                                                 finish();
                                             } else {
@@ -131,7 +133,10 @@ public class MainActivity extends AppCompatActivity {
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this,SignUpActivity.class));
+                Intent i=new Intent(MainActivity.this,SignUpActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(i);
+                finish();
             }
         });
     }

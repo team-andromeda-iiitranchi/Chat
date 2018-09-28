@@ -290,6 +290,7 @@ public class ChatActivity extends AppCompatActivity {
     public void onBackPressed()
     {
         Intent i=new Intent(ChatActivity.this,OptionsActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         startActivity(i);
         finish();
     }

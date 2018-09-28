@@ -204,7 +204,9 @@ public class SignUpActivity extends AppCompatActivity {
 
                     //mRef.child("CR").child("messages").child(uid).child("timestamp").setValue(ServerValue.TIMESTAMP);
                     Toast.makeText(getApplicationContext(), "Authentication Successful!", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+                    Intent i=new Intent(SignUpActivity.this, MainActivity.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                    startActivity(i);
                     finish();
                 } else {
                     Toast.makeText(getApplicationContext(), "Some error occured!", Toast.LENGTH_LONG).show();
@@ -215,7 +217,16 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-    public void faculty(String user,String uid,String name)
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i=new Intent(SignUpActivity.this,MainActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivity(i);
+        finish();
+    }
+
+    public void faculty(String user, String uid, String name)
     {
         user=user.substring(0,user.indexOf("@"));
         String key=mRef.child("Faculty").child(user).child("Notices").child("An").push().getKey();

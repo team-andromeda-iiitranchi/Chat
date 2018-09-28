@@ -67,7 +67,9 @@ public class LibraryActivity extends AppCompatActivity {
                 NetworkInfo info = cm.getActiveNetworkInfo();
                 boolean isConnected = info != null && info.isConnectedOrConnecting();
                 if (isConnected) {
-                    startActivity(new Intent(LibraryActivity.this, AddBook.class));
+                    Intent i=new Intent(LibraryActivity.this, AddBook.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                    startActivity(i);
                 }
                 else
                 {

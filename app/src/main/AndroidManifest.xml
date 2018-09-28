@@ -18,7 +18,6 @@
         <activity
             android:name=".chat.MainActivity"
             android:label="@string/app_name"
-            android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".chat.ChatActivity"
@@ -28,7 +27,6 @@
         <activity
             android:name=".chat.SignUpActivity"
             android:label="@string/title_activity_sign_up"
-            android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".chat.OptionsActivity"
@@ -37,20 +35,16 @@
         </activity>
         <activity
             android:name=".chat.AddPoll"
-            android:launchMode="singleInstance"
             android:parentActivityName=".chat.OptionsActivity" />
         <activity
             android:name=".chat.VoteActivity"
-            android:launchMode="singleInstance"
             android:parentActivityName=".chat.OptionsActivity" />
         <activity
             android:name=".chat.NoticeViewer" />
         <activity
-            android:name=".chat.ImageTitleActivity"
-            android:launchMode="singleInstance" />
+            android:name=".chat.ImageTitleActivity" />
         <activity
-            android:name=".chat.ImageViewer"
-            android:launchMode="singleInstance" />
+            android:name=".chat.ImageViewer" />
         <activity
             android:name=".chat.AccountActivity"
            />
@@ -58,11 +52,9 @@
             android:name=".chat.LibraryActivity"
             />
         <activity
-            android:name=".chat.AddBook"
-            android:launchMode="singleInstance" />
+            android:name=".chat.AddBook" />
         <activity
-            android:name=".chat.NoticeComposerActivity"
-            android:launchMode="singleInstance" />
+            android:name=".chat.NoticeComposerActivity" />
         <activity
             android:name=".chat.AuthNotice"
              />
