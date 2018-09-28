@@ -68,6 +68,7 @@ public class PollFragment extends Fragment {
                 boolean isConnected = info != null && info.isConnectedOrConnecting();
                 if (isConnected) {
                     Intent i = new Intent(getActivity(), AddPoll.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(i);
                 }
                 else {

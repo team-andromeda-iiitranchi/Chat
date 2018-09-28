@@ -78,7 +78,6 @@ public class VoteActivity extends AppCompatActivity {
                                     @NonNull
                                     @Override
                                     public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
-                                        finish();
                                         Long votes = mutableData.getValue(Long.class);
                                         votes++;
                                         mRef.setValue(votes);
@@ -90,6 +89,7 @@ public class VoteActivity extends AppCompatActivity {
                                         Intent intent = new Intent(VoteActivity.this, OptionsActivity.class);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                         startActivity(intent);
+                                        finish();
                                         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(uid).child("polls");
                                         Map map = new HashMap();

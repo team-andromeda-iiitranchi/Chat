@@ -108,7 +108,9 @@ public class PollDialog extends DialogFragment {
                                     databaseReference.child("Users").child(uid).child("polls").child(pushId).removeValue();
                                 }
                             }
-                            activity.startActivity(new Intent(activity,OptionsActivity.class));
+                            Intent i=new Intent(activity,OptionsActivity.class);
+                            i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                            activity.startActivity(i);
                         }
 
                         @Override
