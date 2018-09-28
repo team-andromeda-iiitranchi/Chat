@@ -1,5 +1,6 @@
 package chat.chat.chat;
 
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -48,7 +49,7 @@ public class OptionsActivity extends AppCompatActivity
     private Toolbar toolbar;
     private DrawerLayout drawer;
     private NavigationView navigationView;
-
+    static int state=2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,7 +147,15 @@ public class OptionsActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        }
+        else if(state==1)
+        {
+            state=2;
+            ChatFragment cf=mSectionsPagerAdapter.getCf();
+            cf.toggle(this,getSupportActionBar());
+
+        }
+        else {
             super.onBackPressed();
         }
     }

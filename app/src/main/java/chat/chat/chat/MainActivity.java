@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 else
                                 {
+                                    mProgress.dismiss();
                                     Toast.makeText(MainActivity.this, "User Not Found!", Toast.LENGTH_SHORT).show();
                                 }
                             }

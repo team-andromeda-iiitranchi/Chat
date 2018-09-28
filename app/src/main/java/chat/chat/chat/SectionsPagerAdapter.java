@@ -10,13 +10,17 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public SectionsPagerAdapter(FragmentManager fm) {
         super(fm);
     }
-
+    ChatFragment cf;
+    public ChatFragment getCf()
+    {
+        return cf;
+    }
     @Override
     public Fragment getItem(int position) {
         switch(position)
         {
             case 0:
-                ChatFragment cf=new ChatFragment();
+                cf=new ChatFragment();
                 return cf;
             case 1:
                 NoticeFragment noticeFragment=new NoticeFragment();

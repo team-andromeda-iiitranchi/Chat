@@ -63,6 +63,8 @@ public class ChatFragment extends Fragment {
     private final List<Messages> messagesList=new ArrayList<>();
     private View mView;
     static String receiver;
+    private OptionsActivity optionsActivity;
+    private ActionBar actionBar;
     public ChatFragment() {
         // Required empty public constructor
     }
@@ -74,6 +76,8 @@ public class ChatFragment extends Fragment {
         // Inflate the layout for this fragment
 
         final View view;
+        optionsActivity=(OptionsActivity)getActivity();
+        actionBar=optionsActivity.getSupportActionBar();
         view=inflater.inflate(R.layout.fragment_chat,container,false);
         mView=view;
         FirebaseUser mCurrentUser=FirebaseAuth.getInstance().getCurrentUser();
@@ -220,27 +224,17 @@ public class ChatFragment extends Fragment {
         receiver=uid;
         messagesList.clear();
         //Add back button on toolbar
-        final OptionsActivity optionsActivity=(OptionsActivity)getActivity();
+
         final android.support.v7.widget.Toolbar toolbar=optionsActivity.getToolBar();
-        final ActionBar actionBar=optionsActivity.getSupportActionBar();
+
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
-
-
+        optionsActivity.state=1;
         //Add listener to toolbar
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                usersList.clear();
-                actionBar.setDisplayHomeAsUpEnabled(false);
-                actionBar.setDisplayShowHomeEnabled(false);
-                ((ViewGroup)inflatedLayout.getParent()).removeView(inflatedLayout);
-
-
-                optionsActivity.initDrawer();
-
-
-                inflateForCR(mView);
+                toggle(optionsActivity,actionBar);
             }
         });
 
@@ -350,6 +344,20 @@ public class ChatFragment extends Fragment {
 
             }
         });
+    }
+    public void toggle(OptionsActivity optionsActivity,ActionBar actionBar)
+    {
+        usersList.clear();
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
+        if(!(inflatedLayout==null))
+        ((ViewGroup)inflatedLayout.getParent()).removeView(inflatedLayout);
+        //optionsActivity.state=2;
+
+        optionsActivity.initDrawer();
+
+        if(mView!=null)
+        inflateForCR(mView);
     }
     private void sendMessage(final String message,final String uid) {
         DatabaseReference mDatabase=FirebaseDatabase.getInstance().getReference().child(ChatApp.rollInfo).child("CR").child("messages").child(uid).push();

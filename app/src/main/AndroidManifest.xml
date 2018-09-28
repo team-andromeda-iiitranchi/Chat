@@ -33,7 +33,6 @@
         <activity
             android:name=".chat.OptionsActivity"
             android:label="@string/title_activity_options"
-            android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
