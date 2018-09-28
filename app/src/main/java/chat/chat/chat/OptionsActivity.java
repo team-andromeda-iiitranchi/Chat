@@ -16,9 +16,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -49,6 +53,7 @@ public class OptionsActivity extends AppCompatActivity
     private Toolbar toolbar;
     private DrawerLayout drawer;
     private NavigationView navigationView;
+    private TextView linkTV;
     static int state=2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,6 +181,9 @@ public class OptionsActivity extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View navHeader=navigationView.getHeaderView(0);
+        linkTV= (TextView) navHeader.findViewById(R.id.linkTV);
+        linkTV.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @Override

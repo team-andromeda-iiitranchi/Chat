@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/side_nav_bar"
+    android:id="@+id/navHeader"
     android:backgroundTint="@color/gen_white">
 
     <TextView
@@ -30,13 +31,13 @@
 
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/linkTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/imageView"
         android:layout_centerHorizontal="true"
         android:fontFamily="monospace"
-        android:text="www.iiitranchi.ac.in"
+        android:text="@string/institute_link"
         android:textColor="@color/black_app"
         android:textSize="18sp" />
 
