@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
@@ -311,6 +312,7 @@ class MessageAdapter extends RecyclerView.Adapter
     private class SentImageHolder extends RecyclerView.ViewHolder
     {
         TextView messageView,timeView;
+
         ImageView downloadView;
         public SentImageHolder(View itemView) {
             super(itemView);
@@ -344,6 +346,9 @@ class MessageAdapter extends RecyclerView.Adapter
             timeView=(TextView)itemView.findViewById(R.id.recTimeView);
             displayName=(TextView)itemView.findViewById(R.id.displayname);
             circleImageView= (CircleImageView) itemView.findViewById(R.id.circleview);
+            Typeface roboto = Typeface.createFromAsset(mContext.getAssets(),"font/Roboto-Regular.ttf");
+            messageView.setTypeface(roboto);
+
         }
         public void bind(Messages messages)
         {
@@ -455,6 +460,8 @@ class MessageAdapter extends RecyclerView.Adapter
             super(view);
             displayName=(TextView)view.findViewById(R.id.displayname);
             text=(TextView)view.findViewById(R.id.messview);
+            Typeface roboto = Typeface.createFromAsset(mContext.getAssets(),"font/Roboto-Regular.ttf");
+            text.setTypeface(roboto);
             recTimeView=(TextView)view.findViewById(R.id.recTimeView);
             displayPic= (CircleImageView) view.findViewById(R.id.circleview);
 
@@ -475,6 +482,8 @@ class MessageAdapter extends RecyclerView.Adapter
         public SentMessageHolder(View itemView) {
             super(itemView);
             text=(TextView)itemView.findViewById(R.id.text);
+            Typeface roboto = Typeface.createFromAsset(mContext.getAssets(),"font/Roboto-Regular.ttf");
+            text.setTypeface(roboto);
             timeView=(TextView)itemView.findViewById(R.id.timeView);
         }
         void bind(Messages messages)

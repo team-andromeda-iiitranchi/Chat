@@ -10,6 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:weightSum="1"
     android:orientation="vertical">
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -22,7 +23,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-
         android:layout_toEndOf="@+id/circleview"
         android:orientation="vertical">
 
@@ -36,9 +36,10 @@
             android:layout_toEndOf="@+id/linearLayout"
             android:layout_weight="0"
             android:textColor="@color/black_app"
-            android:background="@drawable/message_background2"
             android:text="@string/display_name"
-            android:textSize="10dp" />
+            android:textStyle="bold"
+            android:fontFamily="serif-monospace"
+            android:textSize="12dp" />
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

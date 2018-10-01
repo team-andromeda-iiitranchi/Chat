@@ -1,5 +1,6 @@
 package chat.chat.chat;
 
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +21,8 @@ public class ImageViewer extends AppCompatActivity {
         setContentView(R.layout.activity_image_viewer);
         imageView=(ImageView)findViewById(R.id.imageView);
         textView=(TextView)findViewById(R.id.textView);
+        Typeface roboto = Typeface.createFromAsset(getAssets(),"font/Roboto-Regular.ttf");
+        textView.setTypeface(roboto);
         File file= (File) getIntent().getExtras().get("file");
         String text=getIntent().getStringExtra("text");
 
