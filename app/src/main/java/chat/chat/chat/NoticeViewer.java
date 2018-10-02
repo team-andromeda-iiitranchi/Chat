@@ -32,7 +32,8 @@ public class NoticeViewer extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notice_viewer);
-
+        Toolbar toolbar= (Toolbar) findViewById(R.id.activity_notice_view_toolbar);
+        setSupportActionBar(toolbar);
 
         messageAdapter=new MessageAdapter(mList,NoticeViewer.this);
         recyclerView=(RecyclerView)findViewById(R.id.noticeViewerRecycler);
@@ -50,7 +51,7 @@ public class NoticeViewer extends AppCompatActivity {
         {
             name1=name1.toUpperCase();
         }
-//        getSupportActionBar().setTitle(name1);
+        getSupportActionBar().setTitle(name1);
         DatabaseReference mRef=FirebaseDatabase.getInstance().getReference();
         if(ChatApp.user.getCR().equals("director"))
         {
