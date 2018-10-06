@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/root/Documents/AndroidStudioProjects/IIIT_App/IIIT_App/app/src/main/assets"/><source path="/root/Documents/AndroidStudioProjects/IIIT_App/IIIT_App/app/build/generated/assets/shaders/debug"/></dataSet><dataSet config="debug"><source path="/root/Documents/AndroidStudioProjects/IIIT_App/IIIT_App/app/src/debug/assets"/></dataSet></merger>

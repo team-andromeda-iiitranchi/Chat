@@ -157,7 +157,7 @@ public class OptionsActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }
-        else if(state==1)
+        else if(state==1&&ChatApp.user.getCR().equals("true"))
         {
             state=2;
             ChatFragment cf=mSectionsPagerAdapter.getCf();
