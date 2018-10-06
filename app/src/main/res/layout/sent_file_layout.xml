@@ -20,7 +20,7 @@
         android:text="DD-MM-YYYY"/>
 
     <LinearLayout
-        android:layout_width="190dp"
+        android:layout_width="206dp"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/timeView"
         android:layout_below="@+id/timeView"
@@ -33,7 +33,7 @@
             android:layout_height="158dp"
             android:layout_alignEnd="@+id/timeView"
             android:layout_below="@+id/timeView"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="2dp"
             android:background="@color/white"
             android:src="@drawable/download_icon" />
 

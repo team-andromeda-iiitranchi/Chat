@@ -2,8 +2,8 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
    <gradient
        android:angle="45"
-       android:startColor="@color/grey_light"
-       android:endColor="@color/grey_color"
+       android:startColor="@color/yellow_light"
+       android:endColor="@color/buttonYellow"
        />
     <corners android:bottomLeftRadius="@dimen/message_view_main_radius"
         android:bottomRightRadius="@dimen/message_view_main_radius"

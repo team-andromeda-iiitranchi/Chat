@@ -95,7 +95,7 @@ public class LibraryActivity extends AppCompatActivity {
             finish();
         }
     }
-    public void downloadAndShow(String name,String bookName)
+    public void downloadAndShow(String name,String bookName,View view)
     {
         String root= Environment.getExternalStorageDirectory().toString();
         File myFile=new File(root+"/ChatApp/Books/"+name+"/");
@@ -109,6 +109,7 @@ public class LibraryActivity extends AppCompatActivity {
             generateIntentAndShow(myFile);
         }
         else {
+            view.setOnClickListener(null);
             ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
             NetworkInfo info = cm.getActiveNetworkInfo();
             boolean isConnected = info != null && info.isConnectedOrConnecting();
@@ -169,6 +170,7 @@ public class LibraryActivity extends AppCompatActivity {
                     final TextView textView1=new TextView(linearLayout.getContext());
                     textView1.setText(bookName);
                     textView1.setPadding(pad,pad,pad,pad);
+                    textView1.setTextColor(getResources().getColor(R.color.black_app));
                     textView1.setBackground(getDrawable(R.drawable.user_border));
                     textView1.setTextSize(20);
                     linearLayout.addView(textView1);
@@ -176,8 +178,7 @@ public class LibraryActivity extends AppCompatActivity {
                     textView1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            downloadAndShow(name, finalBookName);
-                            textView1.setOnClickListener(null);
+                            downloadAndShow(name, finalBookName,textView1);
                         }
                     });
                 }
@@ -206,6 +207,7 @@ public class LibraryActivity extends AppCompatActivity {
                     final String name=dataSnapshot1.getKey();
                     final TextView textView=new TextView(linearLayout.getContext());
                     textView.setText(name);
+                    textView.setTextColor(getResources().getColor(R.color.black_app));
                     textView.setBackground(getDrawable(R.drawable.user_border));
                     textView.setTextSize(20);
                     final int pad=30;

@@ -23,6 +23,8 @@
         android:layout_marginTop="103dp"
         android:background="@drawable/edt_background"
         android:layout_marginEnd="10dp"
+        android:textColor="@color/black_app"
+        android:textColorHint="@color/black_app"
         android:layout_marginStart="10dp"
         android:hint="Enter Subject..." />
 
@@ -34,6 +36,8 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
+        android:textColor="@color/black_app"
+        android:textColorHint="@color/black_app"
         android:layout_marginTop="208dp"
         android:background="@drawable/edt_background"
         android:hint="Enter book's name..." />

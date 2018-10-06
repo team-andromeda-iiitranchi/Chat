@@ -2,6 +2,7 @@ package chat.chat.chat;
 
 
 import android.content.Intent;
+import android.graphics.Path;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -53,11 +54,11 @@ public class PollFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        mList=new ArrayList<>();
         View view=inflater.inflate(R.layout.fragment_poll, container, false);
         floatingActionButton=(FloatingActionButton)view.findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -87,6 +88,7 @@ public class PollFragment extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(pollAdapter);
+        pollAdapter.notifyDataSetChanged();
         String uid= FirebaseAuth.getInstance().getCurrentUser().getUid();
         mRef= FirebaseDatabase.getInstance().getReference();
         //mList=new ArrayList<>();
@@ -108,12 +110,29 @@ public class PollFragment extends Fragment {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
+                Poll poll=dataSnapshot.getValue(Poll.class);
+                for(int i=0;i<mList.size();i++)
+                {
+                    if(mList.get(i).timestamp==poll.timestamp) {
+                        mList.remove(i);
+                        mList.add(i,poll);
+                        pollAdapter.notifyDataSetChanged();
+                        break;
+                    }
+                }
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
+                Poll poll=dataSnapshot.getValue(Poll.class);
+                for(int i=0;i<mList.size();i++)
+                {
+                    if(mList.get(i).timestamp==poll.timestamp) {
+                        mList.remove(i);
+                        pollAdapter.notifyDataSetChanged();
+                        break;
+                    }
+                }
             }
 
             @Override

@@ -34,6 +34,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="5dp"
             android:layout_toEndOf="@+id/linearLayout"
+            android:textColor="@color/black_app"
             android:layout_weight="0"
             android:fontFamily="serif-monospace"
             android:text="@string/display_name"
@@ -46,11 +47,11 @@
             android:layout_alignEnd="@+id/linearLayout"
             android:layout_below="@+id/circleview"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/btn_background"
+            android:background="@drawable/dir_background"
             android:longClickable="true"
             android:maxWidth="@dimen/message_max_width"
             android:text="@string/text"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="@dimen/message_text_size" />
 
         <TextView
@@ -58,6 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="DD-MM-YYYY"
+            android:textColor="@color/black_app"
             android:textSize="11dp"
             android:padding="5dp"/>
 

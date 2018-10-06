@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -26,7 +27,8 @@ public class CategoryViewer extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_viewer);
-
+        android.support.v7.widget.Toolbar toolbar= (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
 
         linearLayout= (LinearLayout)findViewById(R.id.linearLayoutCategory);
@@ -49,6 +51,7 @@ public class CategoryViewer extends AppCompatActivity {
                     TextView textView=new TextView(CategoryViewer.this);
                     textView.setText(key);
                     textView.setTextSize(20);
+                    textView.setTextColor(getResources().getColor(R.color.black_app));
                     int pad=20;
                     textView.setPadding(pad,pad,pad,pad);
                     textView.setBackground(getResources().getDrawable(R.drawable.user_border));

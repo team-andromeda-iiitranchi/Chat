@@ -18,7 +18,8 @@
         <activity
             android:name=".chat.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTask"/>
         <activity
             android:name=".chat.ChatActivity"
             android:label="@string/title_activity_chat"
@@ -31,7 +32,8 @@
         <activity
             android:name=".chat.OptionsActivity"
             android:label="@string/title_activity_options"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTask">
         </activity>
         <activity
             android:name=".chat.AddPoll"
@@ -57,6 +59,7 @@
             android:name=".chat.NoticeComposerActivity" />
         <activity
             android:name=".chat.AuthNotice"
+            android:launchMode="singleTask"
              />
         <activity
             android:name=".chat.CategoryViewer"

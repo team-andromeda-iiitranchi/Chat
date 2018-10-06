@@ -36,6 +36,7 @@
             android:layout_toEndOf="@+id/linearLayout"
             android:layout_weight="0"
             android:fontFamily="serif-monospace"
+            android:textColor="@color/black_app"
             android:text="@string/display_name"
             android:textSize="12dp" />
 

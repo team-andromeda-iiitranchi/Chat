@@ -7,71 +7,101 @@
     android:background="@color/colorPrimary"
     tools:context=".chat.AddPoll"
     >
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/app_bar_height"
+        android:id="@+id/toolbar"
+        android:background="@color/colorPrimary"
+        app:title="Add Poll"></android.support.v7.widget.Toolbar>
 
-    <EditText
-        android:id="@+id/title"
-        android:layout_width="344dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="22dp"
-        android:background="@drawable/edt_background"
-        android:hint="Title"
-        android:maxLength="50"
-        android:maxLines="2"
-        tools:layout_editor_absoluteX="212dp"
-        tools:layout_editor_absoluteY="362dp"
-        />
-
-    <Button
-        android:id="@+id/addBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="27dp"
-        android:layout_marginEnd="46dp"
-        android:background="@drawable/btn_background"
-        android:text="Done"
-        android:textColor="@color/white" />
-
-    <Button
-        android:id="@+id/addField"
-        android:background="@drawable/btn_background"
-        android:textColor="@color/white"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/addBtn"
-        android:layout_marginStart="47dp"
-        android:text="Add field" />
-
-    <EditText
-        android:id="@+id/description"
-        android:layout_width="344dp"
-        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="106dp"
-        android:background="@drawable/edt_background"
-        android:hint="Description"
-        android:maxLength="250"
-        android:minLines="3"
-        tools:layout_editor_absoluteX="20dp"
-        tools:layout_editor_absoluteY="84dp" />
+        android:layout_marginTop="@dimen/app_bar_height">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/fieldRecycler"
-        android:layout_width="338dp"
-        android:layout_height="189dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="89dp"
-        android:background="@drawable/edt_background"
-        android:padding="5dp"
-        tools:layout_editor_absoluteX="14dp"
-        tools:layout_editor_absoluteY="231dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
 
-    </android.support.v7.widget.RecyclerView>
+            <EditText
+                android:id="@+id/title"
+                android:layout_width="323dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="@dimen/poll_margin"
+                android:background="@drawable/edt_background"
+                android:hint="Title"
+                android:textColorHint="@color/black_app"
+                android:maxLength="50"
+                android:maxLines="2"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/black_app" />
+
+            <EditText
+                android:id="@+id/description"
+                android:layout_width="323dp"
+                android:layout_height="wrap_content"
+                android:textColorHint="@color/black_app"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="@dimen/poll_margin"
+                android:background="@drawable/edt_background"
+                android:hint="Description"
+                android:maxLength="250"
+                android:minLines="3"
+                android:textColor="@color/black_app"
+                tools:layout_editor_absoluteX="20dp"
+                tools:layout_editor_absoluteY="84dp" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/fieldRecycler"
+                android:layout_width="319dp"
+                android:layout_height="189dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="@dimen/poll_margin"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edt_background"
+                android:padding="5dp">
+
+            </android.support.v7.widget.RecyclerView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/addBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="46dp"
+                    android:background="@drawable/btn_background"
+                    android:text="Done"
+                    android:textColor="@color/white"
+                    android:layout_marginStart="55dp"
+                    android:layout_marginTop="30dp"/>
+
+                <Button
+                    android:id="@+id/addField"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignTop="@+id/addBtn"
+                    android:layout_marginStart="55dp"
+                    android:layout_marginTop="30dp"
+                    android:background="@drawable/btn_background"
+                    android:text="Add field"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

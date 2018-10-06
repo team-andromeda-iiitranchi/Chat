@@ -63,6 +63,7 @@ public class VoteActivity extends AppCompatActivity {
                     params.setMargins(8,20,8,20);
                     textView.setLayoutParams(params);
                     textView.setTextSize(20);
+                    textView.setTextColor(getResources().getColor(R.color.black_app));
                     int pad=20;
                     textView.setPadding(pad+pad,pad,pad,pad);
                     linearLayout.addView(textView);

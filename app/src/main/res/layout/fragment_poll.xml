@@ -23,7 +23,7 @@
         android:layout_marginRight="30dp"
         android:background="@color/colorPrimary"
         android:src="@drawable/plus"
-        android:tint="@color/gen_black"
+        android:tint="@color/white"
         app:backgroundTint="@color/colorPrimary" />
 
 </RelativeLayout>

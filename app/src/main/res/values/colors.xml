@@ -41,8 +41,11 @@
         </array>
 
     <color name="colorSecondary">#1d9bf7</color>
-    <color name="buttonYellow">#d1395c</color>
+    <color name="buttonYellow">#ebeae31b</color>
     <color name="white">#ffffff</color>
     <color name="pollColor">#e2ddeb</color>
     <color name="black">#000000</color>
+    <color name="yellow_light">#ecfcfc5c</color>
+    <color name="red_light">#f5df3314</color>
+    <color name="buttonRed">#e7f9213a</color>
 </resources>

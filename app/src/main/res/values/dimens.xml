@@ -31,4 +31,6 @@
     <dimen name="text_size_medium">12dp</dimen>
     <dimen name="text_size_xmedium">14dp</dimen>
     <dimen name="text_size_large">16dp</dimen>
+    <dimen name="app_bar_height">55dp</dimen>
+    <dimen name="poll_margin">30dp</dimen>
 </resources>

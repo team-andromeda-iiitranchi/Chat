@@ -37,9 +37,9 @@
             android:layout_toEndOf="@+id/linearLayout"
             android:layout_weight="0"
             android:textColor="@color/black_app"
-            android:background="@drawable/message_background2"
             android:text="@string/display_name"
-            android:textSize="10dp" />
+            android:fontFamily="serif-monospace"
+            android:textSize="12dp" />
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
                 android:layout_marginLeft="10dp"
                 android:maxWidth="@dimen/message_max_width"
                 android:text="@string/text"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="@dimen/message_text_size" />
         </LinearLayout>
         <TextView
