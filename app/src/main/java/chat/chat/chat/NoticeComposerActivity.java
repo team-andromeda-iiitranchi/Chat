@@ -49,6 +49,14 @@ public class NoticeComposerActivity extends AppCompatActivity implements Chooser
         Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Notice");
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
         mMessage= (EditText) findViewById(R.id.notice);
         mSendBtn= (Button) findViewById(R.id.sendBtn);

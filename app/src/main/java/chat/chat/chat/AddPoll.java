@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +52,16 @@ public class AddPoll extends AppCompatActivity {
         mAddBtn=(Button)findViewById(R.id.addBtn);
         title=(EditText)findViewById(R.id.title) ;
         description=(EditText)findViewById(R.id.description);
+        Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
 
         recyclerView=(RecyclerView)findViewById(R.id.fieldRecycler);
@@ -71,6 +82,7 @@ public class AddPoll extends AppCompatActivity {
                 recyclerView.scrollToPosition(mList.size()-1);
             }
         });
+
 
 
         mAddBtn.setOnClickListener(new View.OnClickListener() {

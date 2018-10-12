@@ -83,7 +83,7 @@ public class SignUpActivity extends AppCompatActivity {
                     user = mUser.getText().toString();
                     email = mEmail.getText().toString();
                     suEmail=email;
-                    suUser=user;
+                    suUser=(user.indexOf("fac")==-1&&user.indexOf("dir")==-1)?user.toUpperCase():user;
                     suName=name;
                     if (user.length() < 8) {
                         Toast.makeText(getApplicationContext(), "Invalid Regisration No.!", Toast.LENGTH_LONG).show();

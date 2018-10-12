@@ -67,7 +67,7 @@ public class OptionsActivity extends AppCompatActivity
         mProgress.setMessage("Getting User's Data");
         mProgress.setCanceledOnTouchOutside(false);
         initDrawer();
-
+        navigationView.setCheckedItem(R.id.notices);
         FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(FirebaseAuth firebaseAuth) {

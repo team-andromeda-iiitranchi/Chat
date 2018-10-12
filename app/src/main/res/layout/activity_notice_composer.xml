@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/gen_white"
     tools:context=".chat.NoticeComposerActivity">
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="@dimen/app_bar_height"
-        android:id="@+id/toolbar">
+        android:id="@+id/toolbar"
+        android:background="@color/colorPrimary">
 
     </android.support.v7.widget.Toolbar>
     <EditText
@@ -57,6 +58,7 @@
         android:layout_alignStart="@+id/notice"
         android:layout_below="@+id/toolbar"
         android:text="Add Notice"
+        android:textColor="@color/gen_black"
         android:textStyle="bold" />
 
 
