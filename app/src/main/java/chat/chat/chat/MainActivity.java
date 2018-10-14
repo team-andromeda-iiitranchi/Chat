@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                         mProgress.show();
 //                      name = name + "@abc.com";
 
-                        final String finalName = (name.indexOf("dir")==-1&&name.indexOf("fac")==-1)?name.toUpperCase():name;
+                        final String finalName = name;
 
                         Query q = usersRef.orderByChild("username").equalTo(finalName);
 
