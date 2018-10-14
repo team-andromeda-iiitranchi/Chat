@@ -6,6 +6,8 @@ import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,50 +32,21 @@ import chat.chat.ChatApp;
 import chat.chat.R;
 
 public class AuthNotice extends AppCompatActivity {
-    FloatingActionButton fab;
-    private RecyclerView recyclerView;
-    private LinearLayoutManager linearLayoutManager;
-    private MessageAdapter adapter;
-    private List<Messages> mList;
+    private ViewPager mViewPager;
+    private TabLayout tabLayout;
+    private AuthPagerAdapter authPagerAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth_notice);
-        fab= (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ConnectivityManager cm= (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-                NetworkInfo info=cm.getActiveNetworkInfo();
-                boolean isConnected = info != null && info.isConnectedOrConnecting();
-                if(isConnected) {
-                    Intent intent = new Intent(AuthNotice.this, NoticeComposerActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                    startActivity(intent);
-                }
-                else
-                {
-                    Toast.makeText(AuthNotice.this,"Not Connected to the Internet!",Toast.LENGTH_LONG).show();
-                }
-            }
-        });
         Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        mList=new ArrayList<>();
-        recyclerView= (RecyclerView) findViewById(R.id.recAuth);
-        adapter=new MessageAdapter(mList,AuthNotice.this);
-        linearLayoutManager=new LinearLayoutManager(this);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(adapter);
-        DatabaseReference mRef=FirebaseDatabase.getInstance().getReference();
-        if(ChatApp.user.getCR().equals("faculty")) {
-            loadMessages(mRef.child("Faculty").child(ChatApp.user.getUsername()).child("Notices").child("An"));
-        }
-        else
-        {
-            loadMessages(mRef.child("Director").child("Notices").child("An"));
-        }
+        tabLayout= (TabLayout) findViewById(R.id.authTabLayout);
+        authPagerAdapter=new AuthPagerAdapter(getSupportFragmentManager());
+        mViewPager= (ViewPager) findViewById(R.id.authPager);
+        mViewPager.setAdapter(authPagerAdapter);
+        mViewPager.setOffscreenPageLimit(3);
+        tabLayout.setupWithViewPager(mViewPager);
     }
 
     @Override
@@ -118,37 +91,6 @@ public class AuthNotice extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    public void loadMessages(DatabaseReference mRef)
-    {
-        mRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Messages messages=dataSnapshot.getValue(Messages.class);
-                mList.add(messages);
-                adapter.notifyDataSetChanged();
-                recyclerView.scrollToPosition(mList.size()-1);
-            }
 
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
 
 }

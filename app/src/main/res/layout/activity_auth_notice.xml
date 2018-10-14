@@ -5,42 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".chat.AuthNotice">
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/app_bar_height"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        android:id="@+id/appbar">
-    <android.support.v7.widget.Toolbar
-        android:layout_width="match_parent"
-        android:id="@+id/toolbar"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@drawable/action"
-        android:popupTheme="@style/AppTheme.PopupOverlay">
-    </android.support.v7.widget.Toolbar>
-    </android.support.design.widget.AppBarLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="22dp"
-        android:layout_marginEnd="24dp"
-        android:background="@color/colorPrimary"
-        android:backgroundTint="@color/colorPrimary"
-        android:src="@drawable/plus"
-        android:tint="@color/white"
-        app:backgroundTint="@color/colorPrimary" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recAuth"
+    <include
+        layout="@layout/app_bar_auth_notice"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignTop="@+id/appbar"
-        android:layout_marginTop="@dimen/app_bar_height"
-        android:background="@drawable/msgback1">
-
-    </android.support.v7.widget.RecyclerView>
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
 
 </RelativeLayout>
