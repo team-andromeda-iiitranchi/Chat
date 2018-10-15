@@ -25,6 +25,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ public class FragmentStudentChat extends Fragment {
     private String nameStr;
     private MessageAdapter messageAdapter;
     private List<Messages> mList;
+    private String currentUid;
     private LinearLayoutManager linearLayoutManager;
     int counter=0;
     @Override
@@ -64,6 +66,8 @@ public class FragmentStudentChat extends Fragment {
         relativeLayout= (RelativeLayout) view.findViewById(R.id.relLayout);
         this.inflater=inflater;
 
+
+        currentUid=FirebaseAuth.getInstance().getCurrentUser().getUid();
         mRef= FirebaseDatabase.getInstance().getReference();
 
         listState();
@@ -77,7 +81,7 @@ public class FragmentStudentChat extends Fragment {
         linearLayout= (LinearLayout) inflatedView.findViewById(R.id.linearLayout);
         populateLinearLayout(mRef.child("Sections"));
     }
-    public void populateLinearLayout(DatabaseReference mRef)
+    public void populateLinearLayout(final DatabaseReference mRef)
     {
         mRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -99,8 +103,41 @@ public class FragmentStudentChat extends Fragment {
     public void inflateSection(final String name)
     {
         View view=inflater.inflate(R.layout.each_section_layout,null,false);
-        TextView textView= (TextView) view.findViewById(R.id.nameView);
+        final TextView textView= (TextView) view.findViewById(R.id.nameView);
         textView.setText(name);
+        //check for unseen messages
+        mRef.child("lastSeen").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChild(currentUid))
+                {
+                    mRef.child("lastSeen").child(currentUid).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.hasChild(name))
+                            {
+                                //if unseen messages from that section
+                                if(dataSnapshot.child(name).child("unseen").getValue().toString().equals("1"))
+                                {
+                                    //change message tab colour
+                                    textView.setBackgroundColor(getResources().getColor(R.color.blue_light));
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
         //setting onClickLstener
@@ -155,6 +192,10 @@ public class FragmentStudentChat extends Fragment {
         inflatedView=inflater.inflate(R.layout.other_chat_fragment,null,false);
         relativeLayout.addView(inflatedView);
 
+
+        //set messages to seen
+        mRef.child("lastSeen").child(currentUid).child(nameStr).child("unseen").setValue(0);
+
         //Setting up recyclerView
         mList=new ArrayList<>();
         recyclerView= (RecyclerView) inflatedView.findViewById(R.id.recView2);
@@ -197,6 +238,9 @@ public class FragmentStudentChat extends Fragment {
             String key=mRef.child(nameStr).child("CR").child(ChatApp.user.getUsername()).push().getKey();
             mRef.child(nameStr).child("CR").child(ChatApp.user.getUsername()).child(key).setValue(map);
 
+            //set seen status
+            setUnseen();
+
             //if this is the first message
             //then set a listener at the child
             if(counter==0)
@@ -205,6 +249,32 @@ public class FragmentStudentChat extends Fragment {
             }
         }
     }
+
+    private void setUnseen() {
+        //set unseen node to 1
+        Query q=mRef.child("Users");
+        q.orderByChild("CR").equalTo("true").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot d:dataSnapshot.getChildren())
+                {
+                    String uid=d.getKey();
+                    String name=d.child("username").getValue().toString();
+                    //getting roll id of CRs and comparing them with target
+                    if(name.substring(0,8).equals(nameStr))
+                    {
+                        mRef.child("lastSeen").child(uid).child(currentUid).child("unseen").setValue(1);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     public void loadMessages(String name)
     {
         final String usrname=ChatApp.user.getUsername();

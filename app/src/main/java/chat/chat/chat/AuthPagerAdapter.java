@@ -38,7 +38,7 @@ public class AuthPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position)
         {
-            case 0: return (ChatApp.user.getCR().equalsIgnoreCase("Faculty"))?"Director":"Faculty";
+            case 0: return "Faculty";
             case 1: return "Notices";
             case 2: return "Students";
         }

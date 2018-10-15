@@ -42,13 +42,15 @@ public class AuthNotice extends AppCompatActivity {
         setContentView(R.layout.activity_auth_notice);
         toolbar= (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        tabLayout= (TabLayout) findViewById(R.id.authTabLayout);
-        authPagerAdapter=new AuthPagerAdapter(getSupportFragmentManager());
-        mViewPager= (ViewPager) findViewById(R.id.authPager);
-        mViewPager.setAdapter(authPagerAdapter);
-        mViewPager.setOffscreenPageLimit(3);
-        tabLayout.setupWithViewPager(mViewPager);
-        mViewPager.setCurrentItem(1);
+        if(ChatApp.user.getCR().equals("faculty")) {
+            tabLayout = (TabLayout) findViewById(R.id.authTabLayout);
+            authPagerAdapter = new AuthPagerAdapter(getSupportFragmentManager());
+            mViewPager = (ViewPager) findViewById(R.id.authPager);
+            mViewPager.setAdapter(authPagerAdapter);
+            mViewPager.setOffscreenPageLimit(3);
+            tabLayout.setupWithViewPager(mViewPager);
+            mViewPager.setCurrentItem(1);
+        }
     }
 
     @Override
