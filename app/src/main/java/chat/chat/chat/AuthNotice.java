@@ -35,11 +35,12 @@ public class AuthNotice extends AppCompatActivity {
     private ViewPager mViewPager;
     private TabLayout tabLayout;
     private AuthPagerAdapter authPagerAdapter;
+    public Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth_notice);
-        Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar);
+        toolbar= (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         tabLayout= (TabLayout) findViewById(R.id.authTabLayout);
         authPagerAdapter=new AuthPagerAdapter(getSupportFragmentManager());
@@ -47,6 +48,7 @@ public class AuthNotice extends AppCompatActivity {
         mViewPager.setAdapter(authPagerAdapter);
         mViewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(mViewPager);
+        mViewPager.setCurrentItem(1);
     }
 
     @Override
@@ -92,5 +94,8 @@ public class AuthNotice extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    public Toolbar getToolbar()
+    {
+        return toolbar;
+    }
 }
