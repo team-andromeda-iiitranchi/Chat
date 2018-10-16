@@ -66,6 +66,7 @@ public class OptionsActivity extends AppCompatActivity
     private RelativeLayout.LayoutParams params;
     private NavigationView navigationView;
     private TextView linkTV;
+    private List<Messages> mList;
     private View inflatedView;
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
@@ -79,6 +80,9 @@ public class OptionsActivity extends AppCompatActivity
     private AppBarLayout appBar;
     static int state=2;
     private String nameFac;
+    private int counter=0;
+    private String currentUid;
+    private String facUid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,7 +213,10 @@ public class OptionsActivity extends AppCompatActivity
             cf.toggle(this,getSupportActionBar());
 
         }
-        else {
+        else if(ChatApp.user.getCR().equals("true")&&state==4){
+            toggle();
+        }
+        else{
             super.onBackPressed();
         }
     }
@@ -331,29 +338,24 @@ public class OptionsActivity extends AppCompatActivity
                     public void onClick(View view) {
                         nameStr=username;
                         nameFac=name;
+                        facUid=uid;
                         toggle();
                     }
                 });
-
+                currentUid=FirebaseAuth.getInstance().getCurrentUser().getUid();
                 mRef.child("lastSeen").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.hasChild(ChatApp.rollInfo.substring(0,8)))
+                        if(dataSnapshot.hasChild(currentUid))
                         {
-                            mRef.child("lastSeen").child(ChatApp.rollInfo.substring(0,8)).child(uid).child("unseen").addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    if(dataSnapshot.getValue().toString().equals("1"))
-                                    {
-                                        user.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-                                    }
+                            if(dataSnapshot.child(currentUid).hasChild(uid))
+                            {
+                                String unseen=dataSnapshot.child(currentUid).child(uid).child("unseen").getValue().toString();
+                                if(unseen.equals("1"))
+                                {
+                                    user.setBackgroundColor(getResources().getColor(R.color.colorAccent));
                                 }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
+                            }
                         }
                     }
 
@@ -429,6 +431,15 @@ public class OptionsActivity extends AppCompatActivity
         inflatedView= LayoutInflater.from(this).inflate(R.layout.other_chat_fragment,null,false);
         relativeLayout.addView(inflatedView);
 
+        recyclerView= (RecyclerView) inflatedView.findViewById(R.id.recView2);
+        mList=new ArrayList<>();
+        linearLayoutManager=new LinearLayoutManager(this);
+        messageAdapter=new MessageAdapter(mList,this);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(messageAdapter);
+
+        loadMessages();
 
 
         messageView= (EditText) inflatedView.findViewById(R.id.message);
@@ -444,6 +455,58 @@ public class OptionsActivity extends AppCompatActivity
             }
         });
     }
+
+    private void loadMessages() {
+        mRef.child(ChatApp.rollInfo.substring(0,8)).child("CR").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChild(nameStr))
+                {
+                    counter=1;
+                    mRef.child("lastSeen").child(currentUid).child(facUid).child("unseen").setValue(0);
+                    mRef.child(ChatApp.rollInfo.substring(0,8)).child("CR").child(nameStr).addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            Messages messages=dataSnapshot.getValue(Messages.class);
+                            if(mList.size()==0||mList.get(mList.size()-1).getTimestamp()!=messages.getTimestamp())
+                            {
+                                mList.add(messages);
+                                messageAdapter.notifyDataSetChanged();
+                                recyclerView.scrollToPosition(mList.size()-1);
+                            }
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     private void sendMessage() {
 
         String curUid=FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -461,8 +524,12 @@ public class OptionsActivity extends AppCompatActivity
         String key=mRef.child(ChatApp.rollInfo.substring(0,8)).child("CR").child(nameStr).push().getKey();
         mRef.child(ChatApp.rollInfo.substring(0,8)).child("CR").child(nameStr).child(key).setValue(map);
 
-        mRef.child("lastSeen").child(nameStr).child(ChatApp.rollInfo.substring(0,8)).child("unseen").setValue(1);
+        mRef.child("lastSeen").child(facUid).child(ChatApp.rollInfo.substring(0,8)).child("unseen").setValue(1);
 
+        if(counter==0)
+        {
+            loadMessages();
+        }
     }
 
     public Toolbar getToolBar()

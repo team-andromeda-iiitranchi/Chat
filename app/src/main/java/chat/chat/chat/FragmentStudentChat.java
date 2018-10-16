@@ -120,7 +120,7 @@ public class FragmentStudentChat extends Fragment {
                                 if(dataSnapshot.child(name).child("unseen").getValue().toString().equals("1"))
                                 {
                                     //change message tab colour
-                                    textView.setBackgroundColor(getResources().getColor(R.color.blue_light));
+                                    textView.setBackgroundColor(getResources().getColor(R.color.colorAccent));
                                 }
                             }
                         }
@@ -284,6 +284,7 @@ public class FragmentStudentChat extends Fragment {
     {
         final String usrname=ChatApp.user.getUsername();
         final DatabaseReference mDatabase=mRef.child(name).child("CR");
+        mRef.child("lastSeen").child(currentUid).child(name).child("unseen").setValue(0);
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -295,9 +296,11 @@ public class FragmentStudentChat extends Fragment {
                         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
                             Messages messages=dataSnapshot.getValue(Messages.class);
-                            mList.add(messages);
-                            messageAdapter.notifyDataSetChanged();
-                            recyclerView.scrollToPosition(mList.size()-1);
+                            if(mList.size()==0||mList.get(mList.size()-1).getTimestamp()!=messages.getTimestamp()) {
+                                mList.add(messages);
+                                messageAdapter.notifyDataSetChanged();
+                                recyclerView.scrollToPosition(mList.size() - 1);
+                            }
                         }
 
                         @Override
