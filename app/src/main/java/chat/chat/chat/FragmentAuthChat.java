@@ -162,6 +162,7 @@ public class FragmentAuthChat extends Fragment {
         }
         else
         {
+            backButtonDisable();
             state=1;
             listState();
         }
@@ -179,10 +180,14 @@ public class FragmentAuthChat extends Fragment {
             @Override
             public void onClick(View view) {
                 toggle();
-                authNotice.getSupportActionBar().setDisplayShowHomeEnabled(false);
-                authNotice.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             }
         });
+    }
+
+    private void backButtonDisable() {
+        AuthNotice authNotice=(AuthNotice)getActivity();
+        authNotice.getSupportActionBar().setDisplayShowHomeEnabled(false);
+        authNotice.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
     }
 
     private void chatState() {

@@ -50,13 +50,35 @@ public class AuthNotice extends AppCompatActivity {
             mViewPager.setOffscreenPageLimit(3);
             tabLayout.setupWithViewPager(mViewPager);
             mViewPager.setCurrentItem(1);
+
         }
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        finish();
+        //super.onBackPressed();
+        FragmentStudentChat fragmentStudentChat=authPagerAdapter.fragmentStudentChat;
+        FragmentAuthChat fragmentAuthChat=authPagerAdapter.fragmentAuthChat;
+        if(fragmentAuthChat==null&&fragmentStudentChat==null) {
+            finish();
+        }
+        else if(fragmentAuthChat.state==1&&fragmentStudentChat.state==1)
+        {
+            finish();
+        }
+        else if(fragmentAuthChat.state==2&&fragmentStudentChat.state==2)
+        {
+            fragmentAuthChat.toggle();
+            fragmentStudentChat.toggle();
+        }
+        else if(fragmentAuthChat.state==2)
+        {
+            fragmentAuthChat.toggle();
+        }
+        else
+        {
+            fragmentStudentChat.toggle();
+        }
     }
 
     @Override

@@ -164,9 +164,16 @@ public class FragmentStudentChat extends Fragment {
         }
         else
         {
+            backButtonDisable();
             state=1;
             listState();
         }
+    }
+
+    private void backButtonDisable() {
+        AuthNotice authNotice= (AuthNotice) getActivity();
+        authNotice.getSupportActionBar().setDisplayShowHomeEnabled(false);
+        authNotice.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
     }
 
     private void backButtonEnable() {
@@ -181,8 +188,6 @@ public class FragmentStudentChat extends Fragment {
             @Override
             public void onClick(View view) {
                 toggle();
-                authNotice.getSupportActionBar().setDisplayShowHomeEnabled(false);
-                authNotice.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             }
         });
     }
