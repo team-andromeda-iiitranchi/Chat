@@ -8,6 +8,9 @@
             android:icon="@drawable/notices"
             android:title="Notice Corner"
             />
+        <item android:id="@+id/faculty"
+            android:title="Faculty"
+            android:icon="@drawable/faculty"/>
         <item android:id="@+id/library"
             android:icon="@drawable/library"
             android:title="E-Library"/>

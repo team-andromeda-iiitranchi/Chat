@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.design.widget.NavigationView;
@@ -14,13 +15,19 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,14 +40,18 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import chat.chat.ChatApp;
 import chat.chat.R;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static chat.chat.chat.ChatActivity.TEMP_PHOTO_JPG;
 
@@ -52,9 +63,23 @@ public class OptionsActivity extends AppCompatActivity
     private TabLayout tabLayout;
     private Toolbar toolbar;
     private DrawerLayout drawer;
+    private RelativeLayout.LayoutParams params;
     private NavigationView navigationView;
     private TextView linkTV;
+    private View inflatedView;
+    private RecyclerView recyclerView;
+    private LinearLayoutManager linearLayoutManager;
+    private RelativeLayout relativeLayout;
+    private MessageAdapter messageAdapter;
+    private EditText messageView;
+    private ImageView sendBtn;
+    private LinearLayout linearLayout;
+    private DatabaseReference mRef;
+    private String nameStr;
+    private AppBarLayout appBar;
     static int state=2;
+    private String nameFac;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,11 +87,17 @@ public class OptionsActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final ProgressDialog mProgress=new ProgressDialog(this);
+        relativeLayout= (RelativeLayout) findViewById(R.id.view_pager);
+        appBar= (AppBarLayout) findViewById(R.id.appBarLayout);
+        params=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+
 
         mProgress.setTitle("Loading!");
         mProgress.setMessage("Getting User's Data");
         mProgress.setCanceledOnTouchOutside(false);
         initDrawer();
+        mRef=FirebaseDatabase.getInstance().getReference();
         navigationView.setCheckedItem(R.id.notices);
         FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
@@ -83,11 +114,12 @@ public class OptionsActivity extends AppCompatActivity
                 }
                 else
                 {
-                    final ViewPager mViewPager = (ViewPager) findViewById(R.id.tabPager);
-                    tabLayout=(TabLayout)findViewById(R.id.tabLayout);
+                    initPager();
                     DatabaseReference mRef= FirebaseDatabase.getInstance().getReference();
                     String uid=FirebaseAuth.getInstance().getCurrentUser().getUid();
                     final List votedList=new ArrayList();
+
+
                     Query q=mRef.child("Users").orderByKey().equalTo(uid);
                     q.addChildEventListener(new ChildEventListener() {
                         @Override
@@ -102,6 +134,14 @@ public class OptionsActivity extends AppCompatActivity
                                 mViewPager.setOffscreenPageLimit(3);
                                 tabLayout.setupWithViewPager(mViewPager);
                                 mViewPager.setCurrentItem(1);
+
+                                //if not CR remove faculty options from drawer
+                                if(ChatApp.user.getCR().equals("false")) {
+                                    Menu menu = navigationView.getMenu();
+                                    MenuItem facItem = menu.findItem(R.id.faculty);
+                                    facItem.setEnabled(false);
+                                    facItem.setVisible(false);
+                                }
 
 
                                 Map map = users.getPolls();
@@ -149,6 +189,11 @@ public class OptionsActivity extends AppCompatActivity
 
 
 
+    }
+
+    private void initPager() {
+        mViewPager = (ViewPager) findViewById(R.id.tabPager);
+        tabLayout=(TabLayout)findViewById(R.id.tabLayout);
     }
 
     @Override
@@ -221,7 +266,7 @@ public class OptionsActivity extends AppCompatActivity
 
         if(id==R.id.notices)
         {
-
+            showNotices();
         }
         else if(id==R.id.library)
         {
@@ -229,10 +274,197 @@ public class OptionsActivity extends AppCompatActivity
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         }
+        if(id==R.id.faculty)
+        {
+            showFaculty();
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private void showNotices() {
+        state=1;
+        relativeLayout.removeAllViews();
+        appBar.removeView(tabLayout);
+        params.topMargin=(int)getResources().getDimension(R.dimen.twice_app_bar_height);
+        relativeLayout.setLayoutParams(params);
+        relativeLayout.addView(mViewPager);
+        appBar.addView(tabLayout);
+    }
+
+    private void showFaculty() {
+        state=3;
+        appBar.removeView(tabLayout);
+        params.topMargin= (int) getResources().getDimension(R.dimen.app_bar_height);
+        relativeLayout.setLayoutParams(params);
+        //chat view for chat with fac
+        listState();
+
+    }
+    void listState()
+    {
+        relativeLayout.removeAllViews();
+        inflatedView=LayoutInflater.from(this).inflate(R.layout.auth_chat_layout,null,false);
+        relativeLayout.addView(inflatedView);
+        linearLayout= (LinearLayout) inflatedView.findViewById(R.id.linearLayout);
+
+        Query q=mRef.child("Users");
+        q.orderByChild("CR").equalTo("faculty").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                final View user=LayoutInflater.from(OptionsActivity.this).inflate(R.layout.all_users_layout,null,false);
+                linearLayout.addView(user);
+                String image=dataSnapshot.child("imageLink").getValue().toString();
+                final String name=dataSnapshot.child("Name").getValue().toString();
+                final String uid=dataSnapshot.getKey();
+                final String username=dataSnapshot.child("username").getValue().toString();
+
+                CircleImageView pic= (CircleImageView) user.findViewById(R.id.picture);
+                TextView displayName= (TextView) user.findViewById(R.id.displayName);
+
+                Picasso.get().load(image).placeholder(R.drawable.default_pic).into(pic);
+                displayName.setText(name);
+
+                user.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        nameStr=username;
+                        nameFac=name;
+                        toggle();
+                    }
+                });
+
+                mRef.child("lastSeen").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.hasChild(ChatApp.rollInfo.substring(0,8)))
+                        {
+                            mRef.child("lastSeen").child(ChatApp.rollInfo.substring(0,8)).child(uid).child("unseen").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if(dataSnapshot.getValue().toString().equals("1"))
+                                    {
+                                        user.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void toggle() {
+        if(state==3)
+        {
+            state=4;
+            setBackEnabled();
+            chatState();
+        }
+        else
+        {
+            state=3;
+            initDrawer();
+            listState();
+        }
+    }
+
+    private void setBackEnabled() {
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setBackDisabled();
+                toggle();
+            }
+        });
+    }
+
+    private void setBackDisabled() {
+        getSupportActionBar().setTitle("IIIT RANCHI");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
+    }
+
+    void chatState()
+    {
+        getSupportActionBar().setTitle(nameFac);
+        relativeLayout.removeView(inflatedView);
+        inflatedView= LayoutInflater.from(this).inflate(R.layout.other_chat_fragment,null,false);
+        relativeLayout.addView(inflatedView);
+
+
+
+        messageView= (EditText) inflatedView.findViewById(R.id.message);
+        sendBtn= (ImageView) inflatedView.findViewById(R.id.send);
+
+        sendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!TextUtils.isEmpty(messageView.getText()))
+                {
+                    sendMessage();
+                }
+            }
+        });
+    }
+    private void sendMessage() {
+
+        String curUid=FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        Map map=new HashMap();
+        map.put("text",messageView.getText().toString());
+        map.put("from",curUid);
+        map.put("timestamp",System.currentTimeMillis());
+        map.put("type","null");
+        map.put("link","default");
+        map.put("sender","Student");
+
+        messageView.setText("");
+
+        String key=mRef.child(ChatApp.rollInfo.substring(0,8)).child("CR").child(nameStr).push().getKey();
+        mRef.child(ChatApp.rollInfo.substring(0,8)).child("CR").child(nameStr).child(key).setValue(map);
+
+        mRef.child("lastSeen").child(nameStr).child(ChatApp.rollInfo.substring(0,8)).child("unseen").setValue(1);
+
+    }
+
     public Toolbar getToolBar()
     {
         return toolbar;
