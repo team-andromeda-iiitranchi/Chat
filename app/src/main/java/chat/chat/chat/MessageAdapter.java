@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -124,7 +125,7 @@ class MessageAdapter extends RecyclerView.Adapter
         {
             view=LayoutInflater.from(parent.getContext()).inflate(R.layout.faculty_file,parent,false);
             mView=view;
-            return new ReceivedMessageHolder(view);
+            return new ReceivedImageHolder(view);
         }
     }
 

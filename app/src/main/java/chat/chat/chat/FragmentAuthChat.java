@@ -214,8 +214,7 @@ public class FragmentAuthChat extends Fragment {
         //Declaring messageField and send button
         messageView= (EditText) inflatedLayout.findViewById(R.id.message);
         ImageView sendBtn=(ImageView) inflatedLayout.findViewById(R.id.send);
-        final String text=messageView.getText().toString();
-        messageView.setText("");
+
 
 
         //setting send button functionality
@@ -223,6 +222,8 @@ public class FragmentAuthChat extends Fragment {
             @Override
             public void onClick(View view) {
                 if(!TextUtils.isEmpty(messageView.getText())) {
+                    final String text=messageView.getText().toString();
+                    messageView.setText("");
                     sendMessage("default", "null", text, System.currentTimeMillis());
                 }
             }
@@ -250,7 +251,7 @@ public class FragmentAuthChat extends Fragment {
     }
 
     public void sendMessage(String link,String type,String text,Long timestamp) {
-
+            String seen="seen";
             Map map=new HashMap();
             map.put("from", FirebaseAuth.getInstance().getCurrentUser().getUid());
             map.put("link",link);
@@ -258,12 +259,12 @@ public class FragmentAuthChat extends Fragment {
             map.put("text",text);
             map.put("type",type);
             map.put("timestamp",timestamp);
-            map.put("seen","0");
+            map.put(seen,"0");
 
             String key=mRef.child("Faculty").child(nameStr).child(ChatApp.user.getUsername()).push().getKey();
             mRef.child("Faculty").child(nameStr).child(ChatApp.user.getUsername()).child(key).setValue(map);
 
-            map.put("seen","1");
+            map.put(seen,"1");
 
             key=mRef.child("Faculty").child(ChatApp.user.getUsername()).child(nameStr).push().getKey();
             mRef.child("Faculty").child(ChatApp.user.getUsername()).child(nameStr).child(key).setValue(map);
@@ -297,9 +298,8 @@ public class FragmentAuthChat extends Fragment {
                                 messageAdapter.notifyDataSetChanged();
                                 recyclerView.scrollToPosition(mList.size() - 1);
                                 String key=dataSnapshot.getKey();
-                                Map map=new HashMap();
-                                map.put("seen","1");
-                                mRef.child("Faculty").child(ChatApp.user.getUsername()).child(nameStr).child(key).updateChildren(map);
+                                if(messages.getType()!=null)
+                                    mRef.child("Faculty").child(ChatApp.user.getUsername()).child(nameStr).child(key).child("seen").setValue("1");
                             }
                         }
 

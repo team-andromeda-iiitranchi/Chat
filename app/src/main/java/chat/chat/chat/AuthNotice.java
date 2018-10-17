@@ -151,7 +151,7 @@ public class AuthNotice extends AppCompatActivity {
     }
     private final int IMG=0;
     private final int DOC=1;
-    private final int IMG_UPLD=3;
+    public static final int IMG_UPLD=3;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -174,7 +174,7 @@ public class AuthNotice extends AppCompatActivity {
                 Long timestamp=System.currentTimeMillis();
                 String type="doc";
                 Uri fileUri=data.getData();
-                StorageReference mStorage= FirebaseStorage.getInstance().getReference().child("Auth").child("A"+timestamp+".pdf");
+                StorageReference mStorage= FirebaseStorage.getInstance().getReference().child("Uploads").child("A"+timestamp+".pdf");
                 upload(mStorage,fileUri,text,timestamp,type);
             }
         }

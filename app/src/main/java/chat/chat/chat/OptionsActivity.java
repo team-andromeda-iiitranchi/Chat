@@ -32,6 +32,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -41,6 +45,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -53,6 +60,7 @@ import chat.chat.ChatApp;
 import chat.chat.R;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static chat.chat.chat.AuthNotice.IMG_UPLD;
 import static chat.chat.chat.ChatActivity.TEMP_PHOTO_JPG;
 
 public class OptionsActivity extends AppCompatActivity
@@ -83,6 +91,7 @@ public class OptionsActivity extends AppCompatActivity
     private int counter=0;
     private String currentUid;
     private String facUid;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +104,10 @@ public class OptionsActivity extends AppCompatActivity
         appBar= (AppBarLayout) findViewById(R.id.appBarLayout);
         params=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
+        progressDialog=new ProgressDialog(this);
+        progressDialog.setTitle("Uploading Document");
+        progressDialog.setMessage("Please wait while your document is being uploaded.");
+        progressDialog.setCanceledOnTouchOutside(false);
 
 
         mProgress.setTitle("Loading!");
@@ -450,8 +463,19 @@ public class OptionsActivity extends AppCompatActivity
             public void onClick(View view) {
                 if(!TextUtils.isEmpty(messageView.getText()))
                 {
-                    sendMessage();
+                    String text=messageView.getText().toString();
+                    messageView.setText("");
+                    sendMessage(text,"null","default",System.currentTimeMillis());
                 }
+            }
+        });
+        sendBtn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                PickerDialogFragment pickerDialogFragment=new PickerDialogFragment();
+                pickerDialogFragment.show(getFragmentManager(), "picker");
+
+                return true;
             }
         });
     }
@@ -507,19 +531,17 @@ public class OptionsActivity extends AppCompatActivity
 
     }
 
-    private void sendMessage() {
+    private void sendMessage(String text,String type,String link,Long timestamp) {
 
         String curUid=FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         Map map=new HashMap();
-        map.put("text",messageView.getText().toString());
+        map.put("text",text);
         map.put("from",curUid);
-        map.put("timestamp",System.currentTimeMillis());
-        map.put("type","null");
-        map.put("link","default");
+        map.put("timestamp",timestamp);
+        map.put("type",type);
+        map.put("link",link);
         map.put("sender","Student");
-
-        messageView.setText("");
 
         String key=mRef.child(ChatApp.rollInfo.substring(0,8)).child("CR").child(nameStr).push().getKey();
         mRef.child(ChatApp.rollInfo.substring(0,8)).child("CR").child(nameStr).child(key).setValue(map);
@@ -545,7 +567,7 @@ public class OptionsActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         mMessage=ChatFragment.mMessage;
         UploadHelper uploadHelper = new UploadHelper(OptionsActivity.this, mMessage,"ChatFragment");
-        if (requestCode == IMG) {
+        if (requestCode == IMG&&state<3) {
             if (resultCode == RESULT_OK) {
                 Intent intent = new Intent(OptionsActivity.this, ImageTitleActivity.class);
                 Uri photo = data.getData();
@@ -554,7 +576,7 @@ public class OptionsActivity extends AppCompatActivity
                 intent.putExtra("receiver",ChatFragment.receiver);
                 uploadHelper.makeTempAndUpload(intent, photo, TEMP_PHOTO_JPG);
             }
-        } else if (requestCode == DOC) {
+        } else if (requestCode == DOC&&state<3) {
             if (resultCode == RESULT_OK) {
                 if (!TextUtils.isEmpty(mMessage.getText())) {
                     Uri uri = data.getData();
@@ -564,6 +586,70 @@ public class OptionsActivity extends AppCompatActivity
                 }
             }
         }
+        else if(requestCode==IMG&&state>=3)
+        {
+            if(resultCode==RESULT_OK)
+            {
+                Intent i=new Intent(OptionsActivity.this,AuthImageActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                i.putExtra("imageUri",data.getData());
+                startActivityForResult(i,IMG_UPLD);
+            }
+        }
+        else if(requestCode==DOC&&state>=3)
+        {
+            if(resultCode==RESULT_OK)
+            {
+                progressDialog.show();
+                String text="";
+                Long timestamp=System.currentTimeMillis();
+                String type="doc";
+                Uri fileUri=data.getData();
+                StorageReference mStorage= FirebaseStorage.getInstance().getReference().child("Uploads").child("A"+timestamp+".pdf");
+                upload(mStorage,fileUri,text,timestamp,type);
+            }
+        }
+        else if(requestCode==IMG_UPLD)
+        {
+            if(resultCode==RESULT_OK)
+            {
+                String text=data.getStringExtra("text");
+                String link=data.getStringExtra("link");
+                String type="image";
+                Long timestamp=data.getLongExtra("timestamp",0);
+                sendMessage(text,type,link,timestamp);
+            }
+        }
     }
+    private void upload(final StorageReference mStorage, Uri fileUri, final String text, final Long timestamp, final String type) {
+        UploadTask uploadTask= mStorage.putFile(fileUri);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                progressDialog.dismiss();
+                Toast.makeText(OptionsActivity.this, "Failed to Upload!", Toast.LENGTH_SHORT).show();
+            }
+        });
+        Task<Uri> uriTask=uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if(!task.isSuccessful())
+                {
+                    progressDialog.dismiss();
+                    throw task.getException();
+                }
+                return  mStorage.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                progressDialog.dismiss();
+                String link=task.getResult().toString();
+                sendMessage(text,type,link,timestamp);
+            }
+        });
+
+    }
+
 
 }

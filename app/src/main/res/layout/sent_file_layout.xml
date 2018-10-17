@@ -20,7 +20,7 @@
         android:text="DD-MM-YYYY"/>
 
     <LinearLayout
-        android:layout_width="206dp"
+        android:layout_width="187dp"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/timeView"
         android:layout_below="@+id/timeView"
@@ -30,19 +30,19 @@
         <ImageView
             android:id="@+id/downloadOption"
             android:layout_width="166dp"
-            android:layout_height="158dp"
+            android:layout_height="167dp"
             android:layout_alignEnd="@+id/timeView"
             android:layout_below="@+id/timeView"
-            android:layout_marginStart="2dp"
+            android:layout_marginStart="0dp"
             android:background="@color/white"
             android:src="@drawable/download_icon" />
 
         <TextView
             android:id="@+id/text"
-            android:layout_width="match_parent"
+            android:layout_width="165dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/downloadOption"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="1dp"
 
             android:maxWidth="@dimen/message_max_width"
             android:text="@string/sent_text"

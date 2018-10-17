@@ -221,13 +221,14 @@ public class FragmentStudentChat extends Fragment {
         //Declaring messageField and send button
         messageView= (EditText) inflatedView.findViewById(R.id.message);
         ImageView sendBtn=(ImageView) inflatedView.findViewById(R.id.send);
-        final String text=messageView.getText().toString();
-        messageView.setText("");
+
         //setting send button functionality
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(!TextUtils.isEmpty(messageView.getText())) {
+                    final String text=messageView.getText().toString();
+                    messageView.setText("");
                     sendMessage("default", "null", text, System.currentTimeMillis());
                 }
             }
