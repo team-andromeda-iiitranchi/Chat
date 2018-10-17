@@ -1,6 +1,8 @@
 package chat.chat.chat;
 
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -36,12 +39,15 @@ import java.util.Map;
 import chat.chat.ChatApp;
 import chat.chat.R;
 
+import static android.content.Context.CONNECTIVITY_SERVICE;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class FragmentStudentChat extends Fragment {
 
     static int state=1;
+    private EditText messageView;
     public FragmentStudentChat() {
 
     }
@@ -54,6 +60,7 @@ public class FragmentStudentChat extends Fragment {
     private DatabaseReference mRef;
     private String nameStr;
     private MessageAdapter messageAdapter;
+    private AuthNotice authNotice;
     private List<Messages> mList;
     private String currentUid;
     private LinearLayoutManager linearLayoutManager;
@@ -66,6 +73,7 @@ public class FragmentStudentChat extends Fragment {
         relativeLayout= (RelativeLayout) view.findViewById(R.id.relLayout);
         this.inflater=inflater;
 
+        authNotice=(AuthNotice)getActivity();
 
         currentUid=FirebaseAuth.getInstance().getCurrentUser().getUid();
         mRef= FirebaseDatabase.getInstance().getReference();
@@ -171,13 +179,11 @@ public class FragmentStudentChat extends Fragment {
     }
 
     private void backButtonDisable() {
-        AuthNotice authNotice= (AuthNotice) getActivity();
         authNotice.getSupportActionBar().setDisplayShowHomeEnabled(false);
         authNotice.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
     }
 
     private void backButtonEnable() {
-        final AuthNotice authNotice= (AuthNotice) getActivity();
         authNotice.getSupportActionBar().setDisplayShowHomeEnabled(true);
         authNotice.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -213,30 +219,48 @@ public class FragmentStudentChat extends Fragment {
         loadMessages(nameStr);
 
         //Declaring messageField and send button
-        final EditText messageView= (EditText) inflatedView.findViewById(R.id.message);
+        messageView= (EditText) inflatedView.findViewById(R.id.message);
         ImageView sendBtn=(ImageView) inflatedView.findViewById(R.id.send);
-
-
+        final String text=messageView.getText().toString();
+        messageView.setText("");
         //setting send button functionality
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendMessage(messageView);
+                if(!TextUtils.isEmpty(messageView.getText())) {
+                    sendMessage("default", "null", text, System.currentTimeMillis());
+                }
+            }
+        });
+        sendBtn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(CONNECTIVITY_SERVICE);
+                NetworkInfo info = cm.getActiveNetworkInfo();
+                boolean isConnected = info != null && info.isConnectedOrConnecting();
+                if (isConnected) {
+                    PickerDialogFragment pickerDialogFragment = new PickerDialogFragment();
+                    pickerDialogFragment.show(getActivity().getFragmentManager(), "picker");
+                    authNotice.setChoice(AuthNotice.STUDENT);
+
+                } else {
+                    Toast.makeText(getActivity(), "Not Connected to the Internet!", Toast.LENGTH_SHORT).show();
+                }
+                return true;
             }
         });
 
     }
-    public void sendMessage(TextView messageView)
+    public void sendMessage(String link, String type,String text,Long timestamp)
     {
-        if(!TextUtils.isEmpty(messageView.getText()))
-        {
+
             Map map=new HashMap();
             map.put("from", FirebaseAuth.getInstance().getCurrentUser().getUid());
-            map.put("link","default");
+            map.put("link",link);
             map.put("sender",ChatApp.user.getCR());
-            map.put("text",messageView.getText().toString());
-            map.put("type","null");
-            map.put("timestamp",System.currentTimeMillis());
+            map.put("text",text);
+            map.put("type",type);
+            map.put("timestamp",timestamp);
 
             messageView.setText("");
 
@@ -252,7 +276,7 @@ public class FragmentStudentChat extends Fragment {
             {
                 loadMessages(nameStr);
             }
-        }
+
     }
 
     private void setUnseen() {

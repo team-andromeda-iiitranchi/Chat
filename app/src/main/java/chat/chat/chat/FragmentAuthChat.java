@@ -1,6 +1,8 @@
 package chat.chat.chat;
 
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -37,6 +40,9 @@ import chat.chat.ChatApp;
 import chat.chat.R;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static android.content.Context.CONNECTIVITY_SERVICE;
+import static chat.chat.chat.AuthNotice.AUTH;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -55,6 +61,8 @@ public class FragmentAuthChat extends Fragment {
     private MessageAdapter messageAdapter;
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
+    private EditText messageView;
+    private AuthNotice authNotice;
     int counter=0;
 
     public FragmentAuthChat() {
@@ -72,7 +80,7 @@ public class FragmentAuthChat extends Fragment {
         //init firebase database
         mRef= FirebaseDatabase.getInstance().getReference();
         currentUser= FirebaseAuth.getInstance().getCurrentUser().getUid();
-
+        authNotice=(AuthNotice) getActivity();
         listState();
 
         return view;
@@ -169,7 +177,6 @@ public class FragmentAuthChat extends Fragment {
     }
 
     private void backButtonEnable() {
-        final AuthNotice authNotice= (AuthNotice) getActivity();
         authNotice.getSupportActionBar().setDisplayShowHomeEnabled(true);
         authNotice.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -185,7 +192,6 @@ public class FragmentAuthChat extends Fragment {
     }
 
     private void backButtonDisable() {
-        AuthNotice authNotice=(AuthNotice)getActivity();
         authNotice.getSupportActionBar().setDisplayShowHomeEnabled(false);
         authNotice.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
     }
@@ -206,34 +212,53 @@ public class FragmentAuthChat extends Fragment {
         loadMessages(nameStr);
 
         //Declaring messageField and send button
-        final EditText messageView= (EditText) inflatedLayout.findViewById(R.id.message);
+        messageView= (EditText) inflatedLayout.findViewById(R.id.message);
         ImageView sendBtn=(ImageView) inflatedLayout.findViewById(R.id.send);
+        final String text=messageView.getText().toString();
+        messageView.setText("");
 
 
         //setting send button functionality
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendMessage(messageView);
+                if(!TextUtils.isEmpty(messageView.getText())) {
+                    sendMessage("default", "null", text, System.currentTimeMillis());
+                }
+            }
+        });
+
+        sendBtn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(CONNECTIVITY_SERVICE);
+                NetworkInfo info = cm.getActiveNetworkInfo();
+                boolean isConnected = info != null && info.isConnectedOrConnecting();
+                if (isConnected) {
+                    PickerDialogFragment pickerDialogFragment = new PickerDialogFragment();
+                    pickerDialogFragment.show(getActivity().getFragmentManager(), "picker");
+                    authNotice.setChoice(AUTH);
+
+                } else {
+                    Toast.makeText(getActivity(), "Not Connected to the Internet!", Toast.LENGTH_SHORT).show();
+                }
+                return true;
             }
         });
 
 
     }
 
-    private void sendMessage(EditText messageView) {
-        if(!TextUtils.isEmpty(messageView.getText()))
-        {
+    public void sendMessage(String link,String type,String text,Long timestamp) {
+
             Map map=new HashMap();
             map.put("from", FirebaseAuth.getInstance().getCurrentUser().getUid());
-            map.put("link","default");
+            map.put("link",link);
             map.put("sender",ChatApp.user.getCR());
-            map.put("text",messageView.getText().toString());
-            map.put("type","null");
-            map.put("timestamp",System.currentTimeMillis());
+            map.put("text",text);
+            map.put("type",type);
+            map.put("timestamp",timestamp);
             map.put("seen","0");
-
-            messageView.setText("");
 
             String key=mRef.child("Faculty").child(nameStr).child(ChatApp.user.getUsername()).push().getKey();
             mRef.child("Faculty").child(nameStr).child(ChatApp.user.getUsername()).child(key).setValue(map);
@@ -250,7 +275,7 @@ public class FragmentAuthChat extends Fragment {
             {
                 loadMessages(nameStr);
             }
-        }
+
     }
 
     private void loadMessages(final String nameStr) {

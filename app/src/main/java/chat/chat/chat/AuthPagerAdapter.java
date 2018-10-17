@@ -11,21 +11,28 @@ public class AuthPagerAdapter extends FragmentPagerAdapter {
     public AuthPagerAdapter(FragmentManager fm) {
         super(fm);
     }
-    public FragmentAuthChat fragmentAuthChat;
-    public FragmentAuthNotice fragmentAuthNotice;
-    public FragmentStudentChat fragmentStudentChat;
+    public AuthPagerAdapter(FragmentManager fm,AuthNotice authNotice){
+        super(fm);
+        this.authNotice=authNotice;
+    }
+    private FragmentAuthChat fragmentAuthChat;
+    private FragmentAuthNotice fragmentAuthNotice;
+    private FragmentStudentChat fragmentStudentChat;
+    private AuthNotice authNotice;
     @Override
     public Fragment getItem(int position) {
         switch (position)
         {
             case 0:
                  fragmentAuthChat=new FragmentAuthChat();
+                 authNotice.setFragmentAuthChat(fragmentAuthChat);
                 return fragmentAuthChat;
             case 1:
                 fragmentAuthNotice=new FragmentAuthNotice();
                 return fragmentAuthNotice;
             case 2:
                 fragmentStudentChat=new FragmentStudentChat();
+                authNotice.setFragmentStudentChat(fragmentStudentChat);
                 return fragmentStudentChat;
         }
         return null;
