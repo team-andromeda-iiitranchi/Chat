@@ -8,6 +8,8 @@ import android.support.v4.view.ViewPager;
 import chat.chat.ChatApp;
 
 public class AuthPagerAdapter extends FragmentPagerAdapter {
+    private FacDirChat facDirChat;
+
     public AuthPagerAdapter(FragmentManager fm) {
         super(fm);
     }
@@ -34,13 +36,17 @@ public class AuthPagerAdapter extends FragmentPagerAdapter {
                 fragmentStudentChat=new FragmentStudentChat();
                 authNotice.setFragmentStudentChat(fragmentStudentChat);
                 return fragmentStudentChat;
+            case 3:
+                facDirChat=new FacDirChat();
+                authNotice.setFacDirChat(facDirChat);
+                return facDirChat;
         }
         return null;
     }
 
     @Override
     public int getCount() {
-        return 3;
+        return 4;
     }
 
     @Override
@@ -50,6 +56,7 @@ public class AuthPagerAdapter extends FragmentPagerAdapter {
             case 0: return "Faculty";
             case 1: return "Notices";
             case 2: return "Students";
+            case 3: return "Director";
         }
         return null;
     }

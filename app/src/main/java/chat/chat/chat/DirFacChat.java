@@ -42,11 +42,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
 import static chat.chat.chat.AuthNotice.AUTH;
+import static chat.chat.chat.AuthNotice.DIR;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FragmentAuthChat extends Fragment {
+    public class DirFacChat extends Fragment {
 
     private View view;
     static int state=1;
@@ -66,7 +67,7 @@ public class FragmentAuthChat extends Fragment {
     int counter=0;
     private String facName;
 
-    public FragmentAuthChat() {
+    public DirFacChat() {
         // Required empty public constructor
     }
 
@@ -91,8 +92,8 @@ public class FragmentAuthChat extends Fragment {
         authNotice.getSupportActionBar().setTitle("IIIT RANCHI");
         inflatedLayout=inflater.inflate(R.layout.auth_chat_layout,null,false);
         relativeLayout.addView(inflatedLayout);
-        
-        
+
+
         linearLayout = (LinearLayout) inflatedLayout.findViewById(R.id.linearLayout);
 
         Query q=mRef.child("Users");
@@ -118,7 +119,7 @@ public class FragmentAuthChat extends Fragment {
                         }
                     });
 
-                    Query q=mRef.child("Faculty").child(ChatApp.user.getUsername()).child(username);
+                    Query q=mRef.child("Director").child(username);
                     q.orderByChild("seen").equalTo("0").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -241,7 +242,7 @@ public class FragmentAuthChat extends Fragment {
                 if (isConnected) {
                     PickerDialogFragment pickerDialogFragment = new PickerDialogFragment();
                     pickerDialogFragment.show(getActivity().getFragmentManager(), "picker");
-                    authNotice.setChoice(AUTH);
+                    authNotice.setChoice(DIR);
 
                 } else {
                     Toast.makeText(getActivity(), "Not Connected to the Internet!", Toast.LENGTH_SHORT).show();
@@ -254,37 +255,37 @@ public class FragmentAuthChat extends Fragment {
     }
 
     public void sendMessage(String link,String type,String text,Long timestamp) {
-            String seen="seen";
-            Map map=new HashMap();
-            map.put("from", FirebaseAuth.getInstance().getCurrentUser().getUid());
-            map.put("link",link);
-            map.put("sender",ChatApp.user.getCR());
-            map.put("text",text);
-            map.put("type",type);
-            map.put("timestamp",timestamp);
-            map.put(seen,"0");
+        String seen="seen";
+        Map map=new HashMap();
+        map.put("from", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        map.put("link",link);
+        map.put("sender",ChatApp.user.getCR());
+        map.put("text",text);
+        map.put("type",type);
+        map.put("timestamp",timestamp);
+        map.put(seen,"0");
 
-            String key=mRef.child("Faculty").child(nameStr).child(ChatApp.user.getUsername()).push().getKey();
-            mRef.child("Faculty").child(nameStr).child(ChatApp.user.getUsername()).child(key).setValue(map);
+        String key=mRef.child("Faculty").child(nameStr).child("Director").push().getKey();
+        mRef.child("Faculty").child(nameStr).child("Director").child(key).setValue(map);
 
-            map.put(seen,"1");
+        map.put(seen,"1");
 
-            key=mRef.child("Faculty").child(ChatApp.user.getUsername()).child(nameStr).push().getKey();
-            mRef.child("Faculty").child(ChatApp.user.getUsername()).child(nameStr).child(key).setValue(map);
+        key=mRef.child("Director").child(nameStr).push().getKey();
+        mRef.child("Director").child(nameStr).child(key).setValue(map);
 
 
-            //if this is the first message
-            //then set a listener at the child
-            if(counter==0)
-            {
-                loadMessages(nameStr);
-            }
+        //if this is the first message
+        //then set a listener at the child
+        if(counter==0)
+        {
+            loadMessages(nameStr);
+        }
 
     }
 
     private void loadMessages(final String nameStr) {
 
-        final DatabaseReference mDatabase=mRef.child("Faculty").child(ChatApp.user.getUsername());
+        final DatabaseReference mDatabase=mRef.child("Director");
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -302,7 +303,7 @@ public class FragmentAuthChat extends Fragment {
                                 recyclerView.scrollToPosition(mList.size() - 1);
                                 String key=dataSnapshot.getKey();
                                 if(messages.getType()!=null)
-                                    mRef.child("Faculty").child(ChatApp.user.getUsername()).child(nameStr).child(key).child("seen").setValue("1");
+                                    mRef.child("Director").child(nameStr).child(key).child("seen").setValue("1");
                             }
                         }
 
