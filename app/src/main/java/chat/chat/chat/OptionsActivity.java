@@ -340,8 +340,19 @@ public class OptionsActivity extends AppCompatActivity
                 final String uid=dataSnapshot.getKey();
                 final String username=dataSnapshot.child("username").getValue().toString();
 
-                CircleImageView pic= (CircleImageView) user.findViewById(R.id.picture);
+                final CircleImageView pic= (CircleImageView) user.findViewById(R.id.picture);
                 TextView displayName= (TextView) user.findViewById(R.id.displayName);
+
+                //set onClickListener on CircleImageView to display
+                //profile picture of the user
+                pic.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        UserImgDialogUtil dialogUtil=new UserImgDialogUtil();
+                        dialogUtil.showDialog(pic,OptionsActivity.this,uid);
+                    }
+                });
+
 
                 Picasso.get().load(image).placeholder(R.drawable.default_pic).into(pic);
                 displayName.setText(name);

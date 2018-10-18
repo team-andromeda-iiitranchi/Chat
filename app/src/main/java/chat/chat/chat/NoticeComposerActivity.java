@@ -119,16 +119,17 @@ public class NoticeComposerActivity extends AppCompatActivity implements Chooser
 
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
-                    if(ChatApp.user.getCR().equals("director"))
-                    {
+
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Faculty");
                         reference.runTransaction(new Transaction.Handler() {
                             @NonNull
                             @Override
                             public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
-                                for (MutableData d : mutableData.getChildren()) {
-                                    if(!d.getKey().equals(ChatApp.user.getUsername())) {
-                                        list.add(d.getKey());
+                                if(ChatApp.user.getCR().equals("director")) {
+                                    for (MutableData d : mutableData.getChildren()) {
+                                        if (!d.getKey().equals(ChatApp.user.getUsername())) {
+                                            list.add(d.getKey());
+                                        }
                                     }
                                 }
 
@@ -146,7 +147,7 @@ public class NoticeComposerActivity extends AppCompatActivity implements Chooser
                                 c.show(getFragmentManager(), "ChooserDialog");
                             }
                         });
-                    }
+
 
             }
         });

@@ -141,6 +141,8 @@ public class UserAdapter extends RecyclerView.Adapter {
                         uid=dataSnapshot1.getKey();
                     }
                     if(!uid.equals("")) {
+                        UserImgDialogUtil dialogUtil=new UserImgDialogUtil();
+                        dialogUtil.showDialog(circleImageView,chatFragment.getContext(),uid);
                         setUserImage(circleImageView, uid);
                     }
                 }

@@ -103,8 +103,20 @@ import static chat.chat.chat.AuthNotice.DIR;
                 if(!dataSnapshot.child("username").getValue().toString().equals(ChatApp.user.getUsername())) {
                     final View user = inflater.inflate(R.layout.all_users_layout, null, false);
                     linearLayout.addView(user);
-                    TextView displ = (TextView) user.findViewById(R.id.displayName);
-                    CircleImageView pic = (CircleImageView) user.findViewById(R.id.picture);
+                    final String uid=dataSnapshot.getKey();
+                    final TextView displ = (TextView) user.findViewById(R.id.displayName);
+                    final CircleImageView pic = (CircleImageView) user.findViewById(R.id.picture);
+
+                    //onClickListener on circleImageView
+                    pic.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            UserImgDialogUtil dialogUtil=new UserImgDialogUtil();
+                            dialogUtil.showDialog(pic,getContext(),uid);
+                        }
+                    });
+
+
                     final String name=dataSnapshot.child("Name").getValue().toString();
                     String image=dataSnapshot.child("imageLink").getValue().toString();
                     final String username=dataSnapshot.child("username").getValue().toString();

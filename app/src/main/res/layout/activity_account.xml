@@ -15,10 +15,15 @@
         android:title="Account">
 
     </android.support.v7.widget.Toolbar>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/app_bar_height">
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginTop="@dimen/app_bar_height"
+        android:layout_alignParentTop="true">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -34,6 +39,27 @@
                 android:layout_marginTop="30dp"
                 android:src="@drawable/default_pic" />
 
+            <TextView
+                android:id="@+id/displayName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:textAlignment="center"
+                android:text="Display Name"
+                android:textColor="@color/black"
+                android:textSize="17dp"
+                 />
+            <TextView
+                android:id="@+id/reg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:textAlignment="center"
+                android:text="Registration No."
+                android:textColor="@color/black"
+                android:textSize="17dp"
+                 />
+
             <Button
                 android:id="@+id/setPic"
                 android:layout_width="wrap_content"
@@ -43,6 +69,17 @@
                 android:background="@drawable/btn_background"
                 android:padding="10dp"
                 android:text="@string/set_pro_pic"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/remove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="95dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/btn_background"
+                android:padding="10dp"
+                android:text="Remove Profile Picture"
                 android:textColor="@color/white" />
         </LinearLayout>
     </ScrollView>
