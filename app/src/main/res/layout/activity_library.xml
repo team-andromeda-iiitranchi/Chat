@@ -51,8 +51,6 @@
         android:backgroundTint="@color/colorPrimary"
         android:src="@drawable/plus"
         android:tint="@color/white"
-
-
         app:backgroundTint="@color/colorPrimary" />
 
 </RelativeLayout>

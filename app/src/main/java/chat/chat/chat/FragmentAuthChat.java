@@ -91,8 +91,8 @@ public class FragmentAuthChat extends Fragment {
         authNotice.getSupportActionBar().setTitle("IIIT RANCHI");
         inflatedLayout=inflater.inflate(R.layout.auth_chat_layout,null,false);
         relativeLayout.addView(inflatedLayout);
-        
-        
+
+
         linearLayout = (LinearLayout) inflatedLayout.findViewById(R.id.linearLayout);
 
         Query q=mRef.child("Users");
@@ -118,14 +118,27 @@ public class FragmentAuthChat extends Fragment {
                         }
                     });
 
+                    //check for new or unseen messages
                     Query q=mRef.child("Faculty").child(ChatApp.user.getUsername()).child(username);
-                    q.orderByChild("seen").equalTo("0").addListenerForSingleValueEvent(new ValueEventListener() {
+                    q.orderByChild("seen").equalTo("0").addChildEventListener(new ChildEventListener() {
                         @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if(dataSnapshot.getValue()!=null)
-                            {
-                                user.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-                            }
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            user.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
                         }
 
                         @Override
@@ -273,60 +286,40 @@ public class FragmentAuthChat extends Fragment {
             mRef.child("Faculty").child(ChatApp.user.getUsername()).child(nameStr).child(key).setValue(map);
 
 
-            //if this is the first message
-            //then set a listener at the child
-            if(counter==0)
-            {
-                loadMessages(nameStr);
-            }
 
     }
 
     private void loadMessages(final String nameStr) {
 
         final DatabaseReference mDatabase=mRef.child("Faculty").child(ChatApp.user.getUsername());
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child(nameStr).addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild(nameStr))
-                {
-                    counter=1;
-                    mDatabase.child(nameStr).addChildEventListener(new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                            Messages messages=dataSnapshot.getValue(Messages.class);
-                            if(mList.size()==0||messages.timestamp!=mList.get(mList.size()-1).timestamp) {
-                                mList.add(messages);
-                                messageAdapter.notifyDataSetChanged();
-                                recyclerView.scrollToPosition(mList.size() - 1);
-                                String key=dataSnapshot.getKey();
-                                if(messages.getType()!=null)
-                                    mRef.child("Faculty").child(ChatApp.user.getUsername()).child(nameStr).child(key).child("seen").setValue("1");
-                            }
-                        }
-
-                        @Override
-                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                        }
-
-                        @Override
-                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
+                Messages messages=dataSnapshot.getValue(Messages.class);
+                if(mList.size()==0||messages.timestamp!=mList.get(mList.size()-1).timestamp) {
+                    mList.add(messages);
+                    messageAdapter.notifyDataSetChanged();
+                    recyclerView.scrollToPosition(mList.size() - 1);
+                    String key=dataSnapshot.getKey();
+                    if(messages.getType()!=null)
+                        mRef.child("Faculty").child(ChatApp.user.getUsername()).child(nameStr).child(key).child("seen").setValue("1");
                 }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
             }
 
             @Override
@@ -334,6 +327,8 @@ public class FragmentAuthChat extends Fragment {
 
             }
         });
+
+
     }
 
 

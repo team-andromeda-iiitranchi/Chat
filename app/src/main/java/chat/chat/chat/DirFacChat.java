@@ -120,13 +120,27 @@ import static chat.chat.chat.AuthNotice.DIR;
                     });
 
                     Query q=mRef.child("Director").child(username);
-                    q.orderByChild("seen").equalTo("0").addListenerForSingleValueEvent(new ValueEventListener() {
+                    q.orderByChild("seen").equalTo("0").addChildEventListener(new ChildEventListener() {
                         @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if(dataSnapshot.getValue()!=null)
-                            {
-                                user.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-                            }
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            user.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            user.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
                         }
 
                         @Override

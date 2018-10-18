@@ -91,14 +91,26 @@ public class FragmentStudentChat extends Fragment {
     }
     public void populateLinearLayout(final DatabaseReference mRef)
     {
-        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        mRef.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot dSnap:dataSnapshot.getChildren())
-                {
-                    String key=dSnap.getKey();
-                    inflateSection(key);
-                }
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                String key=dataSnapshot.getKey();
+                inflateSection(key);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
             }
 
             @Override
@@ -113,32 +125,27 @@ public class FragmentStudentChat extends Fragment {
         View view=inflater.inflate(R.layout.each_section_layout,null,false);
         final TextView textView= (TextView) view.findViewById(R.id.nameView);
         textView.setText(name);
-        //check for unseen messages
-        mRef.child("lastSeen").addListenerForSingleValueEvent(new ValueEventListener() {
+        mRef.child("lastSeen").child(currentUid).child(name).addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild(currentUid))
-                {
-                    mRef.child("lastSeen").child(currentUid).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if(dataSnapshot.hasChild(name))
-                            {
-                                //if unseen messages from that section
-                                if(dataSnapshot.child(name).child("unseen").getValue().toString().equals("1"))
-                                {
-                                    //change message tab colour
-                                    textView.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-                                }
-                            }
-                        }
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if(dataSnapshot.getValue().toString().equals("1"))
+                    textView.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+            }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if(dataSnapshot.getValue().toString().equals("1"))
+                textView.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+            }
 
-                        }
-                    });
-                }
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
             }
 
             @Override
@@ -271,31 +278,36 @@ public class FragmentStudentChat extends Fragment {
             //set seen status
             setUnseen();
 
-            //if this is the first message
-            //then set a listener at the child
-            if(counter==0)
-            {
-                loadMessages(nameStr);
-            }
-
     }
 
     private void setUnseen() {
         //set unseen node to 1
         Query q=mRef.child("Users");
-        q.orderByChild("CR").equalTo("true").addListenerForSingleValueEvent(new ValueEventListener() {
+        q.orderByChild("CR").equalTo("true").addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot d:dataSnapshot.getChildren())
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                String uid=dataSnapshot.getKey();
+                String name=dataSnapshot.child("username").getValue().toString();
+                //getting roll id of CRs and comparing them with target
+                if(name.substring(0,8).equals(nameStr))
                 {
-                    String uid=d.getKey();
-                    String name=d.child("username").getValue().toString();
-                    //getting roll id of CRs and comparing them with target
-                    if(name.substring(0,8).equals(nameStr))
-                    {
-                        mRef.child("lastSeen").child(uid).child(currentUid).child("unseen").setValue(1);
-                    }
+                    mRef.child("lastSeen").child(uid).child(currentUid).child("unseen").setValue(1);
                 }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
             }
 
             @Override
@@ -309,46 +321,31 @@ public class FragmentStudentChat extends Fragment {
     {
         final String usrname=ChatApp.user.getUsername();
         final DatabaseReference mDatabase=mRef.child(name).child("CR");
-        mRef.child("lastSeen").child(currentUid).child(name).child("unseen").setValue(0);
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child(usrname).addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild(usrname))
-                {
-                    counter=1;
-                    mDatabase.child(usrname).addChildEventListener(new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                            Messages messages=dataSnapshot.getValue(Messages.class);
-                            if(mList.size()==0||mList.get(mList.size()-1).getTimestamp()!=messages.getTimestamp()) {
-                                mList.add(messages);
-                                messageAdapter.notifyDataSetChanged();
-                                recyclerView.scrollToPosition(mList.size() - 1);
-                            }
-                        }
-
-                        @Override
-                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                        }
-
-                        @Override
-                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
+                Messages messages=dataSnapshot.getValue(Messages.class);
+                if(mList.size()==0||mList.get(mList.size()-1).getTimestamp()!=messages.getTimestamp()) {
+                    mList.add(messages);
+                    messageAdapter.notifyDataSetChanged();
+                    recyclerView.scrollToPosition(mList.size() - 1);
                 }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
             }
 
             @Override

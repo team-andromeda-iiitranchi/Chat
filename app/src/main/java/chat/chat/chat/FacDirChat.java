@@ -149,61 +149,39 @@ public class FacDirChat extends Fragment {
         key=mRef.child("Director").child(ChatApp.user.getUsername()).push().getKey();
         mRef.child("Director").child(ChatApp.user.getUsername()).child(key).setValue(map);
 
-
-        //if this is the first message
-        //then set a listener at the child
-        if(counter==0)
-        {
-            loadMessages();
-        }
-
     }
 
     private void loadMessages() {
 
         final DatabaseReference mDatabase=mRef.child("Faculty");
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child(ChatApp.user.getUsername()).child("Director").addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild(ChatApp.user.getUsername())&&dataSnapshot.child(ChatApp.user.getUsername()).hasChild("Director"))
-                {
-                    counter=1;
-                    mDatabase.child(ChatApp.user.getUsername()).child("Director").addChildEventListener(new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                            Messages messages=dataSnapshot.getValue(Messages.class);
-                            if(mList.size()==0||messages.timestamp!=mList.get(mList.size()-1).timestamp) {
-                                mList.add(messages);
-                                messageAdapter.notifyDataSetChanged();
-                                recyclerView.scrollToPosition(mList.size() - 1);
-                                String key=dataSnapshot.getKey();
-                                if(messages.getType()!=null)
-                                    mRef.child("Faculty").child(ChatApp.user.getUsername()).child("Director").child(key).child("seen").setValue("1");
-                            }
-                        }
-
-                        @Override
-                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                        }
-
-                        @Override
-                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
+                Messages messages=dataSnapshot.getValue(Messages.class);
+                if(mList.size()==0||messages.timestamp!=mList.get(mList.size()-1).timestamp) {
+                    mList.add(messages);
+                    messageAdapter.notifyDataSetChanged();
+                    recyclerView.scrollToPosition(mList.size() - 1);
+                    String key=dataSnapshot.getKey();
+                    if(messages.getType()!=null)
+                        mRef.child("Faculty").child(ChatApp.user.getUsername()).child("Director").child(key).child("seen").setValue("1");
                 }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
             }
 
             @Override

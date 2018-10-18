@@ -356,20 +356,31 @@ public class OptionsActivity extends AppCompatActivity
                     }
                 });
                 currentUid=FirebaseAuth.getInstance().getCurrentUser().getUid();
-                mRef.child("lastSeen").addListenerForSingleValueEvent(new ValueEventListener() {
+                mRef.child("lastSeen").child(currentUid).child(uid).addChildEventListener(new ChildEventListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.hasChild(currentUid))
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        if(dataSnapshot.getValue().toString().equals("1"))
                         {
-                            if(dataSnapshot.child(currentUid).hasChild(uid))
-                            {
-                                String unseen=dataSnapshot.child(currentUid).child(uid).child("unseen").getValue().toString();
-                                if(unseen.equals("1"))
-                                {
-                                    user.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-                                }
-                            }
+                            user.setBackgroundColor(getResources().getColor(R.color.colorAccent));
                         }
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        if(dataSnapshot.getValue().toString().equals("1"))
+                        {
+                            user.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                        }
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
                     }
 
                     @Override
@@ -481,46 +492,32 @@ public class OptionsActivity extends AppCompatActivity
     }
 
     private void loadMessages() {
-        mRef.child(ChatApp.rollInfo.substring(0,8)).child("CR").addListenerForSingleValueEvent(new ValueEventListener() {
+        mRef.child("lastSeen").child(currentUid).child(facUid).child("unseen").setValue(0);
+        mRef.child(ChatApp.rollInfo.substring(0,8)).child("CR").child(nameStr).addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild(nameStr))
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Messages messages=dataSnapshot.getValue(Messages.class);
+                if(mList.size()==0||mList.get(mList.size()-1).getTimestamp()!=messages.getTimestamp())
                 {
-                    counter=1;
-                    mRef.child("lastSeen").child(currentUid).child(facUid).child("unseen").setValue(0);
-                    mRef.child(ChatApp.rollInfo.substring(0,8)).child("CR").child(nameStr).addChildEventListener(new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                            Messages messages=dataSnapshot.getValue(Messages.class);
-                            if(mList.size()==0||mList.get(mList.size()-1).getTimestamp()!=messages.getTimestamp())
-                            {
-                                mList.add(messages);
-                                messageAdapter.notifyDataSetChanged();
-                                recyclerView.scrollToPosition(mList.size()-1);
-                            }
-                        }
-
-                        @Override
-                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                        }
-
-                        @Override
-                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
+                    mList.add(messages);
+                    messageAdapter.notifyDataSetChanged();
+                    recyclerView.scrollToPosition(mList.size()-1);
                 }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
             }
 
             @Override
@@ -548,10 +545,6 @@ public class OptionsActivity extends AppCompatActivity
 
         mRef.child("lastSeen").child(facUid).child(ChatApp.rollInfo.substring(0,8)).child("unseen").setValue(1);
 
-        if(counter==0)
-        {
-            loadMessages();
-        }
     }
 
     public Toolbar getToolBar()
