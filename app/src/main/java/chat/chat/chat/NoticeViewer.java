@@ -32,8 +32,20 @@ public class NoticeViewer extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notice_viewer);
+
+
+
         Toolbar toolbar= (Toolbar) findViewById(R.id.activity_notice_view_toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+
 
         messageAdapter=new MessageAdapter(mList,NoticeViewer.this);
         recyclerView=(RecyclerView)findViewById(R.id.noticeViewerRecycler);

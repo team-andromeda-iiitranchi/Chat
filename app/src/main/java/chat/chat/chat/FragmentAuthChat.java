@@ -103,6 +103,7 @@ public class FragmentAuthChat extends Fragment {
                     final View user = inflater.inflate(R.layout.all_users_layout, null, false);
                     linearLayout.addView(user);
                     final String uid=dataSnapshot.getKey();
+                    final CircleImageView dot= (CircleImageView) user.findViewById(R.id.dot);
                     final TextView displ = (TextView) user.findViewById(R.id.displayName);
                     final CircleImageView pic = (CircleImageView) user.findViewById(R.id.picture);
 
@@ -136,7 +137,7 @@ public class FragmentAuthChat extends Fragment {
                     q.orderByChild("seen").equalTo("0").addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                            user.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                            dot.setVisibility(View.VISIBLE);
                         }
 
                         @Override

@@ -29,7 +29,14 @@ public class CategoryViewer extends AppCompatActivity {
         setContentView(R.layout.activity_category_viewer);
         android.support.v7.widget.Toolbar toolbar= (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
         linearLayout= (LinearLayout)findViewById(R.id.linearLayoutCategory);
         mRef= FirebaseDatabase.getInstance().getReference();

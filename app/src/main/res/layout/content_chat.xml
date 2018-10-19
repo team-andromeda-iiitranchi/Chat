@@ -44,6 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/send"
                 android:textColor="@color/black"
+                android:maxLines="3"
                 android:layout_marginTop="8dp"
                 android:layout_toStartOf="@+id/send"
                 android:hint="@string/message_hint"

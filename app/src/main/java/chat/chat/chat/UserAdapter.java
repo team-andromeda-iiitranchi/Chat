@@ -71,7 +71,8 @@ public class UserAdapter extends RecyclerView.Adapter {
         final Users users=(Users) mList.get(position);
         if(users.getIsUnseen().equals("true"))
         {
-            mView.setBackgroundResource(R.color.pollColor);
+            CircleImageView dot= (CircleImageView) mView.findViewById(R.id.dot);
+            dot.setVisibility(View.VISIBLE);
         }
         ((UserHolder)holder).bind(users);
         mView.setOnClickListener(new View.OnClickListener() {

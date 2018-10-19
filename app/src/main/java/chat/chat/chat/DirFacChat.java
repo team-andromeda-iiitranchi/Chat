@@ -103,6 +103,7 @@ import static chat.chat.chat.AuthNotice.DIR;
                 if(!dataSnapshot.child("username").getValue().toString().equals(ChatApp.user.getUsername())) {
                     final View user = inflater.inflate(R.layout.all_users_layout, null, false);
                     linearLayout.addView(user);
+                    final CircleImageView dot= (CircleImageView) user.findViewById(R.id.dot);
                     final String uid=dataSnapshot.getKey();
                     final TextView displ = (TextView) user.findViewById(R.id.displayName);
                     final CircleImageView pic = (CircleImageView) user.findViewById(R.id.picture);
@@ -135,13 +136,13 @@ import static chat.chat.chat.AuthNotice.DIR;
                     q.orderByChild("seen").equalTo("0").addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                            user.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                            dot.setVisibility(View.VISIBLE);
 
                         }
 
                         @Override
                         public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                            user.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                            dot.setVisibility(View.VISIBLE);
 
                         }
 

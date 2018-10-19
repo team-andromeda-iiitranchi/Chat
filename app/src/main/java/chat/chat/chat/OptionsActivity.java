@@ -114,6 +114,7 @@ public class OptionsActivity extends AppCompatActivity
         mProgress.setMessage("Getting User's Data");
         mProgress.setCanceledOnTouchOutside(false);
         initDrawer();
+        initPager();
         mRef=FirebaseDatabase.getInstance().getReference();
         navigationView.setCheckedItem(R.id.notices);
         FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
@@ -342,7 +343,7 @@ public class OptionsActivity extends AppCompatActivity
 
                 final CircleImageView pic= (CircleImageView) user.findViewById(R.id.picture);
                 TextView displayName= (TextView) user.findViewById(R.id.displayName);
-
+                final CircleImageView dot= (CircleImageView) user.findViewById(R.id.dot);
                 //set onClickListener on CircleImageView to display
                 //profile picture of the user
                 pic.setOnClickListener(new View.OnClickListener() {
@@ -372,7 +373,7 @@ public class OptionsActivity extends AppCompatActivity
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                         if(dataSnapshot.getValue().toString().equals("1"))
                         {
-                            user.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                            dot.setVisibility(View.VISIBLE);
                         }
                     }
 
@@ -380,7 +381,7 @@ public class OptionsActivity extends AppCompatActivity
                     public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                         if(dataSnapshot.getValue().toString().equals("1"))
                         {
-                            user.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                            dot.setVisibility(View.VISIBLE);
                         }
                     }
 

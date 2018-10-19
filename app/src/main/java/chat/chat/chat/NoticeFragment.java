@@ -70,10 +70,10 @@ public class NoticeFragment extends Fragment {
                 {
                     if(getActivity()!=null) {
                         TextView textView=new TextView(getActivity());
-                        textView.setTextColor(Color.BLACK);
+                        textView.setTextColor(getResources().getColor(R.color.black_app));
                         textView.setText(key);
-                        textView.setTextSize(20);
-                        int pad=20;
+                        textView.setTextSize(19);
+                        int pad=30;
                         textView.setPadding(pad,pad,pad,pad);
                         textView.setBackground(getResources().getDrawable(R.drawable.user_border));
                         linearLayout.addView(textView);
