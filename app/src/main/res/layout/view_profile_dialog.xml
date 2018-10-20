@@ -2,26 +2,28 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+
     android:padding="10dp"
-    android:background="@color/white"
+    android:background="@drawable/dialog_bkg"
     android:layout_marginLeft="50dp"
     android:layout_marginTop="50dp">
 
     <TextView
-        android:id="@+id/displayName"
-        android:layout_width="135dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/display_name"
+        android:maxLines="1"
+        android:id="@+id/displayName"
+        android:text="Display Name"
         android:textColor="@color/black_app"
-        android:textSize="20dp" />
-
+        android:textSize="19dp"/>
     <ImageView
         android:id="@+id/propic"
-        android:layout_width="213dp"
-        android:layout_height="226dp"
+        android:layout_width="match_parent"
+        android:layout_marginTop="3dp"
+        android:layout_centerInParent="true"
+        android:layout_height="201dp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="47dp"
+        android:layout_below="@+id/displayName"
         android:src="@drawable/default_pic" />
 
 </RelativeLayout>

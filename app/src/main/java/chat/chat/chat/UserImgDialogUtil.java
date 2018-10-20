@@ -3,11 +3,13 @@ package chat.chat.chat;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,14 +26,14 @@ public class UserImgDialogUtil {
     {
         
     }
-    void showDialog(CircleImageView circleImageView, final Context mContext, final String uid)
+    void showDialog(final CircleImageView circleImageView, final Context mContext, final String uid)
     {
         circleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final AlertDialog.Builder dialog=new AlertDialog.Builder(mContext);
                 final View v= LayoutInflater.from(mContext).inflate(R.layout.view_profile_dialog,null);
-                final TextView displayName= (TextView) v.findViewById(R.id.displayName);
+                final TextView userName= (TextView) v.findViewById(R.id.displayName);
                 final ImageView img= (ImageView) v.findViewById(R.id.propic);
                 DatabaseReference mDb= FirebaseDatabase.getInstance().getReference();
                 Query q=mDb.child("Users").orderByKey().equalTo(uid);
@@ -41,7 +43,7 @@ public class UserImgDialogUtil {
                         Users user=dataSnapshot.child(uid).getValue(Users.class);
                         if(!user.getImageLink().equals("null")) {
                             Picasso.get().load(user.getImageLink()).placeholder(R.drawable.default_pic).into(img);
-                            displayName.setText(user.getName());
+                            userName.setText(user.getUsername());
                             dialog.setView(v);
                             dialog.show();
                         }
