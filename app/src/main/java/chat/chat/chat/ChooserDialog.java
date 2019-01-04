@@ -30,7 +30,7 @@ public class ChooserDialog extends DialogFragment {
 
     public interface ChooserDialogListener {
         public void onPositiveButtonClicked(String[] mList, List<Integer> selectedItems);
-    }
+    }   
 
     ChooserDialogListener listener;
     int click = 1;
