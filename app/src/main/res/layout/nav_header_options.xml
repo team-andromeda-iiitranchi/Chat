@@ -5,25 +5,13 @@
     android:layout_height="wrap_content"
     android:background="@drawable/side_nav_bar"
     android:id="@+id/navHeader"
-    android:backgroundTint="@color/gen_white">
+    android:backgroundTint="@color/nav_bkg">
 
-    <TextView
-        android:id="@+id/iiit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:inputType="textMultiLine"
-        android:text="Indian Institute of Information Technology Ranchi"
-        android:textColor="@color/blue_light"
-        android:textSize="18dp"
-        android:textStyle="bold" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageView"
-        android:layout_width="188dp"
-        android:layout_height="126dp"
-        android:layout_below="@+id/iiit"
+        android:layout_width="207dp"
+        android:layout_height="187dp"
         android:layout_centerHorizontal="true"
         android:contentDescription="@string/nav_header_desc"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
@@ -38,7 +26,7 @@
         android:layout_centerHorizontal="true"
         android:fontFamily="monospace"
         android:text="@string/institute_link"
-        android:textColor="@color/black_app"
+        android:textColor="@color/white"
         android:textSize="18sp" />
 
 

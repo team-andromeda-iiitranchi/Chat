@@ -1,5 +1,6 @@
 package chat.chat.chat;
 
+import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -11,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +28,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
@@ -124,7 +127,7 @@ class MessageAdapter extends RecyclerView.Adapter
         {
             view=LayoutInflater.from(parent.getContext()).inflate(R.layout.faculty_file,parent,false);
             mView=view;
-            return new ReceivedMessageHolder(view);
+            return new ReceivedImageHolder(view);
         }
     }
 
@@ -367,17 +370,20 @@ class MessageAdapter extends RecyclerView.Adapter
         }
     }
 
-    private void setUserImage(final CircleImageView circleImageView, Messages messages) {
-        DatabaseReference mRef=FirebaseDatabase.getInstance().getReference();
+    private void setUserImage(final CircleImageView circleImageView, final Messages messages) {
+        final DatabaseReference mRef=FirebaseDatabase.getInstance().getReference();
         mRef.child("Users").child(messages.getFrom()).child("imageLink").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String link = dataSnapshot.getValue().toString();
                 if (!link.equals("null")) {
                     Picasso.get().load(link).placeholder(mContext.getDrawable(R.drawable.default_pic)).into(circleImageView);
+                    UserImgDialogUtil dialogUtil=new UserImgDialogUtil();
+                    dialogUtil.showDialog(circleImageView,mContext,messages.getFrom());
                 }
                 else
                 {
+                    circleImageView.setOnClickListener(null);
                     Picasso.get().load(R.drawable.default_pic).into(circleImageView);
                 }
             }

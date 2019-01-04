@@ -5,7 +5,7 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="edtPadding">20dp</dimen>
     <dimen name="edtMarginSignUp">20dp</dimen>
-    <dimen name="message_single_padding">15dp</dimen>
+    <dimen name="message_single_padding">10dp</dimen>
     <dimen name="message_text_size">16dp</dimen>
     <dimen name="message_max_width">200dp</dimen>
     <dimen name="message_view_main_radius">13dp</dimen>
@@ -31,6 +31,8 @@
     <dimen name="text_size_medium">12dp</dimen>
     <dimen name="text_size_xmedium">14dp</dimen>
     <dimen name="text_size_large">16dp</dimen>
-    <dimen name="app_bar_height">55dp</dimen>
     <dimen name="poll_margin">30dp</dimen>
+
+    <dimen name="app_bar_height">55dp</dimen>
+    <dimen name="twice_app_bar_height">104dp</dimen>
 </resources>

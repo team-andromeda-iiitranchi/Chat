@@ -39,13 +39,14 @@
             <item>@color/dot_dark_screen1</item>
             <item>@color/dot_dark_screen1</item>
         </array>
-
+    <color name="poll">#3f4d7fed</color>
     <color name="colorSecondary">#1d9bf7</color>
-    <color name="buttonYellow">#ebeae31b</color>
+    <color name="buttonYellow">#d5eae31b</color>
     <color name="white">#ffffff</color>
     <color name="pollColor">#e2ddeb</color>
     <color name="black">#000000</color>
-    <color name="yellow_light">#ecfcfc5c</color>
-    <color name="red_light">#f5df3314</color>
-    <color name="buttonRed">#e7f9213a</color>
+    <color name="yellow_light">#ddfcfc5c</color>
+    <color name="red_light">#e6df3314</color>
+    <color name="buttonRed">#bbf9213a</color>
+    <color name="nav_bkg">#2ac4ea</color>
 </resources>

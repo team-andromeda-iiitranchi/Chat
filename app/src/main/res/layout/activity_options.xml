@@ -8,11 +8,12 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-
     <include
         layout="@layout/app_bar_options"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        />
+
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
@@ -20,7 +21,11 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        android:background="@color/grey_color"
+        android:background="@color/white"
+        app:itemTextColor="@color/nav_bkg_color"
+        app:itemIconTint="@color/nav_bkg_color"
+        app:itemBackground="@color/white"
+        app:itemTextAppearance="@color/colorSecondary"
         app:headerLayout="@layout/nav_header_options"
         app:menu="@menu/activity_options2_drawer" />
 

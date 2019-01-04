@@ -56,6 +56,27 @@ public class Messages {
 
     String sender;
 
+    public Messages(String from, String text, String sender, String seen, String link, String type, long timestamp) {
+        this.from = from;
+        this.text = text;
+        this.sender = sender;
+        this.seen = seen;
+        this.link = link;
+        this.type = type;
+        this.timestamp = timestamp;
+    }
+
+    public String getSeen() {
+        return seen;
+    }
+
+    public void setSeen(String seen) {
+        this.seen = seen;
+    }
+
+    String seen;
+
+
     public Messages(String from, String text, String link, String type, long timestamp) {
         this.from = from;
         this.text = text;

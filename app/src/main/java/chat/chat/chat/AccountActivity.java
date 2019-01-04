@@ -7,11 +7,13 @@ import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
@@ -37,6 +39,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,6 +52,12 @@ public class AccountActivity extends AppCompatActivity {
     private Button setPic;
     private CircleImageView picture;
     private ProgressDialog mProgress;
+    private TextView regNo;
+    private TextView displayName;
+    private Button rem;
+    private String uid;
+    private File file;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,12 +73,38 @@ public class AccountActivity extends AppCompatActivity {
             }
         });
         mProgress=new ProgressDialog(this);
-        mProgress.setTitle("Updating Your Profile Picture");
+        mProgress.setTitle("Updating");
+        mProgress.setMessage("Please wait while the image is being uploaded.");
         mProgress.setCanceledOnTouchOutside(false);
+
+
         setPic= (Button) findViewById(R.id.setPic);
         picture= (CircleImageView) findViewById(R.id.picture);
+        rem=(Button)findViewById(R.id.remove);
+
+
+        displayName=(TextView)findViewById(R.id.displayName);
+        displayName.setText("Name : " +ChatApp.user.getName());
+        regNo=(TextView)findViewById(R.id.reg);
+        regNo.setText(ChatApp.user.getUsername());
+        uid=FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        rem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!ChatApp.user.getImageLink().equals("null")) {
+                    DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
+                    StorageReference mStorage = FirebaseStorage.getInstance().getReference();
+                    mStorage.child("thumbnails").child(uid + ".jpg").delete();
+                    mRef.child("Users").child(uid).child("imageLink").setValue("null");
+                    Picasso.get().load(R.drawable.default_pic).into(picture);
+                }
+            }
+        });
+
+
         DatabaseReference mDatabase=FirebaseDatabase.getInstance().getReference();
-        String uid=FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         mDatabase.child("Users").child(uid).child("imageLink").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@android.support.annotation.NonNull DataSnapshot dataSnapshot) {
@@ -118,6 +153,10 @@ public class AccountActivity extends AppCompatActivity {
             final StorageReference mStorage = FirebaseStorage.getInstance().getReference().child("thumbnails").child(uid + ".jpg");
             String filePath=data.getData().getPath();
             try {
+                String root=Environment.getExternalStorageDirectory().toString();
+                file = new File(root+"/ChatApp/thumbnails/"+uid+".jpg");
+                file.createNewFile();
+
                 InputStream inputStream=getContentResolver().openInputStream(data.getData());
 
                 Bitmap compressedFile= BitmapFactory.decodeStream(inputStream);
@@ -151,7 +190,7 @@ public class AccountActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         mProgress.dismiss();
-                        Toast.makeText(AccountActivity.this, "Failure!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AccountActivity.this, "Failure! Please try after sometime.", Toast.LENGTH_SHORT).show();
                     }
                 });
 

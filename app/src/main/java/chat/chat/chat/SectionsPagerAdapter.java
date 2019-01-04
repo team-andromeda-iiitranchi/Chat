@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.widget.Toolbar;
 
+import chat.chat.ChatApp;
+
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public SectionsPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -41,7 +43,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     {
         switch (position)
         {
-            case 0:return "CRs";
+            case 0:return (ChatApp.user.getCR().equals("true"))?"Students":"CR";
             case 1:return "NOTICES";
             case 2:return "POLLS";
         }
