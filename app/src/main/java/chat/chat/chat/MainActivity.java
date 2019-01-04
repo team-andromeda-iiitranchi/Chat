@@ -1,6 +1,8 @@
 package chat.chat.chat;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -12,11 +14,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -41,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText user;
     private EditText password;
     private Button logIn,signUp;
+    private TextView forgotPass;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +57,46 @@ public class MainActivity extends AppCompatActivity {
         password=(EditText)findViewById(R.id.password);
         dbRef = FirebaseDatabase.getInstance().getReference();
         usersRef= dbRef.child("Users");
+        forgotPass= (TextView) findViewById(R.id.forgot_pass);
+        forgotPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder dial=new AlertDialog.Builder(MainActivity.this);
+                View dialogView = LayoutInflater.from(MainActivity.this).inflate(R.layout.email_input_layout,null);
+                final EditText emailEdt= (EditText) dialogView.findViewById(R.id.email);
+                dial.setView(dialogView);
+                dial.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        mAuth.sendPasswordResetEmail(emailEdt.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                String message;
+                                if(task.isSuccessful())
+                                {
+                                    message="Link sent to email";
+                                }
+                                else
+                                {
+                                    message="Some error occured";
+                                }
+                                Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+
+                    }
+                });
+                dial.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                dial.show();
+            }
+        });
 
         logIn=(Button)findViewById(R.id.logIn);
         logIn.setOnClickListener(new View.OnClickListener() {

@@ -49,6 +49,17 @@
         android:layout_marginTop="100dp"
         android:maxLines="1" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/user"
+        android:layout_marginBottom="135dp"
+        android:autoLink="web"
+        android:text="@string/forgot_password"
+        android:id="@+id/forgot_pass"
+        android:textColor="@color/colorPrimary"/>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
