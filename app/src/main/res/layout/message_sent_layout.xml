@@ -24,6 +24,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/timeView"
+        android:autoLink="web"
+        android:textColorLink="@color/white"
         android:layout_below="@+id/timeView"
         android:background="@drawable/sent_message_background"
         android:fontFamily="casual"

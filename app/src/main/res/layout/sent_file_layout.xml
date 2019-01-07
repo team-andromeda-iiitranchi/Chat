@@ -43,7 +43,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/downloadOption"
             android:layout_marginStart="1dp"
-
+            android:autoLink="web"
+            android:textColorLink="@color/white"
             android:maxWidth="@dimen/message_max_width"
             android:text="@string/sent_text"
             android:textColor="@color/white"

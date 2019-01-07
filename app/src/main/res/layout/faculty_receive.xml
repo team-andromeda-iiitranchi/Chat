@@ -44,6 +44,8 @@
             android:id="@+id/messview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:textColorLink="@color/white"
             android:layout_alignEnd="@+id/linearLayout"
             android:layout_below="@+id/circleview"
             android:layout_marginLeft="10dp"

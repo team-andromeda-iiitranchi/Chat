@@ -50,6 +50,8 @@
             android:background="@drawable/btn_background"
             android:longClickable="true"
             android:maxWidth="@dimen/message_max_width"
+            android:autoLink="web"
+            android:textColorLink="@color/white"
             android:text="@string/text"
             android:fontFamily="serif-monospace"
             android:textStyle="bold"

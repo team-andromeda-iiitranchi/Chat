@@ -154,6 +154,11 @@ public class AccountActivity extends AppCompatActivity {
             String filePath=data.getData().getPath();
             try {
                 String root=Environment.getExternalStorageDirectory().toString();
+                File dir=new File(Environment.getExternalStorageDirectory(),"ChatApp/thumbnails");
+                if(!dir.exists())
+                {
+                    dir.mkdirs();
+                }
                 file = new File(root+"/ChatApp/thumbnails/"+uid+".jpg");
                 file.createNewFile();
 

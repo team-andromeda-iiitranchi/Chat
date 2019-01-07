@@ -60,6 +60,8 @@
                 android:id="@+id/messview"
                 android:layout_width="156dp"
                 android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:textColorLink="@color/white"
                 android:layout_marginLeft="10dp"
                 android:maxWidth="@dimen/message_max_width"
                 android:text="@string/text"
