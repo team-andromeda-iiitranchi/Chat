@@ -57,6 +57,7 @@ import java.util.List;
 import java.util.Map;
 
 import chat.chat.ChatApp;
+import chat.chat.DeveloperActivity;
 import chat.chat.R;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -298,6 +299,10 @@ public class OptionsActivity extends AppCompatActivity
         if(id==R.id.faculty)
         {
             showFaculty();
+        }
+        if(id==R.id.devs)
+        {
+            startActivity(new Intent(OptionsActivity.this, DeveloperActivity.class));
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

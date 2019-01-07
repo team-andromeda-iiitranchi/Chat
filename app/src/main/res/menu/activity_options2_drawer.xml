@@ -15,6 +15,10 @@
             android:icon="@drawable/library"
             android:title="E-Library"/>
     </group>
+    <group>
+        <item android:id="@+id/devs"
+            android:title="Team Andromeda"/>
+    </group>
 
 
 </menu>

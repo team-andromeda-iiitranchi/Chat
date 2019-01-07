@@ -33,7 +33,7 @@
             android:name=".chat.OptionsActivity"
             android:label="@string/title_activity_options"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".chat.AddPoll"
             android:parentActivityName=".chat.OptionsActivity" />
@@ -59,7 +59,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".WelcomeActivity" />
-        <activity android:name=".chat.AuthImageActivity"></activity>
+        <activity android:name=".chat.AuthImageActivity" />
+        <activity android:name=".DeveloperActivity"></activity>
     </application>
 
 </manifest>

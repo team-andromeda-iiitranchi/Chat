@@ -105,7 +105,11 @@ public class NoticeComposerActivity extends AppCompatActivity implements Chooser
     {
         final List<String> list=new ArrayList<>();
         DatabaseReference mRef= FirebaseDatabase.getInstance().getReference().child("Sections");
-
+        final ProgressDialog dial=new ProgressDialog(this);
+        dial.setTitle("Loading Recipient List");
+        dial.setMessage("Please wait while the listis being fetched");
+        dial.setCanceledOnTouchOutside(false);
+        dial.show();
         mRef.runTransaction(new Transaction.Handler() {
             @NonNull
             @Override
@@ -119,7 +123,6 @@ public class NoticeComposerActivity extends AppCompatActivity implements Chooser
 
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
-
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Faculty");
                         reference.runTransaction(new Transaction.Handler() {
                             @NonNull
@@ -143,6 +146,7 @@ public class NoticeComposerActivity extends AppCompatActivity implements Chooser
                                 for (int i = 0; i < list.size(); i++) {
                                     mList[i] = list.get(i);
                                 }
+                                dial.dismiss();
                                 ChooserDialog c = new ChooserDialog();
                                 c.show(getFragmentManager(), "ChooserDialog");
                             }
