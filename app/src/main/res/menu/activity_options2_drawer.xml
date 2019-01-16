@@ -17,6 +17,7 @@
     </group>
     <group>
         <item android:id="@+id/devs"
+            android:icon="@drawable/andromeda"
             android:title="Team Andromeda"/>
     </group>
 

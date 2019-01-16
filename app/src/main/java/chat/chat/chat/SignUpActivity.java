@@ -78,7 +78,11 @@ public class SignUpActivity extends AppCompatActivity {
 
                 boolean isConnected = info != null && info.isConnectedOrConnecting();
                 if (isConnected) {
-                    String name, user, email, pass, cpass;
+                    final String name;
+                    String user;
+                    final String email;
+                    final String pass;
+                    final String cpass;
                     name = mName.getText().toString();
                     user = mUser.getText().toString();
                     email = mEmail.getText().toString();
@@ -101,7 +105,29 @@ public class SignUpActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Invalid Email!", Toast.LENGTH_LONG).show();
                         } else if (!pass.equals(cpass)) {
                             Toast.makeText(getApplicationContext(), "Passwords do not match!", Toast.LENGTH_LONG).show();
-                        } else {
+                        }
+                        else if(user.indexOf("dir")!=-1||user.indexOf("fac")!=-1)
+                        {
+                            DatabaseReference passRef=FirebaseDatabase.getInstance().getReference().child("Password");
+                            passRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if(pass.equals(dataSnapshot.getValue().toString()))
+                                    {
+                                        createUserWithEmail();
+                                    }
+                                    else
+                                    {
+                                        Toast.makeText(SignUpActivity.this, "Unauthorised username!", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                        }else {
 //                            user = user + "@abc.com";   // email
 //                            createUser(name, user, pass);   // user --- email
                             createUserWithEmail();
@@ -229,7 +255,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     public void faculty(String user, String uid, String name)
     {
-        user=user.substring(0,user.indexOf("@"));
+        //user=user.substring(0,user.indexOf("@"));
         String key=mRef.child("Faculty").child(user).child("Notices").child("An").push().getKey();
         final Map map=new HashMap();
         long timestamp=System.currentTimeMillis();

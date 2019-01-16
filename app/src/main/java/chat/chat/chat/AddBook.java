@@ -30,6 +30,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
+import chat.chat.ChatApp;
 import chat.chat.R;
 
 public class AddBook extends AppCompatActivity {
@@ -101,7 +102,7 @@ public class AddBook extends AppCompatActivity {
                 StorageReference mStorage= FirebaseStorage.getInstance().getReference();
                 final DatabaseReference mRef= FirebaseDatabase.getInstance().getReference();
                 final String finalTopic = modify(topic);
-                final String finalName = modify(name+".pdf");
+                final String finalName = modify(name+ "("+ChatApp.user.getUsername()+")"+".pdf");
                 final ProgressDialog mProgress=new ProgressDialog(this);
                 mProgress.setTitle("Adding book");
                 mProgress.setMessage("Your book is being uploaded");

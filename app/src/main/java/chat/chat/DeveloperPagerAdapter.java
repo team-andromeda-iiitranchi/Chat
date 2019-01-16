@@ -22,18 +22,22 @@ public class DeveloperPagerAdapter extends FragmentPagerAdapter {
         switch (position)
         {
             case 0:
+                id=R.drawable.shubham;
                 name="Shubham Kumar";
                 regNo="2017UGCS001R";
                 break;
             case 1:
+                id=R.drawable.shubh;
                 name="Shubham Kumar Singh";
                 regNo="2017UGCS051R";
                 break;
             case 2:
+                id=R.drawable.pankaj;
                 name="Pankaj Vaghela";
                 regNo="2017UGCS032R";
                 break;
             case 3:
+                id=R.drawable.akshansh;
                 name="Akshansh Kumar Singh";
                 regNo="2017UGEC053R";
                 break;
