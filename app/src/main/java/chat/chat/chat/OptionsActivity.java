@@ -268,6 +268,7 @@ public class OptionsActivity extends AppCompatActivity
             Intent i=new Intent(OptionsActivity.this,MainActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(i);
+            finish();
         }
         if(item.getItemId()==R.id.account)
         {
