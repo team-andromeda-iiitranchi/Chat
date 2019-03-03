@@ -682,5 +682,59 @@ public class OptionsActivity extends AppCompatActivity
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(FirebaseAuth firebaseAuth) {
+                FirebaseUser mUser=firebaseAuth.getCurrentUser();
+                if(mUser==null)
+                {
+                    Intent i=new Intent(OptionsActivity.this,MainActivity.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                    startActivity(i);
+                    finish();
+                }
+                else
+                {
+                    DatabaseReference mRef= FirebaseDatabase.getInstance().getReference();
+                    String uid=FirebaseAuth.getInstance().getCurrentUser().getUid();
 
+
+                    Query q=mRef.child("Users").orderByKey().equalTo(uid);
+                    q.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            Users users= dataSnapshot.getValue(Users.class);
+                            ChatApp.user=users;
+                            ChatApp.rollInfo=users.getUsername().substring(0,8);
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+        });
+
+
+    }
 }

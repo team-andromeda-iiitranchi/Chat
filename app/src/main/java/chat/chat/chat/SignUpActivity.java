@@ -342,7 +342,7 @@ public class SignUpActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    Toast.makeText(SignUpActivity.this, "Null hai sections!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignUpActivity.this, "Null sections!", Toast.LENGTH_SHORT).show();
                 }
             }
 
