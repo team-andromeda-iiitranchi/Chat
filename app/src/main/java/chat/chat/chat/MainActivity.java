@@ -33,6 +33,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import chat.chat.ChatApp;
 import chat.chat.R;
@@ -135,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
                                    user=dataSnapshot1.getValue(Users.class);
                                }
                                 if(user!=null) {
+                                    final Users finalUser = user;
                                     mAuth.signInWithEmailAndPassword(user.getEmail(), pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                         @Override
                                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -144,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
                                                 Intent i=new Intent(MainActivity.this, OptionsActivity.class);
                                                 i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                                 startActivity(i);
-
+                                                subscribe(finalUser);
                                                 finish();
                                             } else {
                                                 Toast.makeText(getApplicationContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
@@ -184,6 +186,20 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void subscribe(Users user) {
+        if(user.getUsername().indexOf("fac")==-1&&user.getUsername().indexOf("dir")==-1) {
+            FirebaseMessaging.getInstance().subscribeToTopic((user.getUsername().substring(0, 8)).toLowerCase());
+            FirebaseMessaging.getInstance().subscribeToTopic("students");
+        }
+        else{
+            if(user.getUsername().indexOf("fac")!=-1)
+                FirebaseMessaging.getInstance().subscribeToTopic("faculty");
+            else
+                FirebaseMessaging.getInstance().subscribeToTopic("director");
+        }
+
     }
 
     @Override

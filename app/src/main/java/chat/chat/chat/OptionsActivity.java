@@ -45,6 +45,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -268,6 +269,7 @@ public class OptionsActivity extends AppCompatActivity
             Intent i=new Intent(OptionsActivity.this,MainActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(i);
+            unsubscribe();
             finish();
         }
         if(item.getItemId()==R.id.account)
@@ -279,6 +281,24 @@ public class OptionsActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void unsubscribe() {
+
+        if(ChatApp.user.getUsername().indexOf("fac")==-1&&ChatApp.user.getUsername().indexOf("dir")==-1)
+        {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(ChatApp.user.getUsername().substring(0,8));
+            FirebaseMessaging.getInstance().unsubscribeFromTopic("students");
+        }
+        else if(ChatApp.user.getUsername().indexOf("fac")!=-1)
+        {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic("faculty");
+        }
+        else
+        {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic("director");
+        }
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

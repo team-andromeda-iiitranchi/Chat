@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -45,6 +46,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import chat.chat.BuildConfig;
 import chat.chat.ChatApp;
 import chat.chat.R;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -454,8 +456,9 @@ class MessageAdapter extends RecyclerView.Adapter
     private void displayPDF(File finalMyFile) {
         Intent intent=new Intent();
         intent.setType("application/pdf");
-        intent.setData(Uri.fromFile(finalMyFile));
+        intent.setData(FileProvider.getUriForFile(mContext, BuildConfig.APPLICATION_ID+".provider",finalMyFile));
         intent.setAction(Intent.ACTION_VIEW);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         mContext.startActivity(intent);
     }
 
