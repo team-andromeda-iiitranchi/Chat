@@ -64,8 +64,6 @@ public class PollDialog extends DialogFragment {
                                 String appendStr="\n"+String.format(key+" : %.2f",val)+"%";
                                 message+=appendStr;
                             }
-                            String appendStr="\n\n% Voted :"+String.format("%.2f",(((double)tot)/poll.getTotal()*100))+"%";
-                            message+=appendStr;
                             long timestamp=System.currentTimeMillis();
                             String uid=FirebaseAuth.getInstance().getCurrentUser().getUid();
                             Map putMap=new HashMap();

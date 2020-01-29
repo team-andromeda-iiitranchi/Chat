@@ -1,5 +1,6 @@
 package chat.chat.chat;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -76,9 +77,23 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      * @param remoteMessage FCM message  received.
      */
     private void sendNotification(RemoteMessage remoteMessage) {
-
         String title = remoteMessage.getData().get("title") ;
         String messageBody = remoteMessage.getData().get("body") ;
+
+        /*if(Build.VERSION.SDK_INT==Build.VERSION_CODES.LOLLIPOP)
+        {
+            Notification notification  = new Notification.Builder(this)
+                    .setCategory(Notification.CATEGORY_MESSAGE)
+                    .setContentTitle(title)
+                    .setContentText(messageBody)
+                    //.setSmallIcon(icon)
+                    .setAutoCancel(true)
+                    .setVisibility(Notification.VISIBILITY_PRIVATE).build();
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.notify(1, notification );
+            return;
+        }*/
 
         String activity = remoteMessage.getData().containsKey("activity")?remoteMessage.getData().get("activity"):null;
         int notif_code = remoteMessage.getData().containsKey("notif_code")?Integer.parseInt(remoteMessage.getData().get("notif_code")):0;

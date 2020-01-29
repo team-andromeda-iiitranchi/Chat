@@ -147,7 +147,7 @@ public class OptionsActivity extends AppCompatActivity
                             Users users= dataSnapshot.getValue(Users.class);
                             ChatApp.user=users;
                             ChatApp.rollInfo=users.getUsername().substring(0,8);
-
+                            subscribe();
                             if(!(users.getCR().equalsIgnoreCase("Faculty")||users.getCR().equalsIgnoreCase("Director"))) {
                                 mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
                                 mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -299,6 +299,14 @@ public class OptionsActivity extends AppCompatActivity
             FirebaseMessaging.getInstance().unsubscribeFromTopic("director");
         }
 
+    }
+    private void subscribe(){
+        if(ChatApp.user.getUsername().indexOf("fac")==-1 && ChatApp.user.getUsername().indexOf("dir")==-1)
+        {
+            String topic=ChatApp.user.getUsername().substring(0,8).toUpperCase();//+"/message";
+            //Toast.makeText(this, "Subscribed to ", Toast.LENGTH_SHORT).show();
+            FirebaseMessaging.getInstance().subscribeToTopic(topic);
+        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

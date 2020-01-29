@@ -1,10 +1,13 @@
 package chat.chat.chat;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.renderscript.ScriptGroup;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -12,6 +15,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
@@ -107,13 +111,25 @@ public class SignUpActivity extends AppCompatActivity {
                         }
                         else if(user.indexOf("dir")!=-1||user.indexOf("fac")!=-1)
                         {
-                            DatabaseReference passRef=FirebaseDatabase.getInstance().getReference().child("Password");
+                            DatabaseReference passRef=FirebaseDatabase.getInstance().getReference().child("password");
                             passRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     if(pass.equals(dataSnapshot.getValue().toString()))
                                     {
-                                        createUserWithEmail();
+                                        AlertDialog.Builder passInput=new AlertDialog.Builder(SignUpActivity.this);
+                                        passInput.setTitle("Input new Password");
+                                        final EditText edt=new EditText(SignUpActivity.this);
+                                        edt.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                                        passInput.setView(edt);
+                                        passInput.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                suPass=edt.getText().toString();
+                                                createUserWithEmail();
+                                            }
+                                        });
+                                        passInput.show();
                                     }
                                     else
                                     {
@@ -129,7 +145,10 @@ public class SignUpActivity extends AppCompatActivity {
                         }else {
 //                            user = user + "@abc.com";   // email
 //                            createUser(name, user, pass);   // user --- email
-                            createUserWithEmail();
+                            if(email.indexOf("@iiitranchi.ac.in")!=-1)
+                                createUserWithEmail();
+                            else
+                                Toast.makeText(SignUpActivity.this, "Enter college email!", Toast.LENGTH_SHORT).show();
                         }
 
 
@@ -230,7 +249,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                     //mRef.child("CR").child("messages").child(uid).child("timestamp").setValue(ServerValue.TIMESTAMP);
                     Toast.makeText(getApplicationContext(), "Authentication Successful!", Toast.LENGTH_LONG).show();
-                    Intent i=new Intent(SignUpActivity.this, MainActivity.class);
+                    Intent i=new Intent(SignUpActivity.this,OptionsActivity.class);
                     i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(i);
                     finish();
